@@ -269,7 +269,8 @@ export function readPluginSdkSurfaceBudgets(env: NodeJS.ProcessEnv = process.env
       // including the side-question compatibility split.
       // +1: add the account-aware native approval request selector.
       // +3: add canonical coercion exports while retaining the shipped asString compatibility name.
-      4866,
+      // +1: canonical PNG QR data URL schema for plugin-owned QR login actions.
+      4867,
       env,
     ),
     publicFunctionExports: readPluginSdkSurfaceBudgetEnv(
