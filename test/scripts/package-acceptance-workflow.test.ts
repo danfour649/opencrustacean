@@ -2601,6 +2601,24 @@ describe("package artifact reuse", () => {
       if: "(steps.plan.outputs.needs_package == '1' && inputs.package_artifact_name == '' && inputs.package_artifact_run_id == '') || (inputs.enable_prepublish_plugin_registry && steps.plan.outputs.needs_prepublish_plugin_registry == '1' && inputs.prepublish_plugin_registry_artifact_id == '')",
       uses: "./.github/actions/setup-node-env",
     });
+    const validatePackage = workflowStep(
+      prepareDockerImage,
+      "Validate OpenClaw Docker E2E package",
+    );
+    expectTextToIncludeAll(validatePackage.run, [
+      'metadata=".artifacts/docker-e2e-package/package-candidate.json"',
+      '--arg packageSourceSha "$package_source_sha"',
+      '--arg sha256 "$digest"',
+      '--arg version "$version"',
+      '[[ -s "$metadata" ]]',
+    ]);
+    const uploadPackage = workflowStep(prepareDockerImage, "Upload OpenClaw Docker E2E package");
+    expect(uploadPackage.with?.path).toContain(
+      ".artifacts/docker-e2e-package/openclaw-current.tgz",
+    );
+    expect(uploadPackage.with?.path).toContain(
+      ".artifacts/docker-e2e-package/package-candidate.json",
+    );
     expect(workflowStep(prepareDockerImage, planStepName).env).toEqual({
       INCLUDE_OPENWEBUI: "${{ inputs.include_openwebui }}",
       INCLUDE_RELEASE_PATH_SUITES: "${{ inputs.include_release_path_suites }}",
