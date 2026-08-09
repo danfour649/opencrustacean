@@ -16,7 +16,10 @@ import {
   resolveDiscordComponentSpec,
   sendDiscordComponentMessageLazy,
 } from "./outbound-components.js";
-import { createDiscordPayloadSendContext } from "./outbound-send-context.js";
+import {
+  createDiscordPayloadSendContext,
+  resolveDiscordOutboundTarget,
+} from "./outbound-send-context.js";
 import { hasDiscordMessageCreateAmbiguity } from "./retry.js";
 import { createDiscordSendReceipt, createDiscordSendReceiptFromResults } from "./send.receipt.js";
 import type { DiscordSendComponents, DiscordSendEmbeds } from "./send.shared.js";
@@ -89,13 +92,48 @@ export async function sendDiscordOutboundPayload(params: {
   ctx: DiscordOutboundPayloadContext;
   fallbackAdapter: ChannelOutboundAdapter;
 }): Promise<Awaited<ReturnType<NonNullable<ChannelOutboundAdapter["sendPayload"]>>>> {
-  const ctx = params.ctx;
   const payload = normalizeDiscordApprovalPayload({
-    ...ctx.payload,
-    text: ctx.payload.text ?? "",
+    ...params.ctx.payload,
+    text: params.ctx.payload.text ?? "",
   });
+  const deliveredResults: DiscordSendResult[] = [];
+  let createdThreadId: string | undefined;
+  const ctx: DiscordOutboundPayloadContext = {
+    ...params.ctx,
+    payload,
+    onDeliveryResult: async (result) => {
+      await params.ctx.onDeliveryResult?.(result);
+      const threadId = result.receipt?.threadId;
+      if (threadId && ctx.threadId == null) {
+        // Forum parents create their conversation on the first platform send.
+        // Every later payload mode must target that thread, never its parent.
+        ctx.threadId = threadId;
+        sendContext.target = resolveDiscordOutboundTarget({ to: ctx.to, threadId });
+        createdThreadId = threadId;
+      }
+      if (createdThreadId && result.channelId && result.receipt) {
+        deliveredResults.push({
+          messageId: result.messageId,
+          channelId: result.channelId,
+          receipt: result.receipt,
+        });
+      }
+    },
+  };
   const mediaUrls = resolvePayloadMediaUrls(payload);
   const sendContext = await createDiscordPayloadSendContext(ctx);
+  const finalizeResult = (
+    result: Awaited<ReturnType<NonNullable<ChannelOutboundAdapter["sendPayload"]>>>,
+  ) =>
+    createdThreadId
+      ? {
+          ...result,
+          receipt: createDiscordSendReceiptFromResults({
+            results: deliveredResults,
+            threadId: createdThreadId,
+          }),
+        }
+      : result;
 
   if (payload.audioAsVoice && mediaUrls.length > 0) {
     // audioAsVoice emits one logical Discord reply across voice/text/media sends.
@@ -154,7 +192,7 @@ export async function sendDiscordOutboundPayload(params: {
         onDeliveryResult: resolveDiscordDeliveryProgress(ctx),
       });
     }
-    return attachChannelToResult("discord", lastResult);
+    return finalizeResult(attachChannelToResult("discord", lastResult));
   }
 
   const componentSpec = await resolveDiscordComponentSpec(payload);
@@ -196,41 +234,14 @@ export async function sendDiscordOutboundPayload(params: {
             onDeliveryResult: resolveDiscordDeliveryProgress(ctx),
           }),
       });
-      return attachChannelToResult("discord", result);
+      return finalizeResult(attachChannelToResult("discord", result));
     }
-    const payloadContext = { ...ctx, payload };
-    const deliveredResults: DiscordSendResult[] = [];
-    let createdThreadId: string | undefined;
-    payloadContext.onDeliveryResult = async (result) => {
-      await ctx.onDeliveryResult?.(result);
-      const threadId = result.receipt?.threadId;
-      if (threadId && payloadContext.threadId == null) {
-        // A forum parent creates its conversation on the first platform send.
-        payloadContext.threadId = threadId;
-        createdThreadId = threadId;
-      }
-      if (createdThreadId && result.channelId && result.receipt) {
-        deliveredResults.push({
-          messageId: result.messageId,
-          channelId: result.channelId,
-          receipt: result.receipt,
-        });
-      }
-    };
     const result = await sendTextMediaPayload({
       channel: "discord",
-      ctx: payloadContext,
+      ctx,
       adapter: params.fallbackAdapter,
     });
-    return createdThreadId
-      ? {
-          ...result,
-          receipt: createDiscordSendReceiptFromResults({
-            results: deliveredResults,
-            threadId: createdThreadId,
-          }),
-        }
-      : result;
+    return finalizeResult(result);
   }
 
   const result = await sendPayloadMediaSequenceOrFallback({
@@ -257,5 +268,5 @@ export async function sendDiscordOutboundPayload(params: {
       });
     },
   });
-  return attachChannelToResult("discord", result);
+  return finalizeResult(attachChannelToResult("discord", result));
 }

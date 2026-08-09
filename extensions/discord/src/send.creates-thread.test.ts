@@ -3,7 +3,7 @@ import { ChannelType, MessageFlags, Routes } from "discord-api-types/v10";
 import { createRequireRecord } from "openclaw/plugin-sdk/test-fixtures";
 import { loadWebMediaRaw } from "openclaw/plugin-sdk/web-media";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { RateLimitError } from "./internal/discord.js";
+import { Button, RateLimitError, Row } from "./internal/discord.js";
 import { makeDiscordRest } from "./send.test-harness.js";
 
 vi.mock("openclaw/plugin-sdk/web-media", async () => {
@@ -107,7 +107,9 @@ function createDiscordForumPayloadHarness(parentType: ChannelType = ChannelType.
     parentId,
     postMock,
     run: async (
-      payload: { text: string; mediaUrls?: string[] },
+      payload: Parameters<NonNullable<typeof discordOutbound.sendPayload>>[0]["payload"] & {
+        text: string;
+      },
       options: {
         threadId?: string;
         onDeliveryResult?: Parameters<
@@ -186,7 +188,32 @@ afterAll(() => {
 });
 
 describe("sendMessageDiscord", () => {
-  it.each([
+  class NativeForumButton extends Button {
+    label = "Open";
+    customId = "open";
+  }
+  const nativeForumComponents = [new Row([new NativeForumButton()])];
+  const nativeForumPayload = {
+    text: "Generated images",
+    mediaUrls: ["https://example.com/first.jpg", "https://example.com/second.jpg"],
+    channelData: {
+      discord: {
+        components: nativeForumComponents,
+        embeds: [{ description: "Generated image context" }],
+        filename: "generated-first.jpg",
+      },
+    },
+  };
+
+  it.each<{
+    label: string;
+    payload: Parameters<NonNullable<typeof discordOutbound.sendPayload>>[0]["payload"] & {
+      text: string;
+    };
+    expectedThreadMessages: number;
+    parentType?: ChannelType;
+    expectedNativeData?: boolean;
+  }>([
     {
       label: "a 2001-character reply",
       payload: { text: "a".repeat(2001) },
@@ -200,8 +227,21 @@ describe("sendMessageDiscord", () => {
       },
       expectedThreadMessages: 2,
     },
+    {
+      label: "native embeds, components, filename, and two image attachments",
+      payload: nativeForumPayload,
+      expectedThreadMessages: 2,
+      expectedNativeData: true,
+    },
+    {
+      label: "native embeds and attachments in a media-channel post",
+      payload: nativeForumPayload,
+      expectedThreadMessages: 2,
+      parentType: ChannelType.GuildMedia,
+      expectedNativeData: true,
+    },
   ])("keeps $label in one automatically created forum thread", async (testCase) => {
-    const { parentId, postMock, run } = createDiscordForumPayloadHarness();
+    const { parentId, postMock, run } = createDiscordForumPayloadHarness(testCase.parentType);
     const onDeliveryResult = vi.fn();
 
     const result = await run(testCase.payload, { onDeliveryResult });
@@ -226,6 +266,24 @@ describe("sendMessageDiscord", () => {
         ),
       ],
     });
+    if (testCase.expectedNativeData) {
+      const starter = requireRecord(
+        requestBody(postMock as unknown as MockCallSource).message,
+        "forum starter",
+      );
+      expect(starter.components).toEqual(
+        nativeForumComponents.map((component) => component.serialize()),
+      );
+      expect(starter.embeds).toEqual(nativeForumPayload.channelData.discord.embeds);
+      const firstFiles = requestBody(postMock as unknown as MockCallSource, 1).files as Array<{
+        name?: string;
+      }>;
+      const secondFiles = requestBody(postMock as unknown as MockCallSource, 2).files as Array<{
+        name?: string;
+      }>;
+      expect(firstFiles[0]?.name).toBe("generated-first.jpg");
+      expect(secondFiles[0]?.name).toBe("photo.jpg");
+    }
   });
 
   it("keeps chunked regular-channel replies on their original channel", async () => {
