@@ -12,7 +12,11 @@ import {
 } from "@earendil-works/pi-tui";
 import { classifyGatewayConnectFailure } from "../../packages/gateway-protocol/src/connect-error-details.js";
 import type { CommandEntry } from "../../packages/gateway-protocol/src/index.js";
-import { resolveAgentIdByWorkspacePath, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import {
+  resolveAgentIdByWorkspacePath,
+  resolveDefaultAgentId,
+  tryResolveDefaultAgentId,
+} from "../agents/agent-scope.js";
 import { normalizeThinkLevel } from "../auto-reply/thinking.shared.js";
 import { getRuntimeConfig, type OpenClawConfig } from "../config/config.js";
 import { resolveCurrentOpenClawCliInvocation } from "../infra/openclaw-cli-invocation.js";
@@ -193,7 +197,7 @@ export function resolveTuiSessionKey(params: {
 
 export function resolveInitialTuiAgentId(params: {
   cfg: OpenClawConfig;
-  fallbackAgentId: string;
+  fallbackAgentId?: string;
   initialSessionInput?: string;
   cwd?: string;
 }) {
@@ -208,7 +212,13 @@ export function resolveInitialTuiAgentId(params: {
     return inferredFromWorkspace;
   }
 
-  return normalizeAgentId(params.fallbackAgentId);
+  return normalizeAgentId(
+    params.fallbackAgentId ??
+      resolveDefaultAgentId(params.cfg, {
+        surface: "TUI startup",
+        hint: "Pass an agent-scoped --session key.",
+      }),
+  );
 }
 
 export function resolveGatewayDisconnectState(
@@ -597,12 +607,13 @@ export async function runTui(opts: RunTuiOptions): Promise<TuiResult> {
   const initialSessionInput = (opts.session ?? "").trim();
   const sessionScope = (config.session?.scope ?? "per-sender") as SessionScope;
   const sessionMainKey = normalizeMainKey(config.session?.mainKey);
-  const agentDefaultId = resolveDefaultAgentId(config);
+  const configuredDefaultAgentId = tryResolveDefaultAgentId(config);
   let currentAgentId = resolveInitialTuiAgentId({
     cfg: config,
-    fallbackAgentId: agentDefaultId,
+    fallbackAgentId: configuredDefaultAgentId,
     initialSessionInput,
   });
+  const agentDefaultId = configuredDefaultAgentId ?? currentAgentId;
   const agentNames = new Map<string, string>();
   let currentSessionKey = "";
   let rememberedSessionApplied = false;
