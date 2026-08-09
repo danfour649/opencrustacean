@@ -6,7 +6,6 @@ import { getAiTransportHost } from "../host.js";
 import { resolveAzureDeploymentNameFromMap } from "../providers/azure-deployment-map.js";
 import { isOpenAICompatibleAzureResponsesBaseUrl } from "../providers/azure-openai-responses-client-compat.js";
 import { createAssistantMessageEventStream } from "../utils/event-stream.js";
-import { headersToRecord } from "../utils/headers.js";
 import {
   createFirstStreamEventAbortController,
   getFirstStreamEventTimeoutHandler,
@@ -52,12 +51,13 @@ import {
   isOpenAICodexResponsesModel,
   resolveCodeModeResponsesVisibleToolNames,
 } from "./openai-transport-params.js";
-import { log } from "./openai-transport-shared.js";
+import { createOpenAIResponseHook, log } from "./openai-transport-shared.js";
 import { sanitizeResponsesImagePayload } from "./responses-image-payload-sanitizer.js";
 import {
   assignTransportErrorDetails,
   mergeTransportMetadata,
   transportAbortError,
+  withProviderResponseHook,
 } from "./transport-stream-shared.js";
 import { redactIdentifier } from "./transport-utils.js";
 
@@ -241,34 +241,31 @@ function createResponsesTransportExecutor(config: ResponsesTransportExecutorOpti
               authProfileId: responsesOptions?.authProfileId,
             }),
         });
-        await options?.onResponse?.(
-          { status: response.status, headers: headersToRecord(response.headers) },
-          model,
-        );
-        emitModelTransportDebug(
-          log,
-          `[responses] headers provider=${model.provider} api=${model.api} model=${model.id} ` +
-            `elapsedMs=${Date.now() - requestStartedAt}`,
-        );
-        stream.push({ type: "start", partial: output as never });
-        await processResponsesStream(
-          observeResponsesStream(responseStream, model),
-          output,
-          stream,
-          model,
-          {
-            ...config.pricingOptions?.(responsesOptions),
-            firstEventTimeoutMs:
-              getFirstStreamEventTimeoutMs(options) ?? config.firstEventTimeoutMs,
-            abortFirstEventStream: firstEventAbort.abort,
-            onFirstEventTimeout: getFirstStreamEventTimeoutHandler(options),
-            signal: options?.signal,
-            reasoningReplayMetadata: buildOpenAIResponsesReasoningReplayMetadata(model, {
-              authProfileId: responsesOptions?.authProfileId,
-              sessionId: options?.sessionId,
-            }),
+        const hookedResponseStream = withProviderResponseHook({
+          stream: observeResponsesStream(responseStream, model),
+          signal: firstEventAbort.signal,
+          abort: firstEventAbort.abort,
+          hook: createOpenAIResponseHook(options?.onResponse, response, model),
+          onReady: () => {
+            emitModelTransportDebug(
+              log,
+              `[responses] headers provider=${model.provider} api=${model.api} model=${model.id} ` +
+                `elapsedMs=${Date.now() - requestStartedAt}`,
+            );
+            stream.push({ type: "start", partial: output as never });
           },
-        );
+        });
+        await processResponsesStream(hookedResponseStream, output, stream, model, {
+          ...config.pricingOptions?.(responsesOptions),
+          firstEventTimeoutMs: getFirstStreamEventTimeoutMs(options) ?? config.firstEventTimeoutMs,
+          abortFirstEventStream: firstEventAbort.abort,
+          onFirstEventTimeout: getFirstStreamEventTimeoutHandler(options),
+          signal: options?.signal,
+          reasoningReplayMetadata: buildOpenAIResponsesReasoningReplayMetadata(model, {
+            authProfileId: responsesOptions?.authProfileId,
+            sessionId: options?.sessionId,
+          }),
+        });
         if (options?.signal?.aborted) {
           throw transportAbortError(options.signal);
         }
