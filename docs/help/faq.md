@@ -150,6 +150,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     ```json5
     {
       agents: {
+        ownership: "explicit",
         list: [
           {
             id: "coder",
