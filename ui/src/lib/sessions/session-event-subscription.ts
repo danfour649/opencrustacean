@@ -1,3 +1,7 @@
+import {
+  DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS,
+  GatewayProtocolRequestTimeoutError,
+} from "@openclaw/gateway-client/browser";
 import { GatewayRequestError, type GatewayBrowserClient } from "../../api/gateway.ts";
 
 type SessionEventSubscriptionScope = {
@@ -46,6 +50,7 @@ export function createSessionEventSubscriptionOwner(params: {
         const response = await scope.client.request<{ subscribed?: boolean }>(
           "sessions.subscribe",
           {},
+          { timeoutMs: DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS },
         );
         if (!isCurrent(scope, expectedGeneration)) {
           return;
@@ -63,8 +68,18 @@ export function createSessionEventSubscriptionOwner(params: {
         if (!isCurrent(scope, expectedGeneration)) {
           return;
         }
-        params.onError(scope, String(error));
-        const delayMs = params.retryDelayMs(error);
+        // Lost replies can leave a healthy socket open; retry only the
+        // observer's transport deadline, never authoritative refusals.
+        const failure =
+          error instanceof GatewayProtocolRequestTimeoutError
+            ? new GatewayRequestError({
+                code: "UNAVAILABLE",
+                message: error.message,
+                retryable: true,
+              })
+            : error;
+        params.onError(scope, String(failure));
+        const delayMs = params.retryDelayMs(failure);
         if (delayMs === null || !isCurrent(scope, expectedGeneration)) {
           return;
         }

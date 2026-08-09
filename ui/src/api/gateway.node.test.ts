@@ -2,7 +2,9 @@
 import { createHash } from "node:crypto";
 import {
   ConnectErrorDetailCodes,
+  DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS,
   GATEWAY_CLIENT_CAPS,
+  GatewayProtocolRequestTimeoutError,
   MIN_CLIENT_PROTOCOL_VERSION,
   PROTOCOL_VERSION,
 } from "@openclaw/gateway-client/browser";
@@ -781,7 +783,39 @@ describe("GatewayBrowserClient", () => {
     },
   );
 
-  it("keeps a healthy heartbeat and explicitly unbounded request alive", async () => {
+  it.each([Number.MAX_SAFE_INTEGER, 2 ** 32 + 1])(
+    "clamps an explicit browser RPC timeout %d before scheduling",
+    async (requestedTimeoutMs) => {
+      useNodeFakeTimers();
+      const client = new GatewayBrowserClient({ url: DEFAULT_GATEWAY_URL });
+      try {
+        const { ws, connectFrame } = await startConnect(client);
+        ws.emitMessage({
+          type: "res",
+          id: connectFrame.id,
+          ok: true,
+          payload: {
+            type: "hello-ok",
+            protocol: 4,
+            auth: { role: "operator", scopes: [] },
+          },
+        });
+        const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+        const request = client.request("sessions.list", {}, { timeoutMs: requestedTimeoutMs });
+        const frame = JSON.parse(ws.sent.at(-1) ?? "{}") as { id?: string };
+
+        expect(setTimeoutSpy).toHaveBeenLastCalledWith(expect.any(Function), 2_147_483_647);
+        await vi.advanceTimersByTimeAsync(1);
+        ws.emitMessage({ type: "res", id: frame.id, ok: true, payload: { sessions: [] } });
+
+        await expect(request).resolves.toEqual({ sessions: [] });
+      } finally {
+        client.stop();
+      }
+    },
+  );
+
+  it("classifies a browser RPC transport deadline without disguising it as a refusal", async () => {
     useNodeFakeTimers();
     const client = new GatewayBrowserClient({ url: DEFAULT_GATEWAY_URL });
     try {
@@ -794,14 +828,49 @@ describe("GatewayBrowserClient", () => {
           type: "hello-ok",
           protocol: 4,
           auth: { role: "operator", scopes: [] },
-          policy: { tickIntervalMs: 1_000 },
         },
       });
-      const request = client.request("wizard.next", {}, { timeoutMs: null });
+      const request = client.request("sessions.subscribe", {}, { timeoutMs: 25 });
+      const timeout = expect(request).rejects.toMatchObject({
+        name: "GatewayProtocolRequestTimeoutError",
+        method: "sessions.subscribe",
+        timeoutMs: 25,
+        requestSent: true,
+      });
+
+      await vi.advanceTimersByTimeAsync(25);
+
+      await timeout;
+      await expect(request).rejects.toBeInstanceOf(GatewayProtocolRequestTimeoutError);
+    } finally {
+      client.stop();
+    }
+  });
+
+  it.each([
+    { label: "an explicitly unbounded wizard poll", options: { timeoutMs: null } },
+    { label: "an owner-bounded wizard start", options: undefined },
+  ])("keeps $label alive beyond its local wizard deadline", async ({ options }) => {
+    useNodeFakeTimers();
+    const client = new GatewayBrowserClient({ url: DEFAULT_GATEWAY_URL });
+    try {
+      const { ws, connectFrame } = await startConnect(client);
+      ws.emitMessage({
+        type: "res",
+        id: connectFrame.id,
+        ok: true,
+        payload: {
+          type: "hello-ok",
+          protocol: 4,
+          auth: { role: "operator", scopes: [] },
+          policy: { tickIntervalMs: DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS },
+        },
+      });
+      const request = client.request("wizard.next", {}, options);
       const requestFrame = JSON.parse(ws.sent.at(-1) ?? "{}") as { id?: string };
 
-      for (let seq = 1; seq <= 4; seq += 1) {
-        await vi.advanceTimersByTimeAsync(1_000);
+      for (let seq = 1; seq <= 5; seq += 1) {
+        await vi.advanceTimersByTimeAsync(DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS);
         ws.emitMessage({ type: "event", event: "tick", seq, payload: {} });
       }
 

@@ -8,11 +8,20 @@ import { GatewayEventListeners } from "./event-listeners.js";
 import type { GatewayPendingRequest } from "./pending-request.js";
 import {
   GatewayProtocolRequestError,
+  GatewayProtocolRequestTimeoutError,
   type GatewayProtocolRequestOptions,
 } from "./protocol-request.js";
-import { clearGatewayConnectTimeout, startGatewayConnectTimeout } from "./timeouts.js";
+import {
+  clearGatewayConnectTimeout,
+  resolveSafeTimeoutDelayMs,
+  startGatewayConnectTimeout,
+} from "./timeouts.js";
 
-export { GatewayProtocolRequestError, type GatewayProtocolRequestOptions };
+export {
+  GatewayProtocolRequestError,
+  GatewayProtocolRequestTimeoutError,
+  type GatewayProtocolRequestOptions,
+};
 
 export type GatewayProtocolSocket = {
   isOpen: () => boolean;
@@ -222,8 +231,12 @@ export class GatewayProtocolClient<TPlan> {
       return Promise.reject(new Error("invalid request frame: method must be a non-empty string"));
     }
     const id = this.opts.createRequestId();
-    const timeoutMs =
+    const requestedTimeoutMs =
       options?.timeoutMs === null ? undefined : (options?.timeoutMs ?? this.opts.requestTimeoutMs);
+    const timeoutMs =
+      requestedTimeoutMs === undefined
+        ? undefined
+        : resolveSafeTimeoutDelayMs(requestedTimeoutMs, { minMs: 0 });
     return new Promise<T>((resolve, reject) => {
       let timeout: ReturnType<typeof setTimeout> | undefined;
       let requestSent = false;
@@ -270,7 +283,7 @@ export class GatewayProtocolClient<TPlan> {
           this.finishRequestTiming(id, pending, false, "CLIENT_TIMEOUT");
           reject(
             this.opts.createRequestTimeoutError?.(method, timeoutMs, requestSent) ??
-              new Error(`gateway request timed out after ${timeoutMs}ms: ${method}`),
+              new GatewayProtocolRequestTimeoutError({ method, timeoutMs, requestSent }),
           );
         }, timeoutMs);
         timeout.unref?.();

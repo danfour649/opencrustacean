@@ -1,4 +1,8 @@
 // @vitest-environment node
+import {
+  DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS,
+  GatewayProtocolRequestTimeoutError,
+} from "@openclaw/gateway-client/browser";
 import { describe, expect, it, vi } from "vitest";
 import {
   GatewayRequestError,
@@ -329,6 +333,79 @@ describe("session connection hydration", () => {
       expect(sessions.state.error).toBeNull();
       expect(sessions.state.result).toBe(recoveredResult);
       expect(request.mock.calls.filter(([method]) => method === "sessions.list")).toHaveLength(2);
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      sessions.dispose();
+      vi.useRealTimers();
+    }
+  });
+
+  it("recovers the session roster when the first observer reply never arrives", async () => {
+    vi.useFakeTimers();
+    const initialResult = emptySessionsResult();
+    const recoveredResult: SessionsListResult = {
+      ...initialResult,
+      count: 1,
+      sessions: [{ key: "agent:main:recovered", kind: "direct", updatedAt: 2 }],
+    };
+    let subscriptionCalls = 0;
+    let listCalls = 0;
+    const request = vi.fn(
+      async (method: string, _params?: unknown, options?: { timeoutMs?: number | null }) => {
+        if (method === "sessions.subscribe") {
+          subscriptionCalls += 1;
+          if (subscriptionCalls === 1) {
+            return await new Promise<never>((_resolve, reject) => {
+              const timeoutMs = options?.timeoutMs ?? 0;
+              setTimeout(
+                () =>
+                  reject(
+                    new GatewayProtocolRequestTimeoutError({
+                      method,
+                      timeoutMs,
+                      requestSent: true,
+                    }),
+                  ),
+                timeoutMs,
+              );
+            });
+          }
+          return { subscribed: true };
+        }
+        if (method === "sessions.list") {
+          listCalls += 1;
+          return listCalls === 1 ? initialResult : recoveredResult;
+        }
+        throw new Error(`Unexpected request: ${method}`);
+      },
+    );
+    const { sessions, connect } = createSubscriptionHydrationHarness(
+      request as unknown as GatewayBrowserClient["request"],
+    );
+
+    try {
+      connect();
+      expect(request).toHaveBeenCalledWith(
+        "sessions.subscribe",
+        {},
+        {
+          timeoutMs: DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS,
+        },
+      );
+      await vi.advanceTimersByTimeAsync(DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS - 1);
+      expect(sessions.state.result).toBeNull();
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(sessions.state.result).toBe(initialResult);
+      expect(sessions.state.error).toBe(
+        `GatewayRequestError: gateway request timed out after ${DEFAULT_GATEWAY_REQUEST_TIMEOUT_MS}ms: sessions.subscribe`,
+      );
+
+      await vi.advanceTimersByTimeAsync(500);
+      expect(subscriptionCalls).toBe(2);
+      expect(listCalls).toBe(2);
+      expect(sessions.state.error).toBeNull();
+      expect(sessions.state.result).toBe(recoveredResult);
       expect(vi.getTimerCount()).toBe(0);
     } finally {
       sessions.dispose();
