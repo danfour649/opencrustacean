@@ -202,20 +202,30 @@ export async function routeReply(params: RouteReplyParams): Promise<RouteReplyRe
     resolvedAgentId ?? resolveSessionAgentId({ config: cfg }),
     { channel: normalizedChannel, accountId },
   ).responsePrefix;
+  const pluginReplyTransform = messaging?.transformReplyPayload;
+  let suppressedByChannelTransform = false;
   const normalized = normalizeReplyPayload(payload, {
     responsePrefix,
     responsePrefixContext: params.responsePrefixContext,
-    transformReplyPayload: messaging?.transformReplyPayload
-      ? (nextPayload) =>
-          messaging.transformReplyPayload?.({
+    transformReplyPayload: pluginReplyTransform
+      ? (nextPayload) => {
+          const transformedPayload = pluginReplyTransform({
             payload: nextPayload,
             cfg,
             accountId,
-          }) ?? nextPayload
+          });
+          suppressedByChannelTransform = transformedPayload === null;
+          return transformedPayload;
+        }
       : undefined,
   });
   if (!normalized) {
-    return { ok: true, delivered: false };
+    // Follow-up fallback must never resend content an owning channel explicitly vetoed.
+    return {
+      ok: true,
+      delivered: false,
+      ...(suppressedByChannelTransform ? { suppressed: true } : {}),
+    };
   }
   const externalPayload: ReplyPayload = {
     ...normalized,

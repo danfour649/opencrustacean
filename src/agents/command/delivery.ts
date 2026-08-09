@@ -517,13 +517,14 @@ function normalizeAgentCommandReplyPayloads(params: {
     UNRESOLVED_RESPONSE_PREFIX_VAR_PATTERN.test(resolvedResponsePrefix)
       ? undefined
       : replyPrefix.responsePrefix;
-  const transformReplyPayload = deliveryPlugin?.messaging?.transformReplyPayload
+  const pluginReplyTransform = deliveryPlugin?.messaging?.transformReplyPayload;
+  const transformReplyPayload = pluginReplyTransform
     ? (payload: ReplyPayload) =>
-        deliveryPlugin.messaging?.transformReplyPayload?.({
+        pluginReplyTransform({
           payload,
           cfg: params.cfg,
           accountId: params.accountId,
-        }) ?? payload
+        })
     : undefined;
 
   const normalizedPayloads: ReplyPayload[] = [];

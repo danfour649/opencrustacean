@@ -242,7 +242,7 @@ describe("routeReply", () => {
   });
 
   it("no-ops on empty payload", async () => {
-    await expectSlackNoDelivery({});
+    await expect(expectSlackNoDelivery({})).resolves.toEqual({ ok: true, delivered: false });
   });
 
   it("suppresses reasoning payloads", async () => {
@@ -256,8 +256,52 @@ describe("routeReply", () => {
   });
 
   it("drops silent token payloads", async () => {
-    await expectSlackNoDelivery({ text: SILENT_REPLY_TOKEN });
+    await expect(expectSlackNoDelivery({ text: SILENT_REPLY_TOKEN })).resolves.toEqual({
+      ok: true,
+      delivered: false,
+    });
   });
+
+  it.each([
+    { name: "rewrites", transformedPayload: { text: "transformed reply" } },
+    { name: "vetoes", transformedPayload: null },
+  ])(
+    "honors a registered channel plugin that $name a routed reply",
+    async ({ transformedPayload }) => {
+      const transformReplyPayload = vi.fn(() => transformedPayload);
+      setActivePluginRegistry(
+        createTestRegistry([
+          {
+            pluginId: "slack",
+            plugin: createChannelPlugin("slack", {
+              messaging: { ...slackMessaging, transformReplyPayload },
+            }),
+            source: "test",
+          },
+        ]),
+      );
+
+      const result = await routeTestReply({
+        payload: { text: "original reply" },
+        channel: "slack",
+        to: "channel:C123",
+      });
+
+      expect(transformReplyPayload).toHaveBeenCalledWith({
+        payload: { text: "original reply" },
+        cfg: {},
+        accountId: undefined,
+      });
+      if (!transformedPayload) {
+        expect(result).toEqual({ ok: true, delivered: false, suppressed: true });
+        expect(mocks.deliverOutboundPayloads).not.toHaveBeenCalled();
+        return;
+      }
+
+      expect(mocks.deliverOutboundPayloads).toHaveBeenCalledOnce();
+      expect(lastDeliveryPayload()).toMatchObject(transformedPayload);
+    },
+  );
 
   it("does not drop payloads that merely start with the silent token", async () => {
     const res = await routeTestReply({

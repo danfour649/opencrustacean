@@ -1370,6 +1370,57 @@ describe("deliverAgentCommandResult payload normalization", () => {
     expect(deliverOutboundPayloadsMock).not.toHaveBeenCalled();
   });
 
+  it.each([
+    { name: "rewrites", transformedPayload: { text: "transformed reply" } },
+    { name: "vetoes", transformedPayload: null },
+  ])(
+    "honors a registered channel plugin that $name a command reply",
+    async ({ transformedPayload }) => {
+      const transformReplyPayload = vi.fn(() => transformedPayload);
+      setActivePluginRegistry(
+        createTestRegistry([
+          {
+            pluginId: "slack",
+            source: "test",
+            plugin: createOutboundTestPlugin({
+              id: "slack",
+              outbound: slackOutboundForTest,
+              messaging: { transformReplyPayload },
+            }),
+          },
+        ]),
+      );
+      deliverOutboundPayloadsMock.mockResolvedValue([{ channel: "slack", messageId: "msg-1" }]);
+
+      const delivered = await deliverAgentCommandResultForTest({
+        opts: { message: "go", replyTo: "#general" },
+        payloads: [{ text: "original reply" }],
+      });
+
+      expect(transformReplyPayload).toHaveBeenCalledWith({
+        payload: { text: "original reply" },
+        cfg: {},
+        accountId: "default",
+      });
+      if (!transformedPayload) {
+        expect(delivered.payloads).toEqual([]);
+        expect(delivered.deliverySucceeded).toBe(true);
+        expectDeliveryStatusFields(delivered, {
+          requested: true,
+          attempted: false,
+          status: "suppressed",
+          succeeded: true,
+          reason: "no_visible_payload",
+        });
+        expect(deliverOutboundPayloadsMock).not.toHaveBeenCalled();
+        return;
+      }
+
+      expect(delivered.payloads).toEqual([transformedPayload]);
+      expect(latestOutboundDeliveryArgs().payloads).toEqual([transformedPayload]);
+    },
+  );
+
   it("preserves preflight deliveryStatus when best-effort delivery has no payloads", async () => {
     const runtime = { log: vi.fn(), error: vi.fn() };
 

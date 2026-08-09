@@ -2,6 +2,7 @@
  * Tests channel reply pipeline prefix context and typing callback behavior.
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createReplyDispatcher } from "../auto-reply/reply/reply-dispatcher.js";
 import type { ChannelPlugin } from "../channels/plugins/types.plugin.js";
 import { createEmptyPluginRegistry } from "../plugins/registry-empty.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../plugins/runtime.js";
@@ -135,9 +136,12 @@ describe("createChannelReplyPipeline", () => {
     expect(pipeline.transformReplyPayload).toBe(transformReplyPayload);
   });
 
-  it("resolves reply transforms from the loaded channel registry", () => {
+  it.each([
+    { name: "rewrites", veto: false },
+    { name: "vetoes", veto: true },
+  ])("honors a loaded channel plugin that $name a reply", async ({ veto }) => {
     const transformReplyPayload = vi.fn(({ payload }: { payload: { text?: string } }) =>
-      payload.text ? { ...payload, text: `${payload.text} transformed` } : payload,
+      veto ? null : payload.text ? { ...payload, text: `${payload.text} transformed` } : payload,
     );
     const channelPlugin = {
       id: "demo-channel",
@@ -163,13 +167,25 @@ describe("createChannelReplyPipeline", () => {
       accountId: "acct",
     });
 
-    expect(pipeline.transformReplyPayload?.({ text: "reply" })).toEqual({
-      text: "reply transformed",
-    });
+    const expectedPayload = veto ? null : { text: "reply transformed" };
+    expect(pipeline.transformReplyPayload?.({ text: "reply" })).toEqual(expectedPayload);
     expect(transformReplyPayload).toHaveBeenCalledWith({
       payload: { text: "reply" },
       cfg: {},
       accountId: "acct",
     });
+
+    const delivered: Array<{ text?: string }> = [];
+    const dispatcher = createReplyDispatcher({
+      transformReplyPayload: pipeline.transformReplyPayload,
+      deliver: async (payload) => {
+        delivered.push(payload);
+      },
+    });
+
+    expect(dispatcher.sendFinalReply({ text: "reply" })).toBe(!veto);
+    dispatcher.markComplete();
+    await dispatcher.waitForIdle();
+    expect(delivered).toEqual(expectedPayload ? [expectedPayload] : []);
   });
 });

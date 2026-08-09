@@ -96,12 +96,12 @@ export function createChannelReplyPipeline(
   const transformReplyPayload = params.transformReplyPayload
     ? params.transformReplyPayload
     : channelId
-      ? (payload: ReplyPayload) =>
-          resolvePluginTransform()?.({
-            payload,
-            cfg: params.cfg,
-            accountId: params.accountId,
-          }) ?? payload
+      ? (payload: ReplyPayload) => {
+          const transform = resolvePluginTransform();
+          return transform
+            ? transform({ payload, cfg: params.cfg, accountId: params.accountId })
+            : payload;
+        }
       : undefined;
   const prefixOptions = createReplyPrefixOptions({
     cfg: params.cfg,
