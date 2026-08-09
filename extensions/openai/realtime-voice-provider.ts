@@ -1524,6 +1524,24 @@ class OpenAIRealtimeVoiceBridge implements RealtimeVoiceBridge {
         if (this.handleCompletedResponse(event, connection)) {
           return;
         }
+        if (event.response?.status === "failed" || event.response?.status === "incomplete") {
+          const details = isRecord(event.response.status_details)
+            ? event.response.status_details
+            : undefined;
+          const error = isRecord(details?.error) ? details.error : undefined;
+          const reason = trimToUndefined(details?.reason);
+          const providerError =
+            trimToUndefined(error?.message) ??
+            trimToUndefined(error?.code) ??
+            trimToUndefined(error?.type);
+          const detail = [reason, providerError].filter(Boolean).join(": ");
+          // response.done ends streaming for failures too; only intentional cancellation is benign.
+          this.config.onError?.(
+            new Error(
+              `OpenAI realtime voice response ${event.response.status}${detail ? `: ${detail}` : ""}`,
+            ),
+          );
+        }
         this.responseActive = false;
         this.responseCreateInFlight = false;
         this.manualResponseCreateEventId = null;
