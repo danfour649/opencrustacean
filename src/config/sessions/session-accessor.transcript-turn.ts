@@ -40,6 +40,7 @@ function resolveTranscriptTurnAgentId(params: {
   scopeAgentId?: string;
   sessionKey: string;
   storePath?: string;
+  sessionStore?: Record<string, SessionEntry>;
   env?: NodeJS.ProcessEnv;
 }): string {
   const keyShape = classifySessionKeyShape(params.sessionKey);
@@ -56,12 +57,15 @@ function resolveTranscriptTurnAgentId(params: {
       `Session key owner "${keyAgentId}" does not match requested agent "${scopedAgentId}".`,
     );
   }
-  const persistedStoreOwner = resolvePersistedSessionStoreOwnerForTarget({
-    config: params.config,
-    sessionKey: params.sessionKey,
-    storePath: params.storePath,
-    env: params.env,
-  });
+  const persistedStoreOwner =
+    params.sessionStore && !params.storePath
+      ? ({ kind: "none" } as const)
+      : resolvePersistedSessionStoreOwnerForTarget({
+          config: params.config,
+          sessionKey: params.sessionKey,
+          storePath: params.storePath,
+          env: params.env,
+        });
   if (
     scopedAgentId &&
     persistedStoreOwner.kind === "configured" &&
@@ -278,6 +282,7 @@ async function persistExpectedSessionTranscriptTurn(
     scopeAgentId: scope.agentId,
     sessionKey,
     storePath,
+    sessionStore: scope.sessionStore,
     env: scope.env,
   });
   const resolved = scope.sessionStore
@@ -373,6 +378,7 @@ async function resolveTranscriptTurnTarget(
     scopeAgentId: scope.agentId,
     sessionKey,
     storePath: scope.storePath,
+    sessionStore: scope.sessionStore,
     env: scope.env,
   });
   const storePath =

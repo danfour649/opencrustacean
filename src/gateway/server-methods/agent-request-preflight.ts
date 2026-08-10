@@ -5,7 +5,7 @@ import {
   errorShape,
   validateAgentParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import { tryResolveSoleAgentId } from "../../agents/agent-scope.js";
+import { tryResolveLegacyCompatibilityAgentId } from "../../agents/agent-scope.js";
 import { parseExecApprovalFollowupApprovalId } from "../../agents/bash-tools.exec-approval-followup-state.js";
 import { normalizeSpawnedRunMetadata } from "../../agents/spawned-context.js";
 import {
@@ -80,8 +80,8 @@ export function prepareAgentRequestPreflight(
   const selectedAgentId = requestSessionKey
     ? (parseAgentSessionKey(requestSessionKey)?.agentId ??
       normalizeOptionalString(request.agentId) ??
-      tryResolveSoleAgentId(cfg))
-    : (normalizeOptionalString(request.agentId) ?? tryResolveSoleAgentId(cfg));
+      tryResolveLegacyCompatibilityAgentId(cfg))
+    : (normalizeOptionalString(request.agentId) ?? tryResolveLegacyCompatibilityAgentId(cfg));
   const collectorSession = findSwarmCollectorSession(requestSessionKey);
   // Collector children always use subagent session keys, so ordinary traffic
   // must never pay the persisted-store read. The store fallback only covers a
