@@ -9,6 +9,7 @@ import {
 } from "../../../config/config.js";
 import { prepareAgentRequestPreflight } from "../../../gateway/agent-turn/agent-request-preflight.js";
 import { createAgentTurnIo } from "../../../gateway/agent-turn/io.js";
+import { resolveGatewayAgentTaskTrackingMode } from "../../../gateway/server-methods/agent-task-tracking.js";
 import type {
   GatewayRequestContext,
   GatewayRequestOptions,
@@ -405,5 +406,125 @@ describe("spawnSubagentDirect in-process Gateway collector launch", () => {
         swarmLaunchPending: false,
       });
     });
+  });
+
+  it("aborts the accepted child run when registry registration fails", async () => {
+    const gatewayContext = makeGatewayContext();
+    const requests: Array<{ method: string; params: Record<string, unknown> }> = [];
+    subagentSpawnTesting.setDepsForTest({
+      dispatchGatewayMethodInProcess: async <T>(
+        method: string,
+        params: Record<string, unknown>,
+      ) => {
+        requests.push({ method, params });
+        if (method === "agent") {
+          return { runId: "gateway-accepted-run", status: "accepted" } as T;
+        }
+        if (method === "chat.abort") {
+          return { aborted: true, runIds: [params.runId] } as T;
+        }
+        return {} as T;
+      },
+    });
+    // The registry never takes ownership, which is exactly when the suppressed
+    // gateway CLI row would have been the only record of the accepted run.
+    subagentRegistryTesting.setDepsForTest({
+      loadAgentRuntimePluginRegistryHandle: () => undefined,
+      persistSubagentRunsToDisk: () => {},
+      persistSubagentRunsToDiskOrThrow: () => {
+        throw new Error("state db unavailable");
+      },
+      restoreSubagentRunsFromDisk: () => 0,
+    });
+
+    const result = await withPluginRuntimeGatewayRequestScope(
+      {
+        context: gatewayContext,
+        client: externalCliClient(),
+        isWebchatConnect: () => false,
+      },
+      () =>
+        spawnSubagentDirect(
+          { task: "orphan me", context: "isolated", lightContext: true },
+          { agentSessionKey: "agent:main:main", requesterRunId: "parent-run" },
+        ),
+    );
+
+    expect(result.status).toBe("error");
+    expect(result.error ?? "").toContain("Failed to register subagent run");
+    // No registry row exists, so an unaborted run would execute with no task row at all.
+    expect(
+      requests.some(
+        (request) =>
+          request.method === "chat.abort" && request.params.runId === "gateway-accepted-run",
+      ),
+    ).toBe(true);
+  });
+
+  it("launches child runs as a Gateway client that does not own a second task row", async () => {
+    const gatewayContext = makeGatewayContext();
+    const agentDispatches: Array<{
+      params: Record<string, unknown>;
+      options?: NonNullable<Parameters<typeof dispatchGatewayMethodInProcess>[2]>;
+    }> = [];
+    subagentSpawnTesting.setDepsForTest({
+      dispatchGatewayMethodInProcess: async <T>(
+        method: string,
+        params: Record<string, unknown>,
+        options?: NonNullable<Parameters<typeof dispatchGatewayMethodInProcess>[2]>,
+      ) => {
+        if (method === "agent") {
+          agentDispatches.push({ params, options });
+        }
+        return { runId: params.idempotencyKey as string, status: "accepted" } as T;
+      },
+    });
+
+    const result = await withPluginRuntimeGatewayRequestScope(
+      {
+        context: gatewayContext,
+        client: externalCliClient(),
+        isWebchatConnect: () => false,
+      },
+      () =>
+        spawnSubagentDirect(
+          {
+            task: "summarize the repository",
+            context: "isolated",
+            lightContext: true,
+          },
+          {
+            agentSessionKey: "agent:main:main",
+            requesterRunId: "parent-run",
+          },
+        ),
+    );
+
+    expect(result.status).toBe("accepted");
+    const runId = result.runId ?? "";
+    expect(runId).toBeTruthy();
+    // The registry owns the canonical `subagent` task row for this run.
+    await waitForAssertion(() => {
+      expect(subagentRuns.get(runId)).toMatchObject({
+        childSessionKey: result.childSessionKey,
+      });
+    });
+
+    const dispatch = agentDispatches[0];
+    expect(dispatch).toBeDefined();
+    // Rebuild the exact client the Gateway sees for this launch, then ask the
+    // real resolver whether it would write its own `cli` task row for the run.
+    const gatewayClient = createSyntheticPluginRuntimeClient({
+      ...(dispatch?.options?.agentRunTracking
+        ? { agentRunTracking: dispatch.options.agentRunTracking }
+        : {}),
+      ...(dispatch?.options?.syntheticScopes ? { scopes: dispatch.options.syntheticScopes } : {}),
+    });
+    expect(
+      resolveGatewayAgentTaskTrackingMode({
+        client: gatewayClient,
+        sessionKey: dispatch?.params.sessionKey as string,
+      }),
+    ).toBe("none");
   });
 });

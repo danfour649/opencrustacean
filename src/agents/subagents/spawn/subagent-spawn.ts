@@ -403,6 +403,9 @@ export async function spawnSubagentDirect(
         waitForSessionDeletion,
       });
     type SubagentBackendState = { contextEnginePreparation?: SubagentSpawnPreparation };
+    // Set once the gateway accepts the child run, so a later failure can tell an
+    // accepted run apart from one that never started.
+    let acceptedChildRunId: string | undefined;
     const adapter: SpawnBackendAdapter<SubagentBackendState> = {
       async initialize() {
         const result =
@@ -425,12 +428,24 @@ export async function spawnSubagentDirect(
           return { runId: childIdem };
         }
         const response = await launchChildRun();
-        return { runId: readGatewayRunId(response) ?? childIdem };
+        acceptedChildRunId = readGatewayRunId(response) ?? childIdem;
+        return { runId: acceptedChildRunId };
       },
       async cleanupOnFailure({ phase, state }) {
         if (phase === "initialize") {
           await cleanupFailedSpawn();
           return;
+        }
+        // The gateway skips its fallback CLI task row because this launch claims
+        // the run's row, and registration is what delivers it. A register failure
+        // means no owner ever recorded the run, so abort the run the gateway
+        // already accepted instead of leaving it executing unrecorded.
+        if (phase === "register" && acceptedChildRunId) {
+          await terminateAcceptedCollectorRun({
+            childSessionKey,
+            gatewayRunId: acceptedChildRunId,
+            ...provisionalSessionIdentity,
+          });
         }
         await rollbackPreparedContextEngine(state?.contextEnginePreparation);
         if (attachmentAbsDir) {
