@@ -1,13 +1,14 @@
 // Whatsapp plugin module implements agent tools login behavior.
 import {
   optionalPositiveIntegerSchema,
-  QrPngDataUrlSchema,
   readPositiveIntegerParam,
 } from "openclaw/plugin-sdk/channel-actions";
 import type { ChannelAgentTool } from "openclaw/plugin-sdk/channel-contract";
 import { hasNonEmptyString } from "openclaw/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import { startWebLoginWithQr, waitForWebLogin } from "../login-qr-api.js";
+
+const QR_DATA_URL_MAX_LENGTH = 16_384;
 
 function readLoginStringPreservingWhitespace(value: unknown): string | undefined {
   return hasNonEmptyString(value) ? value : undefined;
@@ -23,7 +24,13 @@ export function createWhatsAppLoginTool(): ChannelAgentTool {
       timeoutMs: optionalPositiveIntegerSchema(),
       force: Type.Optional(Type.Boolean()),
       accountId: Type.Optional(Type.String()),
-      currentQrDataUrl: Type.Optional(QrPngDataUrlSchema),
+      currentQrDataUrl: Type.Optional(
+        Type.String({
+          maxLength: QR_DATA_URL_MAX_LENGTH,
+          // This is an opaque comparison token; the waiter never decodes or renders it.
+          pattern: "^data:image/png;base64,.+$",
+        }),
+      ),
     }),
     execute: async (_toolCallId, args) => {
       const renderQrReply = (params: {
