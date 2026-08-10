@@ -6360,7 +6360,7 @@ class NodeRuntime private constructor(
     publishGatewayData(gatewayScope) {
       _clawHubSkillSearchState.value =
         _clawHubSkillSearchState.value.copy(
-          reviewingSlug = skill.slug,
+          reviewingSlug = skill.reference,
           installReview = null,
           acknowledgeSlug = null,
           acknowledgeVersion = null,
@@ -6369,7 +6369,7 @@ class NodeRuntime private constructor(
         )
     }
     try {
-      val response = requestGatewayData(gatewayScope, "skills.detail", clawHubDetailParams(skill.slug))
+      val response = requestGatewayData(gatewayScope, "skills.detail", clawHubDetailParams(skill.reference))
       val review = parseClawHubInstallReview(response, skill, json)
       publishGatewayData(gatewayScope) {
         if (clawHubSkillReviewSeq.get() == reviewSeq) {
@@ -6379,7 +6379,7 @@ class NodeRuntime private constructor(
               installReview = review,
               errorText =
                 if (review == null) {
-                  "ClawHub did not return an installable version for ${skill.slug}."
+                  "ClawHub did not return an installable version for ${skill.reference}."
                 } else {
                   null
                 },
@@ -6395,7 +6395,7 @@ class NodeRuntime private constructor(
             _clawHubSkillSearchState.value.copy(
               reviewingSlug = null,
               errorText =
-                nativeString("Could not load ClawHub details for \${skill.slug}.", skill.slug),
+                nativeString("Could not load ClawHub details for \${skill.reference}.", skill.reference),
             )
         }
       }
