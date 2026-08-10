@@ -3,7 +3,7 @@ import { type ChildProcess, execFileSync, spawn, spawnSync } from "node:child_pr
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../helpers/temp-dir.js";
 
@@ -14,6 +14,7 @@ const DOCKER_ALL_SCHEDULER_PATH = "scripts/test-docker-all.mts";
 const DOCKER_E2E_PACKAGE_HELPER_PATH = "scripts/lib/docker-e2e-package.sh";
 const DOCKER_E2E_IMAGE_HELPER_PATH = "scripts/lib/docker-e2e-image.sh";
 const DOCKER_E2E_SCENARIOS_PATH = "scripts/lib/docker-e2e-scenarios.mts";
+const OPENCLAW_E2E_INSTANCE_HELPER_PATH = "scripts/lib/openclaw-e2e-instance.sh";
 const COMPOSE_SETUP_E2E_PATH = "scripts/e2e/compose-setup.sh";
 const CLI_INSTALLER_DISTRIBUTION_E2E_PATH = "scripts/e2e/cli-installer-distribution-docker.sh";
 const DOCKER_PACKAGE_INSTALL_E2E_PATH = "scripts/e2e/docker-package-install.sh";
@@ -565,6 +566,68 @@ print_log_tail "$LOG_PATH"
     const compiledResult = resolveEntrypoint(compiledRoot);
     expect(compiledResult.status, compiledResult.stderr).toBe(0);
     expect(compiledResult.stdout.trim()).toBe(compiledEntrypoint);
+  });
+
+  it("runs current TypeScript and frozen JavaScript Docker harness entrypoints", () => {
+    const fixtureRoot = tempDirs.make("openclaw-docker-script-entrypoint-");
+    const scriptStem = join(fixtureRoot, "fixture");
+    const runFixture = (value: string, tsxImport = fileURLToPath(import.meta.resolve("tsx"))) =>
+      spawnSync(
+        "bash",
+        [
+          "-c",
+          `source "${OPENCLAW_E2E_INSTANCE_HELPER_PATH}"; openclaw_e2e_run_script_entrypoint "$1" "$2"`,
+          "openclaw-docker-script-entrypoint",
+          scriptStem,
+          value,
+        ],
+        {
+          cwd: process.cwd(),
+          encoding: "utf8",
+          env: { ...process.env, OPENCLAW_E2E_TSX_IMPORT: tsxImport },
+        },
+      );
+
+    writeFileSync(
+      `${scriptStem}.mts`,
+      'const value: string = process.argv[2] ?? ""; process.stdout.write(`mts:${value}:${process.env.TSX_TSCONFIG_PATH ?? ""}`);\n',
+      "utf8",
+    );
+    const sourceResult = runFixture("current");
+    expect(sourceResult.status, sourceResult.stderr).toBe(0);
+    expect(sourceResult.stdout).toBe(`mts:current:${join(process.cwd(), "tsconfig.json")}`);
+
+    const relativeLoaderResult = runFixture("invalid", "tsx");
+    expect(relativeLoaderResult.status).toBe(1);
+    expect(relativeLoaderResult.stderr).toContain("tsx loader must be absolute");
+
+    rmSync(`${scriptStem}.mts`);
+    writeFileSync(
+      `${scriptStem}.mjs`,
+      'process.stdout.write(`mjs:${process.argv[2] ?? ""}`);\n',
+      "utf8",
+    );
+    const compiledResult = runFixture("frozen", "/missing/tsx/loader.mjs");
+    expect(compiledResult.status, compiledResult.stderr).toBe(0);
+    expect(compiledResult.stdout).toBe("mjs:frozen");
+
+    rmSync(`${scriptStem}.mjs`);
+    const missingResult = runFixture("missing");
+    expect(missingResult.status).toBe(1);
+    expect(missingResult.stderr).toContain("script entrypoint not found");
+  });
+
+  it("routes package-only Docker TypeScript entrypoints through the shared resolver", () => {
+    const gatewayRunner = readFileSync(GATEWAY_NETWORK_DOCKER_E2E_PATH, "utf8");
+    const releaseUpgradeScenario = readFileSync(RELEASE_UPGRADE_USER_JOURNEY_SCENARIO_PATH, "utf8");
+    expect(gatewayRunner).toContain(
+      "openclaw_e2e_run_script_entrypoint scripts/e2e/lib/gateway-network/client",
+    );
+    expect(releaseUpgradeScenario).toContain(
+      "openclaw_e2e_run_script_entrypoint \\\n      scripts/lib/release-upgrade-baseline",
+    );
+    expect(gatewayRunner).not.toContain("node --import tsx");
+    expect(releaseUpgradeScenario).not.toContain("node --import tsx");
   });
 
   it("rejects malformed Docker E2E resource limits before a suite starts", () => {
@@ -4280,7 +4343,9 @@ source "$ROOT_DIR/scripts/lib/docker-e2e-logs.sh"
       "--allow-unreleased-changelog",
       'local harness_root="${DOCKER_E2E_HARNESS_ROOT_DIR:-$ROOT_DIR}"',
       '-v "$harness_root/scripts/windows-cmd-helpers.mjs:/app/scripts/windows-cmd-helpers.mjs:ro"',
+      '-v "$harness_root/packages/normalization-core/package.json:/app/packages/normalization-core/package.json:ro"',
       '-v "$harness_root/packages/normalization-core/src:/app/packages/normalization-core/src:ro"',
+      '-v "$harness_root/tsconfig.json:/app/tsconfig.json:ro"',
       '-v "$harness_root/test/e2e/qa-lab:/app/test/e2e/qa-lab:ro"',
       '-v "$harness_root/test/helpers:/app/test/helpers:ro"',
     ]);

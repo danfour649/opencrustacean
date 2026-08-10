@@ -47,6 +47,61 @@ openclaw_e2e_resolve_entrypoint() {
   echo "OpenClaw entrypoint not found under dist/" >&2
   return 1
 }
+openclaw_e2e_resolve_tsx_import() {
+  local tsx_import="${OPENCLAW_E2E_TSX_IMPORT:-}"
+  if [ -z "$tsx_import" ]; then
+    local tsx_bin
+    tsx_bin="$(command -v tsx 2>/dev/null || true)"
+    if [ -z "$tsx_bin" ]; then
+      echo "OpenClaw E2E tsx executable not found on PATH" >&2
+      return 1
+    fi
+    tsx_import="$(
+      node -e '
+        const fs = require("node:fs");
+        const path = require("node:path");
+        process.stdout.write(path.join(path.dirname(fs.realpathSync(process.argv[1])), "loader.mjs"));
+      ' "$tsx_bin"
+    )"
+  fi
+  if [[ "$tsx_import" != /* ]]; then
+    echo "OpenClaw E2E tsx loader must be absolute: $tsx_import" >&2
+    return 1
+  fi
+  if [ ! -f "$tsx_import" ]; then
+    echo "OpenClaw E2E tsx loader not found: $tsx_import" >&2
+    return 1
+  fi
+  printf '%s\n' "$tsx_import"
+}
+openclaw_e2e_run_script_entrypoint() {
+  local stem="${1:?missing OpenClaw E2E script stem}"
+  shift
+  if [ -f "$stem.mts" ]; then
+    local tsx_import
+    local tsconfig_path="${TSX_TSCONFIG_PATH:-}"
+    # The Docker runner installs tsx globally, which Node cannot resolve by
+    # package name from package-only /app trees. Import its absolute loader.
+    tsx_import="$(openclaw_e2e_resolve_tsx_import)" || return
+    if [ -z "$tsconfig_path" ] && [ -f tsconfig.json ]; then
+      # Mounted harness sources use workspace path aliases; bind the config so
+      # the global loader cannot fall through to stale image dependencies.
+      tsconfig_path="$(pwd -P)/tsconfig.json"
+    fi
+    if [ -n "$tsconfig_path" ]; then
+      TSX_TSCONFIG_PATH="$tsconfig_path" node --import "$tsx_import" "$stem.mts" "$@"
+    else
+      node --import "$tsx_import" "$stem.mts" "$@"
+    fi
+    return
+  fi
+  if [ -f "$stem.mjs" ]; then
+    node "$stem.mjs" "$@"
+    return
+  fi
+  echo "OpenClaw E2E script entrypoint not found: $stem.{mts,mjs}" >&2
+  return 1
+}
 openclaw_e2e_package_root() {
   local prefix="${1:-}"
   if [ -n "$prefix" ]; then

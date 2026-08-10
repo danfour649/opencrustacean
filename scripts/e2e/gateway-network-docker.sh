@@ -13,6 +13,10 @@ GW_NAME="openclaw-gateway-e2e-$$"
 SUSPENSION_STATE_PATH="/tmp/gateway-network-suspension.json"
 DOCKER_COMMAND_TIMEOUT="${OPENCLAW_GATEWAY_NETWORK_DOCKER_COMMAND_TIMEOUT:-600s}"
 CLIENT_TIMEOUT="${OPENCLAW_GATEWAY_NETWORK_CLIENT_TIMEOUT:-90s}"
+GATEWAY_NETWORK_CLIENT_COMMAND=(
+  bash -lc
+  "source scripts/lib/openclaw-e2e-instance.sh; openclaw_e2e_run_script_entrypoint scripts/e2e/lib/gateway-network/client"
+)
 CLIENT_LIMIT_ENV_ARGS=()
 if [[ -n "${OPENCLAW_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS+x}" ]]; then
   CLIENT_CONNECT_TIMEOUT_MS="$(
@@ -45,7 +49,7 @@ run_suspension_phase() {
     -e "GW_MODE=suspension-$stage-restart" \
     -e "GW_STATE_PATH=$SUSPENSION_STATE_PATH" \
     "$GW_NAME" \
-    node --import tsx scripts/e2e/lib/gateway-network/client.mts
+    "${GATEWAY_NETWORK_CLIENT_COMMAND[@]}"
 }
 
 trap cleanup EXIT
@@ -84,7 +88,7 @@ DOCKER_COMMAND_TIMEOUT="$CLIENT_TIMEOUT" run_logged gateway-network-client docke
   -e "GW_URL=ws://$GW_NAME:$PORT" \
   -e "GW_TOKEN=$TOKEN" \
   "$IMAGE_NAME" \
-  node --import tsx scripts/e2e/lib/gateway-network/client.mts
+  "${GATEWAY_NETWORK_CLIENT_COMMAND[@]}"
 
 phase_started="$SECONDS"
 echo "Running cooperative suspension lifecycle before container stop..."
