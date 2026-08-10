@@ -9,6 +9,7 @@ import type { CliDeps } from "../cli/deps.types.js";
 import { getRuntimeConfig } from "../config/io.js";
 import {
   resolveSessionStoreCompatibilityAgentId,
+  tryGetLegacyDefaultAgentId,
   tryResolveLegacyCompatibilityAgentId,
 } from "../config/legacy.default-agent-owner.js";
 import {
@@ -424,6 +425,7 @@ export function buildGatewayCronService(params: {
   };
 
   const defaultAgentId = tryResolveLegacyCompatibilityAgentId(params.cfg);
+  const legacyDefaultAgentId = tryGetLegacyDefaultAgentId(params.cfg);
   const resolveSessionStorePath = (agentId?: string) =>
     resolveStorePath(params.cfg.session?.store, {
       agentId: agentId ?? resolveSessionStoreCompatibilityAgentId(getRuntimeConfig()),
@@ -642,7 +644,7 @@ export function buildGatewayCronService(params: {
         }
       : {}),
     ...(defaultAgentId ? { defaultAgentId } : {}),
-    ...(defaultAgentId ? { legacyDefaultAgentId: defaultAgentId } : {}),
+    ...(legacyDefaultAgentId ? { legacyDefaultAgentId } : {}),
     resolveDefaultAgentId: () => tryResolveLegacyCompatibilityAgentId(getRuntimeConfig()),
     resolveSessionStoreAgentIds: () => {
       const cfg = getRuntimeConfig();
