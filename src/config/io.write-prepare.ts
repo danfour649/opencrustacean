@@ -1494,6 +1494,7 @@ export function resolvePersistCandidateForWrite(params: {
   explicitSetValueSource?: unknown;
   allowedAgentRosterRemovals?: readonly string[];
   allowIncludeAncestorExplicitSetPaths?: boolean;
+  preserveLegacyAgentRoster?: boolean;
 }): unknown {
   const patch = createMergePatch(params.runtimeConfig, params.nextConfig);
   const projectedSource = normalizeTouchedAgentModelMapEntries({
@@ -1560,8 +1561,6 @@ export function resolvePersistCandidateForWrite(params: {
   if (persistCanonicalRoster) {
     persistedBase = deletePathValue(persistedBase, ["agents", "entries"]);
     persistedBase = deletePathValue(persistedBase, ["agents", "list"]);
-  } else if (canCanonicalizeAgentRoster(params.nextConfig)) {
-    persistedBase = restoreAuthoredAgentRoster(persistedBase, rootAuthoredConfig);
   }
   const persisted = injectExplicitlySetPaths({
     valueSource: explicitSetValueSource,
@@ -1582,19 +1581,25 @@ export function resolvePersistCandidateForWrite(params: {
         persistedCandidate: persisted,
       })
     : persisted;
+  const preserveAuthoredRoster =
+    canCanonicalizeAgentRoster(params.nextConfig) || params.preserveLegacyAgentRoster === true;
+  const withAuthoredRoster =
+    persistCanonicalRoster || !preserveAuthoredRoster
+      ? withPreservedIncludes
+      : restoreAuthoredAgentRoster(withPreservedIncludes, rootAuthoredConfig);
   if (persistCanonicalRoster) {
     // A roster rewrite must never drop entries the mutation did not explicitly delete.
     // A 2026-07-25 production incident lost agents.entries.main twice through silent rewrites.
     assertCanonicalAgentRosterRetainsEntries({
       currentConfig: params.sourceConfig,
-      canonicalConfig: withPreservedIncludes,
+      canonicalConfig: withAuthoredRoster,
       allowedRemovals: params.allowedAgentRosterRemovals,
     });
   }
   const withSchema = preserveRootSchemaUri({
     rootAuthoredConfig,
     nextConfig: params.nextConfig,
-    persistedCandidate: withPreservedIncludes,
+    persistedCandidate: withAuthoredRoster,
   });
   const withAuthoredParams = preserveAuthoredAgentParams({
     sourceConfig: params.sourceConfig,
