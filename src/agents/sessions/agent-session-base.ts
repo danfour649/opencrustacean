@@ -70,11 +70,14 @@ export abstract class AgentSessionBase {
   private eventListeners: AgentSessionEventListener[] = [];
 
   /** Tracks pending steering messages for UI display. Removed when delivered. */
-  protected steeringMessages: string[] = [];
+  protected steeringMessages: Array<{ text: string }> = [];
   /** Tracks pending follow-up messages for UI display. Removed when delivered. */
-  protected followUpMessages: string[] = [];
+  protected followUpMessages: Array<{ text: string }> = [];
   /** Message identity keeps empty and duplicate-text turns attached to their exact queue. */
-  protected queuedUserMessages = new WeakMap<AgentMessage, { queue: string[]; text: string }>();
+  private queuedUserMessages = new WeakMap<
+    AgentMessage,
+    { queue: Array<{ text: string }>; entry: { text: string } }
+  >();
   /** Messages queued to be included with the next user prompt as context ("asides"). */
   protected pendingNextTurnMessages: CustomMessage[] = [];
 
@@ -303,9 +306,40 @@ export abstract class AgentSessionBase {
   protected emitQueueUpdate(): void {
     this.emit({
       type: "queue_update",
-      steering: [...this.steeringMessages],
-      followUp: [...this.followUpMessages],
+      steering: this.steeringMessages.map((entry) => entry.text),
+      followUp: this.followUpMessages.map((entry) => entry.text),
     });
+  }
+
+  protected trackQueuedUserMessage(
+    message: AgentMessage,
+    owner: "steering" | "followUp",
+    text: string,
+  ): void {
+    const queue = owner === "steering" ? this.steeringMessages : this.followUpMessages;
+    const entry = { text };
+    queue.push(entry);
+    this.queuedUserMessages.set(message, { queue, entry });
+    this.emitQueueUpdate();
+  }
+
+  /** Retires the display entry owned by this exact runtime message. */
+  retireQueuedUserMessage(message: AgentMessage): boolean {
+    const owned = this.queuedUserMessages.get(message);
+    if (!owned) {
+      return false;
+    }
+    this.queuedUserMessages.delete(message);
+    if (owned.queue !== this.steeringMessages && owned.queue !== this.followUpMessages) {
+      return false;
+    }
+    const queueIndex = owned.queue.indexOf(owned.entry);
+    if (queueIndex === -1) {
+      return false;
+    }
+    owned.queue.splice(queueIndex, 1);
+    this.emitQueueUpdate();
+    return true;
   }
 
   // Track last assistant message for auto-compaction check
@@ -341,15 +375,7 @@ export abstract class AgentSessionBase {
     // This ensures the UI sees the updated queue state
     if (event.type === "message_start" && event.message.role === "user") {
       this.overflowRecoveryAttempted = false;
-      const queuedMessage = this.queuedUserMessages.get(event.message);
-      if (queuedMessage) {
-        this.queuedUserMessages.delete(event.message);
-        const queueIndex = queuedMessage.queue.indexOf(queuedMessage.text);
-        if (queueIndex !== -1) {
-          queuedMessage.queue.splice(queueIndex, 1);
-          this.emitQueueUpdate();
-        }
-      }
+      this.retireQueuedUserMessage(event.message);
     }
 
     // Emit to extensions first
