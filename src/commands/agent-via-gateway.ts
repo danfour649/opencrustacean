@@ -112,6 +112,7 @@ type AgentDispatchOpts = Omit<AgentCliOpts, "messageFile"> & {
   message: string;
   gatewayDispatchConfig?: OpenClawConfig;
   remoteGatewayRoster?: RemoteGatewayRoster;
+  localGatewayCompatibilityAgentId?: string;
 };
 
 type AgentCliSignal = "SIGINT" | "SIGTERM";
@@ -610,6 +611,14 @@ async function normalizeSessionKeyOptsForDispatch(
     const unscopedSession = isUnscopedSessionKeySentinel(rawSessionKey) || implicitGlobalSession;
     const implicitAgentSelection = implicitSoleAgent || implicitCompatibilityDefault;
     agentIdRaw = implicitAgentSelection && unscopedSession ? undefined : selectedAgentId;
+    if (!remoteGatewayRoster && opts.local !== true && implicitCompatibilityDefault) {
+      // The retained owner lives on the migrated config sidecar, so carry it past
+      // normalization rather than re-deriving ownership from the raw dispatch config.
+      normalizedOpts = {
+        ...normalizedOpts,
+        localGatewayCompatibilityAgentId: selectedAgentId,
+      };
+    }
     if (agentIdRaw && implicitCompatibilityDefault && !rawSessionKey && !rawTo) {
       // Legacy multi-agent owners stay implicit, but a bare per-sender turn still
       // needs their canonical main session to reach gateway dispatch.
@@ -934,7 +943,9 @@ async function agentViaGatewayCommand(
     (opts.remoteGatewayRoster
       ? !opts.remoteGatewayRoster.selectionRequired &&
         (remoteRosterIsSole || remoteRosterUsesCompatibilityDefault)
-      : !remoteGateway && tryResolveSoleAgentId(cfg) !== undefined);
+      : !remoteGateway &&
+        (tryResolveSoleAgentId(cfg) !== undefined ||
+          opts.localGatewayCompatibilityAgentId !== undefined));
   if (
     !opts.to &&
     !opts.sessionId &&
