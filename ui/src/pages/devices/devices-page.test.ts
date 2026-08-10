@@ -453,7 +453,7 @@ describe("DevicesPage gateway lifecycle", () => {
 
   it("reveals a rotated token that lands after the request generation moved on", async () => {
     stubLocalDeviceIdentity();
-    const rotated = deferred<{ token: string; tokenDelivery: string }>();
+    const rotated = deferred<Record<string, unknown>>();
     const request = vi.fn(async (method: string) =>
       method === "device.token.rotate" ? rotated.promise : { paired: [], pending: [] },
     );
@@ -462,7 +462,13 @@ describe("DevicesPage gateway lifecycle", () => {
 
     const pending = page.reportRotationOutcome({ id: "device-1", name: "MacBook Pro" }, "operator");
     page.pageState.requestGeneration += 1;
-    rotated.resolve({ token: ROTATED_TOKEN, tokenDelivery: "in-band" });
+    rotated.resolve({
+      deviceId: "device-1",
+      role: "operator",
+      scopes: [],
+      token: ROTATED_TOKEN,
+      tokenDelivery: "in-band",
+    });
     await waitForRenderedModalDialog(document.body);
 
     // The rotate already killed the previous credential, so a mid-flight reconnect must

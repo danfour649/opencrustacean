@@ -161,8 +161,32 @@ describe("device token request lifecycle", () => {
       "a delivery mode this client predates",
       { tokenDelivery: "out-of-band", token: "rotated-token" },
     ],
+    // `token` is a non-empty string in the result schema, so a blank one is a malformed
+    // envelope, not the withheld state - accepting it would report the reassuring outcome.
+    [
+      "a withheld result carrying a blank token",
+      { tokenDelivery: "withheld-cross-device", token: "" },
+    ],
+    ["a blank token with no delivery field", { token: "" }],
   ])("refuses %s", async (_label, response) => {
     const state = createState(async () => ({ ...tokenParams, scopes: [], ...response }));
+
+    expect(await rotateDeviceToken(state, tokenParams)).toBeNull();
+    expect(state.devicesError).toContain("unusable result");
+    expect(loadDeviceAuthToken(tokenParams)).toBeNull();
+  });
+
+  // Envelopes that identify no grant are not legacy responses: every Gateway that answers
+  // this method returns deviceId and role. Treating them as the omission state would turn
+  // a broken reply into a completion dialog after the previous credential was invalidated.
+  it.each([
+    ["a null payload", null],
+    ["a scalar payload", "rotated"],
+    ["an empty object", {}],
+    ["an array payload", []],
+    ["a payload naming no role", { deviceId: "00" }],
+  ])("refuses %s", async (_label, response) => {
+    const state = createState(async () => response);
 
     expect(await rotateDeviceToken(state, tokenParams)).toBeNull();
     expect(state.devicesError).toContain("unusable result");

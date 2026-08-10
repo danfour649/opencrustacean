@@ -4,6 +4,7 @@
 // dialog bridge and would end the action with no outcome and no recorded reason.
 import { getPublicKeyAsync, signAsync, utils } from "@noble/ed25519";
 import { gatewayCredentialScope } from "@openclaw/gateway-client/browser";
+import { isRecord } from "@openclaw/normalization-core/record-coerce";
 import {
   type DeviceAuthEntry,
   type DeviceAuthStore,
@@ -415,28 +416,48 @@ type RotatedDeviceTokenOutcome =
   | { delivery: "withheld-cross-device" };
 
 /**
- * The Gateway pairs `tokenDelivery` with the presence of the secret, so an explicit pair
- * that contradicts itself — or a delivery mode this client predates — describes a rotation
- * whose outcome is unknown, not one to report as done. Both dialogs would lie about it:
- * one claims a credential arrived, the other that the device re-credentials on its own.
- * The old token is dead either way, so the operator gets the error and the recovery step.
- * Gateways released before `tokenDelivery` omit it, leaving the token as the only signal.
+ * Parses the raw `device.token.rotate` payload, which reaches this client unvalidated:
+ * the browser Gateway client resolves `frame.payload` directly, so the registered result
+ * schema never runs here. Only `DeviceTokenRotateResultSchema`'s shapes are accepted —
+ * an identified grant, a token that is absent or a non-empty string, and `tokenDelivery`
+ * paired with the secret. Anything else describes a rotation whose outcome is unknown,
+ * and both dialogs would lie about it: one claims a credential arrived, the other that
+ * the device re-credentials on its own. The old token is dead either way, so the operator
+ * gets the error and the recovery step. Gateways released before `tokenDelivery` omit it
+ * and leave the token as the only signal, but still identify the grant they rotated.
  */
-function classifyRotationOutcome(
-  tokenDelivery: string | undefined,
-  token: string | undefined,
-): RotatedDeviceTokenOutcome {
-  if (tokenDelivery === undefined) {
-    return token ? { delivery: "in-band", token } : { delivery: "withheld-cross-device" };
-  }
-  if (tokenDelivery === "in-band" && token) {
-    return { delivery: "in-band", token };
-  }
-  if (tokenDelivery === "withheld-cross-device" && !token) {
-    return { delivery: "withheld-cross-device" };
+function classifyRotationOutcome(payload: unknown): RotatedDeviceTokenOutcome {
+  const result = isRecord(payload) ? payload : undefined;
+  const identified =
+    typeof result?.deviceId === "string" &&
+    result.deviceId.length > 0 &&
+    typeof result.role === "string" &&
+    result.role.length > 0;
+  // An absent token and a present-but-invalid one are different answers: the schema bounds
+  // `token` to a non-empty string, so `token: ""` is a malformed envelope rather than a
+  // rotation that withheld the secret.
+  const rawToken = result?.token;
+  const token = typeof rawToken === "string" && rawToken.length > 0 ? rawToken : undefined;
+  const tokenAbsent = rawToken === undefined;
+  const delivery = result?.tokenDelivery;
+  if (identified) {
+    if (delivery === undefined) {
+      if (token) {
+        return { delivery: "in-band", token };
+      }
+      if (tokenAbsent) {
+        return { delivery: "withheld-cross-device" };
+      }
+    }
+    if (delivery === "in-band" && token) {
+      return { delivery: "in-band", token };
+    }
+    if (delivery === "withheld-cross-device" && tokenAbsent) {
+      return { delivery: "withheld-cross-device" };
+    }
   }
   throw new Error(
-    `Rotation returned an unusable result (tokenDelivery=${JSON.stringify(tokenDelivery)}, token ${token ? "present" : "absent"}). The previous token no longer works; pair the device again if it does not reconnect.`,
+    `Rotation returned an unusable result (tokenDelivery=${JSON.stringify(delivery)}, token ${token ? "present" : tokenAbsent ? "absent" : "malformed"}). The previous token no longer works; pair the device again if it does not reconnect.`,
   );
 }
 
@@ -459,7 +480,7 @@ export async function rotateDeviceToken(
       scopes?: Array<string>;
       tokenDelivery?: string;
     }>("device.token.rotate", requestParams);
-    const outcome = classifyRotationOutcome(res?.tokenDelivery, res?.token);
+    const outcome = classifyRotationOutcome(res);
     // A retired epoch stops every state write below, but never the return: the previous
     // credential is already dead on the server, so discarding this response would leave
     // the operator locked out with no way to ask for the replacement again.
