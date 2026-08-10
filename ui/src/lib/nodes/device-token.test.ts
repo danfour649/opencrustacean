@@ -26,7 +26,7 @@ function createState(request: (method: string, params?: unknown) => Promise<unkn
     connected: true,
     requestGeneration: 1,
     devicesLoading: false,
-    devicesError: null,
+    devicesError: null as string | null,
     devicesList: null,
   };
 }
@@ -136,6 +136,37 @@ describe("device token request lifecycle", () => {
     digest.resolve(new Uint8Array([0]).buffer);
 
     expect(await operation).toEqual({ delivery: "in-band", token: "legacy-token" });
+  });
+
+  // The other legacy omission state: no field and no token is the withheld rotation that
+  // used to end with nothing on screen, so it must resolve rather than read as an error.
+  it("classifies a tokenless response from a Gateway that omits tokenDelivery", async () => {
+    const state = createState(async () => ({ ...tokenParams, scopes: [] }));
+
+    expect(await rotateDeviceToken(state, tokenParams)).toEqual({
+      delivery: "withheld-cross-device",
+    });
+  });
+
+  // Explicit delivery and secret presence have to agree. A contradictory or unrecognized
+  // pair leaves the outcome unknown, and either dialog would assert something the response
+  // does not support, so it takes the error path with the previous token already dead.
+  it.each([
+    ["an in-band result that carries no token", { tokenDelivery: "in-band" }],
+    [
+      "a withheld result that carries a token",
+      { tokenDelivery: "withheld-cross-device", token: "unexpected-token" },
+    ],
+    [
+      "a delivery mode this client predates",
+      { tokenDelivery: "out-of-band", token: "rotated-token" },
+    ],
+  ])("refuses %s", async (_label, response) => {
+    const state = createState(async () => ({ ...tokenParams, scopes: [], ...response }));
+
+    expect(await rotateDeviceToken(state, tokenParams)).toBeNull();
+    expect(state.devicesError).toContain("unusable result");
+    expect(loadDeviceAuthToken(tokenParams)).toBeNull();
   });
 
   it("does not clear a current token when a revoke request retires during identity loading", async () => {

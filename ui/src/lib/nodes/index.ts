@@ -414,6 +414,32 @@ type RotatedDeviceTokenOutcome =
   | { delivery: "in-band"; token: string }
   | { delivery: "withheld-cross-device" };
 
+/**
+ * The Gateway pairs `tokenDelivery` with the presence of the secret, so an explicit pair
+ * that contradicts itself — or a delivery mode this client predates — describes a rotation
+ * whose outcome is unknown, not one to report as done. Both dialogs would lie about it:
+ * one claims a credential arrived, the other that the device re-credentials on its own.
+ * The old token is dead either way, so the operator gets the error and the recovery step.
+ * Gateways released before `tokenDelivery` omit it, leaving the token as the only signal.
+ */
+function classifyRotationOutcome(
+  tokenDelivery: string | undefined,
+  token: string | undefined,
+): RotatedDeviceTokenOutcome {
+  if (tokenDelivery === undefined) {
+    return token ? { delivery: "in-band", token } : { delivery: "withheld-cross-device" };
+  }
+  if (tokenDelivery === "in-band" && token) {
+    return { delivery: "in-band", token };
+  }
+  if (tokenDelivery === "withheld-cross-device" && !token) {
+    return { delivery: "withheld-cross-device" };
+  }
+  throw new Error(
+    `Rotation returned an unusable result (tokenDelivery=${JSON.stringify(tokenDelivery)}, token ${token ? "present" : "absent"}). The previous token no longer works; pair the device again if it does not reconnect.`,
+  );
+}
+
 /** Rotates a device token and returns what the Gateway did with the replacement. */
 export async function rotateDeviceToken(
   state: DevicesState,
@@ -433,18 +459,14 @@ export async function rotateDeviceToken(
       scopes?: Array<string>;
       tokenDelivery?: string;
     }>("device.token.rotate", requestParams);
-    const token = res?.token;
-    // Gateways that predate tokenDelivery leave the present token as the only signal.
-    const withheld = res?.tokenDelivery === undefined ? !token : res.tokenDelivery !== "in-band";
-    const outcome: RotatedDeviceTokenOutcome =
-      withheld || !token ? { delivery: "withheld-cross-device" } : { delivery: "in-band", token };
+    const outcome = classifyRotationOutcome(res?.tokenDelivery, res?.token);
     // A retired epoch stops every state write below, but never the return: the previous
     // credential is already dead on the server, so discarding this response would leave
     // the operator locked out with no way to ask for the replacement again.
     if (!isCurrentNodesRequest(state, client, generation)) {
       return outcome;
     }
-    if (token) {
+    if (outcome.delivery === "in-band") {
       const identity = await loadOrCreateDeviceIdentity();
       if (!isCurrentNodesRequest(state, client, generation)) {
         return outcome;
@@ -455,7 +477,7 @@ export async function rotateDeviceToken(
           deviceId: identity.deviceId,
           gatewayUrl,
           role,
-          token,
+          token: outcome.token,
           scopes: res.scopes ?? params.scopes ?? [],
         });
       }
