@@ -19,7 +19,7 @@ import {
   releaseSessionDeliveryClaim,
 } from "../infra/session-delivery-queue.js";
 import { stringifyRouteThreadId } from "../plugin-sdk/channel-route.js";
-import { parseAgentSessionKey } from "../routing/session-key.js";
+import { normalizeAgentId, parseAgentSessionKey } from "../routing/session-key.js";
 import { defaultRuntime } from "../runtime.js";
 import {
   isAgentMediatedCompletionSourceTool,
@@ -90,6 +90,25 @@ import { getSubagentDepthFromSessionStore } from "./subagent-depth.js";
 import { resolveRequesterStoreKey } from "./subagent-requester-store-key.js";
 
 const DEFAULT_SUBAGENT_ANNOUNCE_TIMEOUT_MS = 120_000;
+
+function tryResolveRequesterAgentId(
+  cfg: OpenClawConfig,
+  requesterSessionKey: string,
+  explicitAgentId?: string,
+): string | undefined {
+  const requestedAgentId = explicitAgentId?.trim() ? normalizeAgentId(explicitAgentId) : undefined;
+  const parsedAgentId = parseAgentSessionKey(requesterSessionKey)?.agentId;
+  if (requestedAgentId && parsedAgentId && requestedAgentId !== parsedAgentId) {
+    return undefined;
+  }
+  return (
+    requestedAgentId ??
+    parsedAgentId ??
+    tryResolveSoleAgentId(cfg) ??
+    tryResolveLegacyCompatibilityAgentId(cfg)
+  );
+}
+
 type SubagentAnnounceDeliveryDeps = {
   dispatchGatewayMethodInProcess: typeof dispatchGatewayMethodInProcess;
   getRuntimeConfig: typeof getRuntimeConfig;
@@ -115,14 +134,18 @@ const defaultSubagentAnnounceDeliveryDeps: SubagentAnnounceDeliveryDeps = {
   dispatchGatewayMethodInProcess,
   getRuntimeConfig,
   getRequesterSessionActivity: (requesterSessionKey: string, requesterAgentId?: string) => {
-    const storedSessionId = loadRequesterSessionEntry(requesterSessionKey, requesterAgentId).entry
+    const cfg = getRuntimeConfig();
+    const resolvedAgentId = tryResolveRequesterAgentId(cfg, requesterSessionKey, requesterAgentId);
+    if (!resolvedAgentId) {
+      return { isActive: false };
+    }
+    const storedSessionId = loadRequesterSessionEntry(requesterSessionKey, resolvedAgentId).entry
       ?.sessionId;
     // Unscoped active-run keys are ambiguous across agents. An explicit owner
     // must use its logical store entry instead of accepting another agent's run.
-    const activeSessionId =
-      !requesterAgentId || parseAgentSessionKey(requesterSessionKey)
-        ? resolveActiveEmbeddedRunSessionId(requesterSessionKey)
-        : undefined;
+    const activeSessionId = parseAgentSessionKey(requesterSessionKey)
+      ? resolveActiveEmbeddedRunSessionId(requesterSessionKey)
+      : undefined;
     const sessionId = activeSessionId ?? storedSessionId;
     return {
       sessionId,
@@ -181,14 +204,22 @@ function formatQueueWakeFailureError(
 }
 
 function resolveRequesterSessionActivity(requesterSessionKey: string, requesterAgentId?: string) {
+  const cfg = subagentAnnounceDeliveryDeps.getRuntimeConfig();
+  const resolvedAgentId = tryResolveRequesterAgentId(cfg, requesterSessionKey, requesterAgentId);
+  if (!resolvedAgentId) {
+    return { isActive: false };
+  }
   const activity = subagentAnnounceDeliveryDeps.getRequesterSessionActivity(
     requesterSessionKey,
-    requesterAgentId,
+    resolvedAgentId,
   );
   if (activity.sessionId || activity.isActive) {
     return activity;
   }
-  const { entry } = loadRequesterSessionEntry(requesterSessionKey, requesterAgentId);
+  const { entry } = subagentAnnounceDeliveryDeps.loadRequesterSessionEntry(
+    requesterSessionKey,
+    resolvedAgentId,
+  );
   const sessionId = entry?.sessionId;
   return {
     sessionId,
@@ -581,13 +612,10 @@ export async function runAnnounceDeliveryWithRetry<T>(params: {
 export function loadRequesterSessionEntry(requesterSessionKey: string, explicitAgentId?: string) {
   const cfg = subagentAnnounceDeliveryDeps.getRuntimeConfig();
   const canonicalKey = resolveRequesterStoreKey(cfg, requesterSessionKey);
-  const scopedAgentId = parseAgentSessionKey(canonicalKey)?.agentId;
-  const agentId =
-    scopedAgentId ??
-    resolveAgentIdFromSessionKey(
-      canonicalKey,
-      explicitAgentId ?? tryResolveLegacyCompatibilityAgentId(cfg),
-    );
+  const agentId = tryResolveRequesterAgentId(cfg, canonicalKey, explicitAgentId);
+  if (!agentId) {
+    return { cfg, entry: undefined, canonicalKey };
+  }
   const storePath = resolveStorePath(cfg.session?.store, { agentId });
   const entry = subagentAnnounceDeliveryDeps.loadSessionEntry({
     storePath,
@@ -625,15 +653,21 @@ async function maybeSteerSubagentAnnounce(params: {
   if (params.signal?.aborted) {
     return { status: "none" };
   }
-  const { cfg, entry } = loadRequesterSessionEntry(
+  const cfg = subagentAnnounceDeliveryDeps.getRuntimeConfig();
+  const requesterAgentId = tryResolveRequesterAgentId(
+    cfg,
     params.requesterSessionKey,
     params.requesterAgentId,
   );
-  const canonicalKey = resolveRequesterStoreKey(cfg, params.requesterSessionKey);
-  const { sessionId, isActive } = resolveRequesterSessionActivity(
-    canonicalKey,
-    params.requesterAgentId,
+  if (!requesterAgentId) {
+    return { status: "none" };
+  }
+  const { entry } = subagentAnnounceDeliveryDeps.loadRequesterSessionEntry(
+    params.requesterSessionKey,
+    requesterAgentId,
   );
+  const canonicalKey = resolveRequesterStoreKey(cfg, params.requesterSessionKey);
+  const { sessionId, isActive } = resolveRequesterSessionActivity(canonicalKey, requesterAgentId);
   if (subagentAnnounceDeliveryDeps.isRequesterSessionAbandoned(canonicalKey, sessionId)) {
     return { status: "none" };
   }
@@ -679,7 +713,7 @@ async function maybeSteerSubagentAnnounce(params: {
   if (queueOutcome.reason === "stale_run") {
     return { status: "none" };
   }
-  const currentActivity = resolveRequesterSessionActivity(canonicalKey, params.requesterAgentId);
+  const currentActivity = resolveRequesterSessionActivity(canonicalKey, requesterAgentId);
   return { status: currentActivity.isActive ? "dropped" : "none" };
 }
 
