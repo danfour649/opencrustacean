@@ -95,6 +95,40 @@ describe("system-agent transcript store", () => {
       },
     );
   });
+
+  it("round-trips typed wizard-action presentation metadata", async () => {
+    await withTempDir({ prefix: "openclaw-system-agent-transcript-action-" }, async (stateDir) => {
+      const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+      appendTranscriptTurn(
+        {
+          role: "user",
+          text: "Slack bot",
+          at: 1,
+          sessionId: "slack-session",
+          wizardAction: {
+            kind: "answer",
+            step: {
+              id: "slack-mode",
+              type: "select",
+              message: "How should OpenClaw appear in Slack?",
+              options: [{ label: "Slack bot", value: "bot" }],
+            },
+          },
+        },
+        { env },
+      );
+      closeOpenClawStateDatabase();
+
+      expect(readTranscriptTail(1, { env, sessionId: "slack-session" })).toEqual([
+        expect.objectContaining({
+          role: "user",
+          text: "Slack bot",
+          sessionId: "slack-session",
+          wizardAction: expect.objectContaining({ kind: "answer" }),
+        }),
+      ]);
+    });
+  });
   it("prunes the oldest rows beyond the rolling retention limit", async () => {
     await withTempDir({ prefix: "openclaw-system-agent-transcript-prune-" }, async (stateDir) => {
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
