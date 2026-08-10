@@ -6,9 +6,7 @@ import type {
 import { appendAssistantMessageToSessionTranscript } from "../config/sessions/transcript.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import type { GatewayRecoveryRuntime } from "../gateway/server-instance-runtime.types.js";
-import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 import type { DeliveryContext } from "../utils/delivery-context.shared.js";
-import { resolveDefaultAgentId } from "./agent-scope-config.js";
 import type { MainSessionRecoveryObservation } from "./main-session-recovery-state.js";
 import { commitMainSessionRecovery } from "./main-session-recovery-store.js";
 import { buildUnresumableSessionNoticeIdempotencyKey } from "./main-session-restart-claim.js";
@@ -50,6 +48,7 @@ export async function sendUnresumableSessionNotice(params: {
 
 export async function writeUnresumableSessionNotice(params: {
   agentId: string;
+  cfg?: OpenClawConfig;
   entry: SessionEntry;
   sessionKey: string;
   storePath: string;
@@ -59,6 +58,7 @@ export async function writeUnresumableSessionNotice(params: {
 }): Promise<"failed" | "stale" | "written"> {
   const result = await appendAssistantMessageToSessionTranscript({
     agentId: params.agentId,
+    config: params.cfg,
     sessionKey: params.sessionKey,
     expectedSessionId: params.entry.sessionId,
     expectedSessionState:
@@ -81,6 +81,7 @@ export async function writeUnresumableSessionNotice(params: {
 }
 
 export async function failUnresumableMainSession(params: {
+  agentId: string;
   cfg?: OpenClawConfig;
   entry: SessionEntry;
   gatewayRuntime: GatewayRecoveryRuntime;
@@ -98,10 +99,8 @@ export async function failUnresumableMainSession(params: {
   if (
     !deliveryContext &&
     (await writeUnresumableSessionNotice({
-      agentId: resolveAgentIdFromSessionKey(
-        params.sessionKey,
-        params.cfg ? resolveDefaultAgentId(params.cfg) : undefined,
-      ),
+      agentId: params.agentId,
+      cfg: params.cfg,
       entry: params.entry,
       sessionKey: params.sessionKey,
       storePath: params.storePath,

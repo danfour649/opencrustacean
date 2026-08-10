@@ -55,6 +55,7 @@ const AGENT_FOLLOWUP_OBSERVATION_TIMEOUT_MS =
 
 type ExecApprovalFollowupParams = {
   approvalId: string;
+  agentId?: string;
   sessionKey?: string;
   /** Session UUID active when the approval was requested. Carried to the gateway
    *  so a followup whose session key was rebound by /new or /reset is dropped. */
@@ -123,6 +124,7 @@ function shouldSuppressExecDeniedFollowup(sessionKey: string | undefined): boole
  * real result is never suppressed by accident.
  */
 function isExecApprovalFollowupDirectDeliveryStale(params: {
+  agentId: string | undefined;
   sessionKey: string | undefined;
   expectedSessionId: string | undefined;
   sessionStore: string | undefined;
@@ -134,10 +136,11 @@ function isExecApprovalFollowupDirectDeliveryStale(params: {
   }
   try {
     const storePath = resolveStorePath(normalizeOptionalString(params.sessionStore), {
-      agentId: resolveAgentIdFromSessionKey(sessionKey),
+      agentId: params.agentId ?? resolveAgentIdFromSessionKey(sessionKey),
     });
     const resolvedSessionId = normalizeOptionalString(
       loadSessionEntryReadOnly({
+        agentId: params.agentId,
         storePath,
         sessionKey,
         clone: false,
@@ -318,6 +321,7 @@ function canDirectSendDeniedFollowup(sessionError: unknown): boolean {
 
 function buildAgentFollowupArgs(params: {
   approvalId: string;
+  agentId?: string;
   sessionKey: string;
   expectedSessionId?: string;
   resultText: string;
@@ -337,6 +341,7 @@ function buildAgentFollowupArgs(params: {
   const fallbackChannel = sessionOnlyOriginChannel ?? params.turnSourceChannel;
   const isDenied = isExecDeniedResultText(params.resultText.trim());
   return {
+    ...(params.agentId ? { agentId: params.agentId } : {}),
     sessionKey: params.sessionKey,
     message: isDenied
       ? buildExecApprovalFollowupPrompt(params.resultText)
@@ -371,6 +376,7 @@ function buildAgentFollowupArgs(params: {
 
 async function sendDirectFollowupFallback(params: {
   approvalId: string;
+  agentId?: string;
   deliveryTarget: ExternalBestEffortDeliveryTarget;
   resultText: string;
   sessionError: unknown;
@@ -403,7 +409,7 @@ async function sendDirectFollowupFallback(params: {
     accountId: params.deliveryTarget.accountId,
     threadId: params.deliveryTarget.threadId,
     content,
-    agentId: undefined,
+    agentId: params.agentId,
     gatewayOwnedDelivery: true,
     idempotencyKey: deliveryIntentId,
     deliveryIntentId,
@@ -460,6 +466,7 @@ export async function sendExecApprovalFollowup(
     try {
       const agentArgs = buildAgentFollowupArgs({
         approvalId: params.approvalId,
+        agentId: params.agentId,
         sessionKey,
         expectedSessionId: params.expectedSessionId,
         resultText,
@@ -516,6 +523,7 @@ export async function sendExecApprovalFollowup(
   if (isDenied) {
     if (
       isExecApprovalFollowupDirectDeliveryStale({
+        agentId: params.agentId,
         sessionKey,
         expectedSessionId: params.expectedSessionId,
         sessionStore: params.sessionStore,
@@ -535,6 +543,7 @@ export async function sendExecApprovalFollowup(
     if (
       await sendDirectFollowupFallback({
         approvalId: params.approvalId,
+        agentId: params.agentId,
         deliveryTarget,
         resultText,
         sessionError,
@@ -551,6 +560,7 @@ export async function sendExecApprovalFollowup(
 
   if (
     isExecApprovalFollowupDirectDeliveryStale({
+      agentId: params.agentId,
       sessionKey,
       expectedSessionId: params.expectedSessionId,
       sessionStore: params.sessionStore,
@@ -571,6 +581,7 @@ export async function sendExecApprovalFollowup(
   if (
     await sendDirectFollowupFallback({
       approvalId: params.approvalId,
+      agentId: params.agentId,
       deliveryTarget,
       resultText,
       sessionError,

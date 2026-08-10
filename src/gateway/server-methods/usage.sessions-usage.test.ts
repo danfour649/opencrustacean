@@ -12,7 +12,7 @@ vi.mock("../../config/config.js", () => {
   return {
     getRuntimeConfig: vi.fn(() => ({
       agents: {
-        list: [{ id: "main" }, { id: "opus" }],
+        list: [{ id: "main", default: true }, { id: "opus" }],
       },
       session: {},
     })),
@@ -109,7 +109,7 @@ import { testApi, usageHandlers } from "./usage.js";
 
 const TEST_RUNTIME_CONFIG = {
   agents: {
-    list: [{ id: "main" }, { id: "opus" }],
+    list: [{ id: "main", default: true }, { id: "opus" }],
   },
   session: {},
 };
@@ -130,7 +130,10 @@ async function runSessionsUsage(
   return respond;
 }
 
-async function runSessionsUsageTimeseries(params: Record<string, unknown>) {
+async function runSessionsUsageTimeseries(
+  params: Record<string, unknown>,
+  config: OpenClawConfig = TEST_RUNTIME_CONFIG,
+) {
   const respond = vi.fn();
   await expectDefined(
     usageHandlers["sessions.usage.timeseries"],
@@ -138,12 +141,15 @@ async function runSessionsUsageTimeseries(params: Record<string, unknown>) {
   )({
     respond,
     params,
-    context: { getRuntimeConfig: () => TEST_RUNTIME_CONFIG },
+    context: { getRuntimeConfig: () => config },
   } as unknown as Parameters<(typeof usageHandlers)["sessions.usage.timeseries"]>[0]);
   return respond;
 }
 
-async function runSessionsUsageLogs(params: Record<string, unknown>) {
+async function runSessionsUsageLogs(
+  params: Record<string, unknown>,
+  config: OpenClawConfig = TEST_RUNTIME_CONFIG,
+) {
   const respond = vi.fn();
   await expectDefined(
     usageHandlers["sessions.usage.logs"],
@@ -151,7 +157,7 @@ async function runSessionsUsageLogs(params: Record<string, unknown>) {
   )({
     respond,
     params,
-    context: { getRuntimeConfig: () => TEST_RUNTIME_CONFIG },
+    context: { getRuntimeConfig: () => config },
   } as unknown as Parameters<(typeof usageHandlers)["sessions.usage.logs"]>[0]);
   return respond;
 }
@@ -189,6 +195,7 @@ function mockStoredSession(key: string, sessionId: string) {
   const entry = { sessionId, updatedAt: 1_000 };
   vi.mocked(loadSessionEntryReadOnly).mockReturnValueOnce({
     cfg: TEST_RUNTIME_CONFIG,
+    agentId: "opus",
     canonicalKey: key,
     entry,
     legacyKey: undefined,
@@ -833,6 +840,38 @@ describe("sessions.usage", () => {
 
     expect(vi.mocked(loadSessionLogs)).toHaveBeenCalledWith(
       expect.objectContaining({ agentId: "opus", sessionFile: expect.stringMatching(/^sqlite:/) }),
+    );
+  });
+
+  it("loads bare-key usage details through the persisted fixed-store owner", async () => {
+    const config: OpenClawConfig = {
+      session: { store: "/tmp/shared-sessions.sqlite", scope: "global" },
+      agents: {
+        ownership: "explicit",
+        list: [{ id: "ops" }, { id: "research" }],
+        defaults: { sessionStore: { agentId: "ops" } },
+      },
+    };
+    const entry = { sessionId: "s-ops", updatedAt: 1_000 };
+    vi.mocked(loadSessionEntryReadOnly).mockReturnValueOnce({
+      cfg: config,
+      agentId: "ops",
+      canonicalKey: "global",
+      entry,
+      legacyKey: undefined,
+      store: { global: entry },
+      storeKeys: ["global"],
+      storePath: "/tmp/shared-sessions.sqlite",
+    });
+
+    const respond = await runSessionsUsageTimeseries({ key: "global" }, config);
+
+    expect(mockArg(respond, 0, 0)).toBe(true);
+    expect(vi.mocked(loadSessionEntryReadOnly)).toHaveBeenCalledWith("global", {
+      agentId: "ops",
+    });
+    expect(vi.mocked(loadSessionUsageTimeSeries)).toHaveBeenCalledWith(
+      expect.objectContaining({ agentId: "ops" }),
     );
   });
 

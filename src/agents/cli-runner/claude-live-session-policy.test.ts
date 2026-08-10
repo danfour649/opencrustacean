@@ -37,4 +37,30 @@ describe("Claude live configured exec policy", () => {
       ask: "always",
     });
   });
+
+  it("uses the configured fixed-store owner for an unscoped session key", () => {
+    const context = {
+      params: {
+        sessionKey: "global",
+        config: {
+          session: { store: "/stores/shared.sqlite" },
+          tools: { exec: { security: "full", ask: "off" } },
+          agents: {
+            ownership: "explicit",
+            defaults: { sessionStore: { agentId: "research" } },
+            entries: {
+              ops: {},
+              research: { tools: { exec: { security: "deny", ask: "always" } } },
+            },
+          },
+        },
+      },
+    } as unknown as PreparedCliRunContext;
+
+    expect(readConfiguredExecPolicy(context)).toEqual({
+      agentId: "research",
+      security: "deny",
+      ask: "always",
+    });
+  });
 });

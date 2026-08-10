@@ -11,12 +11,12 @@ import {
   validateTaskSuggestionsDismissParams,
   validateTaskSuggestionsListParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import { resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import { insideGitCheckout } from "../../agents/worktrees/git.js";
 import { managedWorktrees } from "../../agents/worktrees/service.js";
 import { formatErrorMessage } from "../../infra/errors.js";
-import { normalizeAgentId, parseAgentSessionKey } from "../../routing/session-key.js";
+import { normalizeAgentId } from "../../routing/session-key.js";
 import { buildDashboardSessionKey } from "../session-create-service.js";
+import { resolveRequestedSessionAgentId } from "../session-request-agent.js";
 import { loadSessionEntryReadOnly } from "../session-utils.js";
 import {
   abandonTaskSuggestionAcceptance,
@@ -149,11 +149,15 @@ async function createSuggestedTaskSession(params: {
   options: GatewayRequestHandlerOptions;
 }): Promise<TaskSuggestionAcceptanceResult> {
   let sessionResponse: Parameters<RespondFn> | undefined;
-  const agentId = normalizeAgentId(
-    params.suggestion.agentId ??
-      parseAgentSessionKey(params.suggestion.sessionKey)?.agentId ??
-      resolveDefaultAgentId(params.options.context.getRuntimeConfig()),
+  const sourceOwner = resolveRequestedSessionAgentId(
+    params.options.context.getRuntimeConfig(),
+    params.suggestion.sessionKey,
+    params.suggestion.agentId,
   );
+  if (!sourceOwner.ok) {
+    return { ok: false, error: sourceOwner.error };
+  }
+  const agentId = normalizeAgentId(sourceOwner.agentId);
   const sessionKey = buildDashboardSessionKey(agentId);
   try {
     await sessionCreateHandlers["sessions.create"]?.({
@@ -238,7 +242,7 @@ async function createSuggestedTaskSession(params: {
 }
 
 export const taskSuggestionsHandlers: GatewayRequestHandlers = {
-  "taskSuggestions.list": ({ params, respond }) => {
+  "taskSuggestions.list": ({ params, respond, context }) => {
     if (!validateTaskSuggestionsListParams(params)) {
       respond(
         false,
@@ -247,7 +251,28 @@ export const taskSuggestionsHandlers: GatewayRequestHandlers = {
       );
       return;
     }
-    respond(true, { suggestions: listTaskSuggestions(params) }, undefined);
+    const requestedSessionKey = params.sessionKey;
+    const sessionOwner = requestedSessionKey
+      ? resolveRequestedSessionAgentId(
+          context.getRuntimeConfig(),
+          requestedSessionKey,
+          params.agentId,
+        )
+      : undefined;
+    if (sessionOwner && !sessionOwner.ok) {
+      respond(false, undefined, sessionOwner.error);
+      return;
+    }
+    respond(
+      true,
+      {
+        suggestions: listTaskSuggestions({
+          ...params,
+          ...(sessionOwner ? { agentId: sessionOwner.agentId } : {}),
+        }),
+      },
+      undefined,
+    );
   },
   "taskSuggestions.create": ({ params, respond, context }) => {
     if (!validateTaskSuggestionsCreateParams(params)) {
@@ -274,26 +299,17 @@ export const taskSuggestionsHandlers: GatewayRequestHandlers = {
       );
       return;
     }
-    const sessionAgentId = parseAgentSessionKey(params.sessionKey)?.agentId;
     const requestedAgentId = params.agentId ? normalizeAgentId(params.agentId) : undefined;
-    if (
-      requestedAgentId &&
-      sessionAgentId &&
-      requestedAgentId !== normalizeAgentId(sessionAgentId)
-    ) {
-      respond(
-        false,
-        undefined,
-        errorShape(
-          ErrorCodes.INVALID_REQUEST,
-          "task suggestion agentId must match its source session",
-        ),
-      );
+    const sourceOwner = resolveRequestedSessionAgentId(
+      context.getRuntimeConfig(),
+      params.sessionKey,
+      requestedAgentId,
+    );
+    if (!sourceOwner.ok) {
+      respond(false, undefined, sourceOwner.error);
       return;
     }
-    const agentId = normalizeAgentId(
-      requestedAgentId ?? sessionAgentId ?? resolveDefaultAgentId(context.getRuntimeConfig()),
-    );
+    const agentId = normalizeAgentId(sourceOwner.agentId);
     const created = createTaskSuggestion({ ...params, agentId });
     if (created.status === "full") {
       respond(

@@ -2,7 +2,6 @@ import type { InternalSessionEntry as SessionEntry } from "../config/sessions.js
 import { loadSessionEntry } from "../config/sessions/session-accessor.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import type { GatewayRecoveryRuntime } from "../gateway/server-instance-runtime.types.js";
-import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 import type { MainSessionRecoveryObservation } from "./main-session-recovery-state.js";
 import { commitMainSessionRecovery } from "./main-session-recovery-store.js";
 import { resolveRestartRecoveryDeliveryContext } from "./main-session-restart-dispatch.js";
@@ -44,6 +43,7 @@ async function claimMainRestartRecoveryTombstone(params: {
 }
 
 export async function tombstoneMainRestartRecoveryWithNotice(params: {
+  agentId: string;
   cfg?: OpenClawConfig;
   entry: SessionEntry;
   gatewayRuntime: GatewayRecoveryRuntime;
@@ -74,7 +74,8 @@ export async function tombstoneMainRestartRecoveryWithNotice(params: {
       }
       const now = Date.now();
       const notice = await writeUnresumableSessionNotice({
-        agentId: resolveAgentIdFromSessionKey(params.sessionKey),
+        agentId: params.agentId,
+        cfg: params.cfg,
         entry,
         expectedSessionState: buildRestartRecoveryExpectedState(entry, observation),
         sessionKey: params.sessionKey,

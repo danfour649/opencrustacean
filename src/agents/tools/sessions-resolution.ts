@@ -200,12 +200,14 @@ function buildResolvedSessionReference(params: {
 
 function buildSessionIdResolveParams(params: {
   sessionId: string;
+  agentId?: string;
   requesterInternalKey?: string;
   restrictToSpawned: boolean;
   allowMissing?: boolean;
 }) {
   return {
     sessionId: params.sessionId,
+    agentId: params.agentId,
     spawnedBy: params.restrictToSpawned ? params.requesterInternalKey : undefined,
     includeGlobal: !params.restrictToSpawned,
     includeUnknown: !params.restrictToSpawned,
@@ -244,6 +246,7 @@ async function callGatewayResolveSession(
 
 async function callGatewayResolveSessionId(params: {
   sessionId: string;
+  agentId?: string;
   requesterInternalKey?: string;
   restrictToSpawned: boolean;
   allowMissing?: boolean;
@@ -261,6 +264,7 @@ async function callGatewayResolveSessionId(params: {
 
 async function resolveSessionKeyFromSessionId(params: {
   sessionId: string;
+  agentId?: string;
   alias: string;
   mainKey: string;
   requesterInternalKey?: string;
@@ -298,6 +302,7 @@ async function resolveSessionKeyFromSessionId(params: {
 
 async function resolveSessionKeyFromKey(params: {
   key: string;
+  agentId?: string;
   alias: string;
   mainKey: string;
   requesterInternalKey?: string;
@@ -308,6 +313,7 @@ async function resolveSessionKeyFromKey(params: {
     // Try key-based resolution first so non-standard keys keep working.
     const result = await callGatewayResolveSession({
       key: params.key,
+      agentId: params.agentId,
       spawnedBy: params.restrictToSpawned ? params.requesterInternalKey : undefined,
       ...(params.allowMissing ? { allowMissing: true } : {}),
     });
@@ -330,6 +336,7 @@ async function resolveSessionKeyFromKey(params: {
 
 async function tryResolveSessionKeyFromSessionId(params: {
   sessionId: string;
+  agentId?: string;
   alias: string;
   mainKey: string;
   requesterInternalKey?: string;
@@ -352,6 +359,7 @@ async function tryResolveSessionKeyFromSessionId(params: {
 
 async function resolveSessionReferenceByKeyOrSessionId(params: {
   raw: string;
+  agentId?: string;
   alias: string;
   mainKey: string;
   requesterInternalKey?: string;
@@ -365,6 +373,7 @@ async function resolveSessionReferenceByKeyOrSessionId(params: {
     // Prefer key resolution to avoid misclassifying custom keys as sessionIds.
     const resolvedByKey = await resolveSessionKeyFromKey({
       key: params.raw,
+      agentId: params.agentId,
       alias: params.alias,
       mainKey: params.mainKey,
       requesterInternalKey: params.requesterInternalKey,
@@ -381,6 +390,7 @@ async function resolveSessionReferenceByKeyOrSessionId(params: {
   if (params.allowUnresolvedSessionId) {
     return await tryResolveSessionKeyFromSessionId({
       sessionId: params.raw,
+      agentId: params.agentId,
       alias: params.alias,
       mainKey: params.mainKey,
       requesterInternalKey: params.requesterInternalKey,
@@ -390,6 +400,7 @@ async function resolveSessionReferenceByKeyOrSessionId(params: {
   }
   return await resolveSessionKeyFromSessionId({
     sessionId: params.raw,
+    agentId: params.agentId,
     alias: params.alias,
     mainKey: params.mainKey,
     requesterInternalKey: params.requesterInternalKey,
@@ -400,6 +411,7 @@ async function resolveSessionReferenceByKeyOrSessionId(params: {
 
 export async function resolveSessionReference(params: {
   sessionKey: string;
+  agentId?: string;
   alias: string;
   mainKey: string;
   requesterInternalKey?: string;
@@ -413,6 +425,7 @@ export async function resolveSessionReference(params: {
   if (rawInput === "current") {
     const resolvedCurrent = await resolveSessionReferenceByKeyOrSessionId({
       raw: rawInput,
+      agentId: params.agentId,
       alias: params.alias,
       mainKey: params.mainKey,
       requesterInternalKey: params.requesterInternalKey,
@@ -431,6 +444,7 @@ export async function resolveSessionReference(params: {
   if (shouldResolveSessionIdInput(raw)) {
     const resolvedByGateway = await resolveSessionReferenceByKeyOrSessionId({
       raw,
+      agentId: params.agentId,
       alias: params.alias,
       mainKey: params.mainKey,
       requesterInternalKey: params.requesterInternalKey,

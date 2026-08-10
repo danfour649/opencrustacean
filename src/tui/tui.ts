@@ -15,6 +15,7 @@ import type { CommandEntry } from "../../packages/gateway-protocol/src/index.js"
 import {
   resolveAgentIdByWorkspacePath,
   resolveDefaultAgentId,
+  resolveSessionAgentId,
   tryResolveDefaultAgentId,
 } from "../agents/agent-scope.js";
 import { normalizeThinkLevel } from "../auto-reply/thinking.shared.js";
@@ -202,9 +203,23 @@ export function resolveInitialTuiAgentId(params: {
   initialSessionInput?: string;
   cwd?: string;
 }) {
-  const parsed = parseAgentSessionKey((params.initialSessionInput ?? "").trim());
+  const initialSessionInput = (params.initialSessionInput ?? "").trim();
+  const parsed = parseAgentSessionKey(initialSessionInput);
   if (parsed?.agentId) {
     return normalizeAgentId(parsed.agentId);
+  }
+  const effectiveUnscopedSessionKey =
+    initialSessionInput === "global" || initialSessionInput === "unknown"
+      ? initialSessionInput
+      : !initialSessionInput && params.cfg.session?.scope === "global"
+        ? "global"
+        : undefined;
+  if (effectiveUnscopedSessionKey) {
+    return resolveSessionAgentId({
+      config: params.cfg,
+      sessionKey: effectiveUnscopedSessionKey,
+      fallbackAgentId: params.fallbackAgentId,
+    });
   }
 
   const cwd = params.cwd ?? tryProcessCwd();

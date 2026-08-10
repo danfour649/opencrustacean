@@ -18,7 +18,12 @@ type Method =
 
 const GIT_CWD = process.cwd();
 
-async function call(method: Method, params: Record<string, unknown>, broadcast = vi.fn()) {
+async function call(
+  method: Method,
+  params: Record<string, unknown>,
+  broadcast = vi.fn(),
+  config: Record<string, unknown> = {},
+) {
   const calls: Parameters<RespondFn>[] = [];
   const respond: RespondFn = (...args) => {
     calls.push(args);
@@ -26,7 +31,7 @@ async function call(method: Method, params: Record<string, unknown>, broadcast =
   await taskSuggestionsHandlers[method]?.({
     params,
     respond,
-    context: { broadcast, getRuntimeConfig: () => ({}) },
+    context: { broadcast, getRuntimeConfig: () => config },
   } as never);
   return { response: calls[0], broadcast };
 }
@@ -106,6 +111,36 @@ describe("task suggestion gateway methods", () => {
 
     const empty = await call("taskSuggestions.list", {});
     expect(empty.response?.[1]).toEqual({ suggestions: [] });
+  });
+
+  it("attributes a bare source session to the persisted fixed-store owner", async () => {
+    const config = {
+      session: { store: "/tmp/shared-sessions.sqlite", scope: "global" },
+      agents: {
+        ownership: "explicit",
+        list: [{ id: "ops" }, { id: "research" }],
+        defaults: { sessionStore: { agentId: "ops" } },
+      },
+    };
+    const created = await call(
+      "taskSuggestions.create",
+      {
+        title: "Inspect the deployment",
+        prompt: "Check the deployment logs.",
+        tldr: "Deployment needs inspection.",
+        cwd: GIT_CWD,
+        sessionKey: "global",
+      },
+      vi.fn(),
+      config,
+    );
+
+    expect(created.response?.[0]).toBe(true);
+    expect(created.response?.[1]).toMatchObject({ suggestion: { agentId: "ops" } });
+    const listed = await call("taskSuggestions.list", { sessionKey: "global" }, vi.fn(), config);
+    expect(listed.response?.[1]).toMatchObject({
+      suggestions: [expect.objectContaining({ agentId: "ops", sessionKey: "global" })],
+    });
   });
 
   it("evicts accepted-session replay before an unseen pending suggestion", async () => {
@@ -469,19 +504,24 @@ describe("task suggestion gateway methods", () => {
   );
 
   it("rejects an agent that conflicts with the source session", async () => {
-    const result = await call("taskSuggestions.create", {
-      title: "Add coverage",
-      prompt: "Add the missing regression test.",
-      tldr: "The edge case is untested.",
-      cwd: GIT_CWD,
-      sessionKey: "agent:main:main",
-      agentId: "work",
-    });
+    const result = await call(
+      "taskSuggestions.create",
+      {
+        title: "Add coverage",
+        prompt: "Add the missing regression test.",
+        tldr: "The edge case is untested.",
+        cwd: GIT_CWD,
+        sessionKey: "agent:main:main",
+        agentId: "work",
+      },
+      vi.fn(),
+      { agents: { list: [{ id: "main" }, { id: "work" }] } },
+    );
 
     expect(result.response?.[0]).toBe(false);
     expect(result.response?.[2]).toMatchObject({
       code: "INVALID_REQUEST",
-      message: "task suggestion agentId must match its source session",
+      message: 'agent "work" does not match session key agent "main"',
     });
     expect(result.broadcast).not.toHaveBeenCalled();
   });

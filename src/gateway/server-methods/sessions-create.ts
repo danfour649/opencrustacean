@@ -95,6 +95,17 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
       );
       return;
     }
+    const explicitlyRequestedKey = normalizeOptionalString(p.key);
+    const explicitlyRequestedAgent =
+      explicitlyRequestedKey && !parseAgentSessionKey(explicitlyRequestedKey)
+        ? resolveRequestedGlobalAgentId(cfg, explicitlyRequestedKey, p.agentId, {
+            allowUnconfiguredExplicitAgent: true,
+          })
+        : undefined;
+    if (explicitlyRequestedAgent && !explicitlyRequestedAgent.ok) {
+      respond(false, undefined, explicitlyRequestedAgent.error);
+      return;
+    }
     const catalogRequestedKey = normalizeOptionalString(p.key) ?? "global";
     const catalogAgentId = catalogId
       ? normalizeAgentId(
@@ -103,13 +114,6 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
             resolveDefaultAgentId(cfg),
         )
       : undefined;
-    const catalogRequestedAgent = catalogAgentId
-      ? resolveRequestedGlobalAgentId(cfg, catalogRequestedKey, catalogAgentId)
-      : undefined;
-    if (catalogRequestedAgent && !catalogRequestedAgent.ok) {
-      respond(false, undefined, catalogRequestedAgent.error);
-      return;
-    }
     const catalogTarget =
       catalogId && catalogAgentId
         ? resolveSessionCatalogCreateTarget(catalogId, catalogAgentId, cfg)
@@ -181,7 +185,11 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
       return;
     }
     let sessionKey = p.key;
-    let sessionAgentId = catalogAgentId ?? p.agentId;
+    let sessionAgentId =
+      catalogAgentId ??
+      explicitlyRequestedAgent?.agentId ??
+      p.agentId ??
+      parseAgentSessionKey(explicitlyRequestedKey)?.agentId;
     let sessionWorktree: Awaited<ReturnType<typeof managedWorktrees.create>> | undefined;
     const sessionExecCwd = requestedExecNode ? requestedCwd : undefined;
     let sessionCwd = requestedExecNode ? undefined : requestedCwd;
@@ -222,17 +230,11 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
     if (p.worktree === true) {
       // The normal path stays at operator.write and checks out the configured agent workspace.
       // An explicit cwd can target another host checkout, so method-scopes requires admin.
-      const explicitKey = normalizeOptionalString(p.key);
-      const requestedKey = explicitKey ?? "global";
-      const requestedAgent = resolveRequestedGlobalAgentId(cfg, requestedKey, p.agentId);
-      if (!requestedAgent.ok) {
-        respond(false, undefined, requestedAgent.error);
-        return;
-      }
+      const explicitKey = explicitlyRequestedKey;
       const agentId = normalizeAgentId(
-        requestedAgent.agentId ??
+        explicitlyRequestedAgent?.agentId ??
           normalizeOptionalString(p.agentId) ??
-          parseAgentSessionKey(requestedKey)?.agentId ??
+          parseAgentSessionKey(explicitKey)?.agentId ??
           resolveDefaultAgentId(cfg),
       );
       let targetKey = explicitKey;
@@ -245,12 +247,16 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
         !hasInitialTurn &&
         cfg.session?.dmScope === "main"
       ) {
-        const parent = loadSessionEntryReadOnly(
-          parentSessionKey,
-          requestedAgent.agentId ? { agentId: requestedAgent.agentId } : undefined,
-        );
+        const parentRequestedAgent = resolveRequestedGlobalAgentId(cfg, parentSessionKey);
+        if (!parentRequestedAgent.ok) {
+          respond(false, undefined, parentRequestedAgent.error);
+          return;
+        }
+        const parent = loadSessionEntryReadOnly(parentSessionKey, {
+          agentId: parentRequestedAgent.agentId,
+        });
         const parentAgentId = normalizeAgentId(
-          requestedAgent.agentId ?? resolveSessionStoreAgentId(cfg, parent.canonicalKey),
+          parentRequestedAgent.agentId ?? resolveSessionStoreAgentId(cfg, parent.canonicalKey),
         );
         if (
           parent.entry?.sessionId &&

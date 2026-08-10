@@ -240,6 +240,7 @@ export const agentRunHandler: GatewayRequestHandlers["agent"] = async ({
 
     if (requestedSessionKey) {
       const preparedSession = prepareAgentSession({
+        cfg,
         requestedSessionKey,
         requestedSessionId,
         expectedExistingSessionId,

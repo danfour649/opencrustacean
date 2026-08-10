@@ -273,6 +273,7 @@ function stripChannelRecipientPrefix(
 }
 
 function resolveDisplayRuntimePolicySessionKey(params: {
+  agentId: string;
   cfg: OpenClawConfig;
   key: string;
   entry: SessionEntry;
@@ -299,10 +300,12 @@ function resolveDisplayRuntimePolicySessionKey(params: {
   // Direct-message runtime policy can route by native user id, stripped
   // recipient, or sender; expose the derived key when it differs from the row.
   const runtimePolicySessionKey = resolveRuntimePolicySessionKey({
+    agentId: params.agentId,
     cfg,
     sessionKey: key,
     ctx: {
       SessionKey: key,
+      AgentId: params.agentId,
       Provider: channel,
       Surface: normalizeOptionalString(origin?.surface),
       AccountId: normalizeOptionalString(origin?.accountId ?? deliveryContext?.accountId),
@@ -419,6 +422,7 @@ export async function sessionsCommand(
           displayModelRef: modelRef,
           kind: classifySessionKind(row.key, entry),
           runtimePolicySessionKey: resolveDisplayRuntimePolicySessionKey({
+            agentId,
             cfg,
             key: row.key,
             entry,

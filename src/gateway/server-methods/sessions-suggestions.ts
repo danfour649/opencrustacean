@@ -22,6 +22,7 @@ import {
   SESSION_SUGGESTION_DISPATCH_CLAIM_TTL_MS,
   type StoredSessionSuggestion,
 } from "../../config/sessions.js";
+import { resolveRequestedSessionAgentId } from "../session-request-agent.js";
 import {
   authorizeIncognitoSessionTarget,
   authorizeSessionSharingTarget,
@@ -76,10 +77,16 @@ function requireSuggestionTarget(params: {
   agentId?: string;
   respond: RespondFn;
 }) {
+  const cfg = params.context.getRuntimeConfig();
+  const requestedAgent = resolveRequestedSessionAgentId(cfg, params.sessionKey, params.agentId);
+  if (!requestedAgent.ok) {
+    params.respond(false, undefined, requestedAgent.error);
+    return null;
+  }
   const target = resolveSessionSharingTarget({
-    cfg: params.context.getRuntimeConfig(),
+    cfg,
     sessionKey: params.sessionKey,
-    agentId: params.agentId,
+    agentId: requestedAgent.agentId,
   });
   if (!target) {
     params.respond(
@@ -564,7 +571,7 @@ export const sessionSuggestionHandlers: GatewayRequestHandlers = {
     const currentTarget = resolveSessionSharingTarget({
       cfg: context.getRuntimeConfig(),
       sessionKey: params.sessionKey,
-      agentId: params.agentId,
+      agentId: target.agentId,
     });
     if (!currentTarget || currentTarget.entry.sessionId !== target.entry.sessionId) {
       // Session replacement clears session_suggestions in the same entry-store
@@ -674,7 +681,7 @@ export const sessionSuggestionHandlers: GatewayRequestHandlers = {
         const current = resolveSessionSharingTarget({
           cfg: context.getRuntimeConfig(),
           sessionKey: params.sessionKey,
-          agentId: params.agentId,
+          agentId: target.agentId,
         });
         if (!current || current.entry.sessionId !== target.entry.sessionId) {
           return false;
