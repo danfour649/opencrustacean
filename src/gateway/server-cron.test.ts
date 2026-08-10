@@ -362,6 +362,7 @@ describe("buildGatewayCronService", () => {
       deps: {} as CliDeps,
       broadcast: () => {},
     });
+    await initial.cron.start();
     const job = await initial.cron.add({
       name: "dynamic sole owner",
       enabled: true,
@@ -370,6 +371,7 @@ describe("buildGatewayCronService", () => {
       wakeMode: "next-heartbeat",
       payload: { kind: "agentTurn", message: "follow the live owner" },
     });
+    expect(job.agentId).toBeUndefined();
     initial.cron.stop();
 
     const restarted = buildGatewayCronService({
@@ -413,6 +415,7 @@ describe("buildGatewayCronService", () => {
       deps: {} as CliDeps,
       broadcast: () => {},
     });
+    await initial.cron.start();
     const job = await initial.cron.add({
       name: "legacy retained owner",
       enabled: true,
@@ -421,10 +424,13 @@ describe("buildGatewayCronService", () => {
       wakeMode: "next-heartbeat",
       payload: { kind: "agentTurn", message: "pin once" },
     });
+    expect(job.agentId).toBe("ops");
     initial.cron.stop();
 
+    const restartedCfg = structuredClone(cfg);
+    loadConfigMock.mockReturnValue(restartedCfg);
     const restarted = buildGatewayCronService({
-      cfg,
+      cfg: restartedCfg,
       deps: {} as CliDeps,
       broadcast: () => {},
     });
