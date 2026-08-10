@@ -799,6 +799,7 @@ function hasFailedSubagentNoOutputCompletion(events: readonly AgentInternalEvent
 async function deliverCompletionDirect(params: {
   cfg: OpenClawConfig;
   requesterSessionKey: string;
+  requesterAgentId?: string;
   directIdempotencyKey: string;
   deliveryTarget: {
     deliver: boolean;
@@ -821,7 +822,11 @@ async function deliverCompletionDirect(params: {
   ) {
     return undefined;
   }
-  const agentId = tryResolveRequesterAgentId(params.cfg, params.requesterSessionKey);
+  const agentId = tryResolveRequesterAgentId(
+    params.cfg,
+    params.requesterSessionKey,
+    params.requesterAgentId,
+  );
   if (!agentId) {
     return undefined;
   }
@@ -1067,6 +1072,7 @@ async function sendSubagentAnnounceDirectly(params: {
       deliverCompletionDirect({
         cfg,
         requesterSessionKey: canonicalRequesterSessionKey,
+        requesterAgentId: params.requesterAgentId,
         directIdempotencyKey: params.directIdempotencyKey,
         deliveryTarget,
         internalEvents: params.internalEvents,
