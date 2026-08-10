@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createUserTurnTranscriptRecorder } from "../../../sessions/user-turn-transcript.js";
 import { createTestUserTurnTranscriptTarget } from "../../../sessions/user-turn-transcript.test-support.js";
+import { registerQueuedUserMessageRetirement } from "../../sessions/queued-user-message-retirement.js";
 import {
   reportSteeringMessagePersistenceFailure,
   setSteeringMessageIdentity,
@@ -12,8 +13,6 @@ type EmbeddedAgentActiveSessionSteerTarget = Parameters<
   typeof steerActiveSessionWithOptionalDeliveryWait
 >[0];
 
-const ignoreQueuedDisplayMessage = () => false;
-
 function createIdentityAwareSteer(message: object): EmbeddedAgentActiveSessionSteerTarget["steer"] {
   return async (_text, _images, _recorder, _media, _imageOrder, queueIdentity) => {
     setSteeringMessageIdentity(
@@ -21,6 +20,15 @@ function createIdentityAwareSteer(message: object): EmbeddedAgentActiveSessionSt
       queueIdentity,
     );
   };
+}
+
+function registerDisplayRetirement(message: object) {
+  const retire = vi.fn(() => true);
+  registerQueuedUserMessageRetirement(
+    message as Parameters<typeof registerQueuedUserMessageRetirement>[0],
+    retire,
+  );
+  return retire;
 }
 
 function steerWithDeliveryWait(
@@ -44,7 +52,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       target: createTestUserTurnTranscriptTarget(),
     });
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer,
       subscribe: () => () => {},
     };
@@ -63,7 +70,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       { type: "image" as const, data: "second", mimeType: "image/png" },
     ];
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer,
       subscribe: () => () => {},
     };
@@ -81,7 +87,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     ];
     const imageOrder = ["offloaded", "inline"] as const;
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer,
       subscribe: () => () => {},
     };
@@ -110,7 +115,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       content: [{ type: "text", text: "queued completion" }],
     };
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer: createIdentityAwareSteer(queuedMessage),
       subscribe: (listener) => {
         emit = listener;
@@ -151,7 +155,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     const listeners = new Set<(event: unknown) => void>();
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: [] } },
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer: async () => {},
       subscribe: (listener) => {
         listeners.add(listener);
@@ -212,14 +215,13 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       timestamp: 3,
     };
     const queueMessages = [unrelatedMessage, targetMessage, trailingMessage];
-    const retireQueuedUserMessage = vi.fn(() => true);
+    const retireDisplay = registerDisplayRetirement(targetMessage);
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: {
         steeringQueue: {
           messages: queueMessages,
         },
       },
-      retireQueuedUserMessage,
       steer: createIdentityAwareSteer(targetMessage),
       subscribe: () => () => {},
     };
@@ -237,8 +239,7 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       expect(queueMessages[0]).toBe(unrelatedMessage);
       expect(queueMessages[0]?.content[1]).toBe(unrelatedImage);
       expect(queueMessages[1]).toBe(trailingMessage);
-      expect(retireQueuedUserMessage).toHaveBeenCalledOnce();
-      expect(retireQueuedUserMessage).toHaveBeenCalledWith(targetMessage);
+      expect(retireDisplay).toHaveBeenCalledOnce();
     } finally {
       vi.useRealTimers();
     }
@@ -258,7 +259,7 @@ describe("embedded OpenClaw queued steering cancellation", () => {
       timestamp: 3,
     };
     const queueMessages = [targetMessage, keepMessage];
-    const retireQueuedUserMessage = vi.fn(() => true);
+    const retireDisplay = registerDisplayRetirement(targetMessage);
     let unsubscribed = false;
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: {
@@ -266,7 +267,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
           messages: queueMessages,
         },
       },
-      retireQueuedUserMessage,
       steer: createIdentityAwareSteer(targetMessage),
       subscribe: (listener) => {
         emit = listener;
@@ -289,8 +289,7 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     try {
       await rejection;
       expect(queueMessages).toEqual([keepMessage]);
-      expect(retireQueuedUserMessage).toHaveBeenCalledOnce();
-      expect(retireQueuedUserMessage).toHaveBeenCalledWith(targetMessage);
+      expect(retireDisplay).toHaveBeenCalledOnce();
       expect(unsubscribed).toBe(true);
     } finally {
       vi.useRealTimers();
@@ -307,7 +306,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     let enqueued = false;
     const onQueueAccepted = vi.fn();
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer: async (_text, _images, _recorder, _media, _imageOrder, _identity, canInject) => {
         await preparation;
         if (canInject && !canInject()) {
@@ -358,7 +356,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     setSteeringMessageIdentity(second, "steer-b");
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: [first, second] } },
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer: async () => {},
       subscribe: (listener) => {
         emit = listener;
@@ -391,10 +388,9 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     setSteeringMessageIdentity(second, "steer-b");
     const queueMessages = [first, second];
     const controller = new AbortController();
-    const retireQueuedUserMessage = vi.fn(() => true);
+    const retireDisplay = registerDisplayRetirement(first);
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: queueMessages } },
-      retireQueuedUserMessage,
       steer: async () => {},
       subscribe: () => () => {},
     };
@@ -407,7 +403,7 @@ describe("embedded OpenClaw queued steering cancellation", () => {
 
     await expect(wait).rejects.toThrow("queued steering message was cancelled before delivery");
     expect(queueMessages).toEqual([second]);
-    expect(retireQueuedUserMessage).toHaveBeenCalledWith(first);
+    expect(retireDisplay).toHaveBeenCalledOnce();
   });
 
   it("cancels the exact expanded steer without leaving a duplicate UI entry", async () => {
@@ -422,10 +418,9 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     setSteeringMessageIdentity(second, "cancel-second");
     const queueMessages = [first, second];
     const controller = new AbortController();
-    const retireQueuedUserMessage = vi.fn(() => true);
+    const retireDisplay = registerDisplayRetirement(second);
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: queueMessages } },
-      retireQueuedUserMessage,
       steer: async () => {},
       subscribe: () => () => {},
     };
@@ -439,7 +434,7 @@ describe("embedded OpenClaw queued steering cancellation", () => {
 
     await expect(wait).rejects.toThrow("queued steering message was cancelled before delivery");
     expect(queueMessages).toEqual([first]);
-    expect(retireQueuedUserMessage).toHaveBeenCalledWith(second);
+    expect(retireDisplay).toHaveBeenCalledOnce();
   });
 
   it("removes the empty UI entry for an image-only queued steer", async () => {
@@ -448,10 +443,9 @@ describe("embedded OpenClaw queued steering cancellation", () => {
     setSteeringMessageIdentity(message, "image-only");
     const queueMessages = [message];
     const controller = new AbortController();
-    const retireQueuedUserMessage = vi.fn(() => true);
+    const retireDisplay = registerDisplayRetirement(message);
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: queueMessages } },
-      retireQueuedUserMessage,
       steer: async () => {},
       subscribe: () => () => {},
     };
@@ -468,14 +462,13 @@ describe("embedded OpenClaw queued steering cancellation", () => {
 
     await expect(wait).rejects.toThrow("queued steering message was cancelled before delivery");
     expect(queueMessages).toEqual([]);
-    expect(retireQueuedUserMessage).toHaveBeenCalledWith(message);
+    expect(retireDisplay).toHaveBeenCalledOnce();
   });
 
   it("marks a missing queued message as accepted without transcript confirmation", async () => {
     vi.useFakeTimers();
     const activeSession: EmbeddedAgentActiveSessionSteerTarget = {
       agent: { steeringQueue: { messages: [] } },
-      retireQueuedUserMessage: ignoreQueuedDisplayMessage,
       steer: async () => {},
       subscribe: () => () => {},
     };
@@ -512,7 +505,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
             messages: queueMessages,
           },
         },
-        retireQueuedUserMessage: ignoreQueuedDisplayMessage,
         steer: createIdentityAwareSteer(targetMessage),
         subscribe: (listener) => {
           emit = listener;
@@ -559,7 +551,6 @@ describe("embedded OpenClaw queued steering cancellation", () => {
             messages: queueMessages,
           },
         },
-        retireQueuedUserMessage: ignoreQueuedDisplayMessage,
         steer: createIdentityAwareSteer(targetMessage),
         subscribe: (listener) => {
           emit = listener;

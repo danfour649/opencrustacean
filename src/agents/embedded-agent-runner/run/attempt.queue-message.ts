@@ -11,6 +11,7 @@ import {
   claimPendingAgentQuestionAnswer,
 } from "../../harness/gateway-question.js";
 import type { AgentMessage } from "../../runtime/index.js";
+import { retireQueuedUserMessage } from "../../sessions/queued-user-message-retirement.js";
 import {
   getSteeringMessageIdentity,
   subscribeSteeringMessagePersistenceFailure,
@@ -27,7 +28,6 @@ import type {
  */
 type EmbeddedAgentActiveSessionSteerTarget = {
   agent?: unknown;
-  retireQueuedUserMessage?(message: AgentMessage): boolean;
   steer(
     text: string,
     images?: ImageContent[],
@@ -135,7 +135,7 @@ async function cancelQueuedSteeringMessage(
   queueIdentity: string,
 ): Promise<boolean> {
   const queuedMessages = getAgentSteeringQueueMessages(activeSession.agent);
-  if (!queuedMessages || !activeSession.retireQueuedUserMessage) {
+  if (!queuedMessages) {
     return false;
   }
   // The session runtime exposes only all-queue clears publicly; mutate the exact pending message
@@ -147,7 +147,7 @@ async function cancelQueuedSteeringMessage(
     return false;
   }
   const message = queuedMessages[queueIndex];
-  if (!message || !activeSession.retireQueuedUserMessage(message as AgentMessage)) {
+  if (!message || !retireQueuedUserMessage(message as AgentMessage)) {
     return false;
   }
   queuedMessages.splice(queueIndex, 1);

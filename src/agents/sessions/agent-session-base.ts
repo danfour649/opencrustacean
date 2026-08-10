@@ -38,6 +38,10 @@ import type { BashExecutionMessage, CustomMessage } from "./messages.js";
 import { getModelRegistryRuntime } from "./model-registry-runtime.js";
 import type { ModelRegistry } from "./model-registry.js";
 import type { PromptTemplate } from "./prompt-templates.js";
+import {
+  registerQueuedUserMessageRetirement,
+  retireQueuedUserMessage,
+} from "./queued-user-message-retirement.js";
 import type { ResourceLoader } from "./resource-loader.js";
 import type { SessionManager } from "./session-manager.js";
 import type { SettingsManager } from "./settings-manager.js";
@@ -73,11 +77,6 @@ export abstract class AgentSessionBase {
   protected steeringMessages: Array<{ text: string }> = [];
   /** Tracks pending follow-up messages for UI display. Removed when delivered. */
   protected followUpMessages: Array<{ text: string }> = [];
-  /** Message identity keeps empty and duplicate-text turns attached to their exact queue. */
-  private queuedUserMessages = new WeakMap<
-    AgentMessage,
-    { queue: Array<{ text: string }>; entry: { text: string } }
-  >();
   /** Messages queued to be included with the next user prompt as context ("asides"). */
   protected pendingNextTurnMessages: CustomMessage[] = [];
 
@@ -319,27 +318,19 @@ export abstract class AgentSessionBase {
     const queue = owner === "steering" ? this.steeringMessages : this.followUpMessages;
     const entry = { text };
     queue.push(entry);
-    this.queuedUserMessages.set(message, { queue, entry });
+    registerQueuedUserMessageRetirement(message, () => {
+      if (queue !== this.steeringMessages && queue !== this.followUpMessages) {
+        return false;
+      }
+      const queueIndex = queue.indexOf(entry);
+      if (queueIndex === -1) {
+        return false;
+      }
+      queue.splice(queueIndex, 1);
+      this.emitQueueUpdate();
+      return true;
+    });
     this.emitQueueUpdate();
-  }
-
-  /** Retires the display entry owned by this exact runtime message. */
-  retireQueuedUserMessage(message: AgentMessage): boolean {
-    const owned = this.queuedUserMessages.get(message);
-    if (!owned) {
-      return false;
-    }
-    this.queuedUserMessages.delete(message);
-    if (owned.queue !== this.steeringMessages && owned.queue !== this.followUpMessages) {
-      return false;
-    }
-    const queueIndex = owned.queue.indexOf(owned.entry);
-    if (queueIndex === -1) {
-      return false;
-    }
-    owned.queue.splice(queueIndex, 1);
-    this.emitQueueUpdate();
-    return true;
   }
 
   // Track last assistant message for auto-compaction check
@@ -375,7 +366,7 @@ export abstract class AgentSessionBase {
     // This ensures the UI sees the updated queue state
     if (event.type === "message_start" && event.message.role === "user") {
       this.overflowRecoveryAttempted = false;
-      this.retireQueuedUserMessage(event.message);
+      retireQueuedUserMessage(event.message);
     }
 
     // Emit to extensions first
