@@ -31,18 +31,9 @@ import type {
   SessionTranscriptTurnPersistOptions,
   SessionTranscriptTurnPersistResult,
 } from "./session-accessor.types.js";
-import { isPerAgentSessionStoreConfig } from "./session-store-config.js";
+import { resolvePersistedSessionStoreOwnerForKey } from "./session-store-owner.js";
 import { runWithOwnedSessionTranscriptWriteLock } from "./transcript-write-context.js";
 import type { SessionEntry } from "./types.js";
-
-function resolveTranscriptCompatibilityAgentId(config: OpenClawConfig): string | undefined {
-  const compatibilityAgentId = tryResolveLegacyCompatibilityAgentId(config);
-  if (isPerAgentSessionStoreConfig(config.session?.store)) {
-    return compatibilityAgentId;
-  }
-  const persistedAgentId = config.agents?.defaults?.sessionStore?.agentId?.trim();
-  return persistedAgentId ? normalizeAgentId(persistedAgentId) : compatibilityAgentId;
-}
 
 function resolveTranscriptTurnAgentId(params: {
   config: OpenClawConfig;
@@ -63,8 +54,31 @@ function resolveTranscriptTurnAgentId(params: {
       `Session key owner "${keyAgentId}" does not match requested agent "${scopedAgentId}".`,
     );
   }
+  const persistedStoreOwner = resolvePersistedSessionStoreOwnerForKey(
+    params.config,
+    params.sessionKey,
+  );
+  if (
+    scopedAgentId &&
+    persistedStoreOwner.kind === "configured" &&
+    scopedAgentId !== persistedStoreOwner.agentId
+  ) {
+    throw new AgentSelectionRequiredError(listAgentIds(params.config), {
+      surface: "transcript turn persistence",
+      hint: `The shared fixed-store row belongs to agent "${persistedStoreOwner.agentId}", not agent "${scopedAgentId}".`,
+    });
+  }
+  if (persistedStoreOwner.kind === "retired") {
+    throw new AgentSelectionRequiredError(listAgentIds(params.config), {
+      surface: "transcript turn persistence",
+      hint: `The shared fixed-store row belongs to retired agent "${persistedStoreOwner.agentId}".`,
+    });
+  }
   const agentId =
-    scopedAgentId ?? keyAgentId ?? resolveTranscriptCompatibilityAgentId(params.config);
+    keyAgentId ??
+    (persistedStoreOwner.kind === "configured" ? persistedStoreOwner.agentId : undefined) ??
+    scopedAgentId ??
+    tryResolveLegacyCompatibilityAgentId(params.config);
   if (agentId) {
     return normalizeAgentId(agentId);
   }
