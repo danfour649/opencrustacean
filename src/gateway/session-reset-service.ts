@@ -570,6 +570,7 @@ async function runAcpCleanupStep(params: {
 async function closeAcpRuntimeForSession(params: {
   cfg: OpenClawConfig;
   sessionKey: string;
+  agentId?: string;
   fallbackSessionKeys?: Array<string | undefined>;
   reason: "session-reset" | "session-delete";
   onResetMeta?: (params: { sessionKey: string; meta: SessionAcpMeta }) => void;
@@ -592,7 +593,7 @@ async function closeAcpRuntimeForSession(params: {
   let acpMeta: SessionAcpMeta | undefined;
   let acpSessionKey = params.sessionKey;
   for (const sessionKey of sessionKeys) {
-    acpMeta = readAcpSessionMeta({ sessionKey });
+    acpMeta = readAcpSessionMeta({ sessionKey, agentId: params.agentId, cfg: params.cfg });
     if (acpMeta) {
       acpSessionKey = sessionKey;
       break;
@@ -667,6 +668,7 @@ async function closeAcpRuntimeForSession(params: {
     await upsertAcpSessionMeta({
       cfg: params.cfg,
       sessionKey: acpSessionKey,
+      agentId: params.agentId,
       mutate: () => null,
     });
     params.assertCurrent?.();
@@ -679,6 +681,7 @@ async function closeAcpRuntimeForSession(params: {
     const resetMeta = await ensureFreshAcpResetState({
       cfg: params.cfg,
       sessionKey: acpSessionKey,
+      agentId: params.agentId,
       reason: params.reason,
       acpMeta,
       assertCurrent: params.assertCurrent,
@@ -717,6 +720,7 @@ function buildPendingAcpMeta(base: SessionAcpMeta, now: number): SessionAcpMeta 
 async function ensureFreshAcpResetState(params: {
   cfg: OpenClawConfig;
   sessionKey: string;
+  agentId?: string;
   reason: "session-reset" | "session-delete";
   acpMeta: SessionAcpMeta;
   assertCurrent?: () => void;
@@ -728,6 +732,8 @@ async function ensureFreshAcpResetState(params: {
   const latestMeta =
     readAcpSessionMeta({
       sessionKey: params.sessionKey,
+      agentId: params.agentId,
+      cfg: params.cfg,
     }) ?? params.acpMeta;
   if (
     !latestMeta?.identity ||
@@ -766,6 +772,7 @@ async function ensureFreshAcpResetState(params: {
   await upsertAcpSessionMeta({
     cfg: params.cfg,
     sessionKey: params.sessionKey,
+    agentId: params.agentId,
     mutate: (current) => {
       if (params.shouldApply && !params.shouldApply()) {
         return current;
@@ -883,6 +890,7 @@ export async function cleanupSessionBeforeMutation(params: {
   const parentAcpError = await closeAcpRuntimeForSession({
     cfg: params.cfg,
     sessionKey: parentSessionKey,
+    agentId: params.target.agentId,
     fallbackSessionKeys: [params.canonicalKey, params.legacyKey, params.key],
     reason: params.reason,
     onResetMeta: params.onAcpResetMeta,
@@ -1351,6 +1359,7 @@ export async function performGatewaySessionReset(params: {
       const parentAcpError = await closeAcpRuntimeForSession({
         cfg,
         sessionKey: parentSessionKey,
+        agentId: target.agentId,
         fallbackSessionKeys: [canonicalKey, legacyKey, params.key],
         reason: "session-reset",
         deferResetState: true,
