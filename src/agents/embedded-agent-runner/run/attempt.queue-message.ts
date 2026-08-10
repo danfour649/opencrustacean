@@ -135,8 +135,7 @@ async function cancelQueuedSteeringMessage(
   queueIdentity: string,
 ): Promise<boolean> {
   const queuedMessages = getAgentSteeringQueueMessages(activeSession.agent);
-  const retireQueuedUserMessage = activeSession.retireQueuedUserMessage;
-  if (!queuedMessages || !retireQueuedUserMessage) {
+  if (!queuedMessages || !activeSession.retireQueuedUserMessage) {
     return false;
   }
   // The session runtime exposes only all-queue clears publicly; mutate the exact pending message
@@ -148,7 +147,7 @@ async function cancelQueuedSteeringMessage(
     return false;
   }
   const message = queuedMessages[queueIndex];
-  if (!message || !retireQueuedUserMessage.call(activeSession, message as AgentMessage)) {
+  if (!message || !activeSession.retireQueuedUserMessage(message as AgentMessage)) {
     return false;
   }
   queuedMessages.splice(queueIndex, 1);
