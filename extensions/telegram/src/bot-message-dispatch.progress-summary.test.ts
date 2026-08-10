@@ -478,6 +478,46 @@ describeTelegramDispatch("dispatchTelegramMessage progress-summary", () => {
     expect(texts.some((text) => text.includes("tool call"))).toBe(false);
   });
 
+  it.each([
+    ["active", true],
+    ["inactive", false],
+  ])(
+    "renders Telegram commentary in the draft exactly when durable verbose progress is %s",
+    async (_label, durableLaneActive) => {
+      const { answerDraftStream } = setupDraftStreams({ answerMessageId: 2001 });
+      dispatchReplyWithBufferedBlockDispatcher.mockImplementation(
+        async ({ dispatcherOptions, replyOptions }) => {
+          expect(replyOptions?.commentaryPayloadsEnabled).toBe(true);
+          expect(replyOptions?.shouldDeliverCommentaryPayloads?.()).toBe(false);
+          replyOptions?.onVerboseProgressVisibility?.(() => durableLaneActive);
+          expect(replyOptions?.shouldDeliverCommentaryPayloads?.()).toBe(durableLaneActive);
+          await replyOptions?.onItemEvent?.({
+            kind: "preamble",
+            itemId: "commentary-1",
+            progressText: "Checking the Telegram event path",
+          });
+          await dispatcherOptions.deliver({ text: "Done" }, { kind: "final" });
+          return { queuedFinal: true };
+        },
+      );
+
+      await dispatchWithContext({
+        context: createContext(),
+        streamMode: "progress",
+        telegramCfg: { streaming: { mode: "progress", progress: { commentary: true } } },
+      });
+
+      const updates = answerDraftStream.updatePreview.mock.calls
+        .map(([preview]) => preview.text)
+        .join("\n");
+      if (durableLaneActive) {
+        expect(updates).not.toContain("Checking the Telegram event path");
+      } else {
+        expect(updates).toContain("Checking the Telegram event path");
+      }
+    },
+  );
+
   it("posts a collapse summary for a message_tool_only final that bypasses the answer path", async () => {
     // Codex-runtime turns deliver the final out-of-band (queuedFinal), so the
     // in-band collapse path never runs. The window still started, so the
