@@ -472,6 +472,7 @@ describe("DevicesPage gateway lifecycle", () => {
       deviceId: "device-1",
       role: "operator",
       scopes: [],
+      rotatedAtMs: 1_700_000_000_000,
       token: ROTATED_TOKEN,
       tokenDelivery: "in-band",
     });
