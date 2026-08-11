@@ -1,6 +1,10 @@
 // Durable rolling transcript for the machine-wide OpenClaw conversation.
 import { randomUUID } from "node:crypto";
-import type { SystemAgentChatHistoryWizardAction } from "../../packages/gateway-protocol/src/index.js";
+import { Value } from "typebox/value";
+import {
+  SystemAgentChatHistoryWizardActionSchema,
+  type SystemAgentChatHistoryWizardAction,
+} from "../../packages/gateway-protocol/src/schema/openclaw.js";
 import { createSqliteAuditRecordStore } from "../infra/sqlite-audit-record-store.js";
 
 type SystemAgentTranscriptEntry = {
@@ -11,7 +15,10 @@ type SystemAgentTranscriptEntry = {
   wizardAction?: SystemAgentChatHistoryWizardAction;
 };
 
-type StoredSystemAgentTranscriptEntry = Omit<SystemAgentTranscriptEntry, "sessionId">;
+type StoredSystemAgentTranscriptEntry = Omit<
+  SystemAgentTranscriptEntry,
+  "sessionId" | "wizardAction"
+>;
 
 type SystemAgentTranscriptTurn = {
   role: "user" | "assistant";
@@ -24,6 +31,7 @@ type SystemAgentTranscriptTurn = {
 const SYSTEM_AGENT_TRANSCRIPT_SCOPE = "system-agent-transcript";
 const SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES = 1_000;
 const SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX = "session:";
+const SYSTEM_AGENT_TRANSCRIPT_ACTION_KEY_MARKER = ":action:";
 
 function openTranscriptStore(env?: NodeJS.ProcessEnv) {
   return createSqliteAuditRecordStore<StoredSystemAgentTranscriptEntry>({
@@ -36,7 +44,11 @@ function openTranscriptStore(env?: NodeJS.ProcessEnv) {
 function createTranscriptEntryKey(turn: SystemAgentTranscriptEntry): string {
   const suffix = `${turn.at}:${randomUUID()}`;
   return turn.sessionId
-    ? `${SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX}${Buffer.from(turn.sessionId, "utf8").toString("base64url")}:${suffix}`
+    ? `${SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX}${Buffer.from(turn.sessionId, "utf8").toString("base64url")}${
+        turn.wizardAction
+          ? `${SYSTEM_AGENT_TRANSCRIPT_ACTION_KEY_MARKER}${Buffer.from(JSON.stringify(turn.wizardAction), "utf8").toString("base64url")}`
+          : ""
+      }:${suffix}`
     : suffix;
 }
 
@@ -54,13 +66,32 @@ function readTranscriptSessionId(key: string): string | undefined {
     : undefined;
 }
 
+function readTranscriptWizardAction(key: string): SystemAgentChatHistoryWizardAction | undefined {
+  const markerIndex = key.indexOf(SYSTEM_AGENT_TRANSCRIPT_ACTION_KEY_MARKER);
+  if (markerIndex < 0) {
+    return undefined;
+  }
+  const encoded = key
+    .slice(markerIndex + SYSTEM_AGENT_TRANSCRIPT_ACTION_KEY_MARKER.length)
+    .split(":", 1)[0];
+  if (!encoded) {
+    return undefined;
+  }
+  try {
+    const value: unknown = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
+    return Value.Check(SystemAgentChatHistoryWizardActionSchema, value) ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Append one already-sanitized engine history turn to the rolling logbook. */
 export function appendTranscriptTurn(
   turn: SystemAgentTranscriptEntry,
   opts: { env?: NodeJS.ProcessEnv } = {},
 ): void {
-  const { sessionId: _sessionId, ...storedTurn } = turn;
-  // Keep session attribution in the audit key, not the payload. Released readers
+  const { sessionId: _sessionId, wizardAction: _wizardAction, ...storedTurn } = turn;
+  // Keep recovery-only metadata in the audit key, not the payload. Released readers
   // return payloads verbatim, so adding fields there would break downgrade responses.
   openTranscriptStore(opts.env).register(createTranscriptEntryKey(turn), storedTurn, turn.at);
 }
@@ -95,7 +126,11 @@ export function readTranscriptTail(
   const entries = openTranscriptStore(opts.env)
     .latest({ limit: readLimit })
     .toReversed()
-    .map((entry) => ({ ...entry.value, sessionId: readTranscriptSessionId(entry.key) }));
+    .map((entry) => ({
+      ...entry.value,
+      sessionId: readTranscriptSessionId(entry.key),
+      wizardAction: readTranscriptWizardAction(entry.key),
+    }));
   // New reset markers fence only their owning session. Legacy unattributed markers
   // remain global so upgraded installs preserve the old machine-wide boundary.
   const resetIndex = opts.afterLastReset

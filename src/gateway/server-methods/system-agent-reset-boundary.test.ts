@@ -266,7 +266,7 @@ describe("openclaw.chat reset boundary", () => {
 
       expect(readTranscriptTail(10, { afterLastReset: true, sessionId: "s1" })).toEqual([]);
       expect(readTranscriptTail(10, { afterLastReset: true, sessionId: "s2" })).toEqual([
-        { role: "user", text: "session two question", at: 2 },
+        { role: "user", text: "session two question", at: 2, sessionId: "s2" },
       ]);
       expect(sessions.has("s1")).toBe(false);
       expect(sessions.has("s2")).toBe(true);
