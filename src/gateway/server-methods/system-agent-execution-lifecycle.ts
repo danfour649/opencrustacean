@@ -24,11 +24,26 @@ const systemAgentOwnerExecutions = new WeakMap<
 >();
 let retiredSystemAgentMutationSettlement: Promise<void> = Promise.resolve();
 
-export async function waitForRetiredSystemAgentMutationSettlement(): Promise<void> {
-  await retiredSystemAgentMutationSettlement;
+async function waitForRetiredSystemAgentMutationSettlementUntilStable(
+  afterSettlement?: () => void,
+): Promise<void> {
+  let settlement: Promise<void>;
+  do {
+    settlement = retiredSystemAgentMutationSettlement;
+    await settlement;
+    afterSettlement?.();
+    // Retired work can append while the observed fence is pending. Reach the stable
+    // tail before replacement work proceeds, or generations can overlap mutations.
+  } while (settlement !== retiredSystemAgentMutationSettlement);
 }
 
-async function waitForRetiredSystemAgentMutationSettlementForRpc(): Promise<void> {
+export async function waitForRetiredSystemAgentMutationSettlement(): Promise<void> {
+  await waitForRetiredSystemAgentMutationSettlementUntilStable();
+}
+
+async function waitForRetiredSystemAgentMutationSettlementForRpc(
+  sessions: GatewayRequestContext["systemAgentSessions"],
+): Promise<void> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<never>((_resolve, reject) => {
     timer = setTimeout(() => {
@@ -41,7 +56,12 @@ async function waitForRetiredSystemAgentMutationSettlementForRpc(): Promise<void
     timer.unref?.();
   });
   try {
-    await Promise.race([waitForRetiredSystemAgentMutationSettlement(), timeout]);
+    await Promise.race([
+      waitForRetiredSystemAgentMutationSettlementUntilStable(() =>
+        assertSystemAgentGatewayExecutionActive(sessions),
+      ),
+      timeout,
+    ]);
   } finally {
     if (timer) {
       clearTimeout(timer);
@@ -156,7 +176,7 @@ export async function runSystemAgentGatewayTask<T>(
 ): Promise<T> {
   // A persistent writer that crossed its commit boundary cannot be cancelled.
   // Preserve the cross-generation fence until every retired writer has settled.
-  await waitForRetiredSystemAgentMutationSettlementForRpc();
+  await waitForRetiredSystemAgentMutationSettlementForRpc(sessions);
   assertSystemAgentGatewayExecutionActive(sessions);
   const queue = getSystemAgentGatewayExecutionQueue(sessions);
   // Track every accepted RPC as active, never queued: restart draining snapshots

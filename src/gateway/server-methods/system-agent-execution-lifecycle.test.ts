@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { createDeferred } from "../../shared/deferred.js";
 import {
+  retainRetiredSystemAgentMutationSettlement,
   runSystemAgentGatewayMutationTask,
   runSystemAgentGatewayTask,
+  waitForRetiredSystemAgentMutationSettlement,
 } from "./system-agent-execution-lifecycle.js";
 import { disposeSystemAgentSessions } from "./system-agent-session-disposal.js";
 import type { GatewayRequestContext } from "./types.js";
@@ -14,6 +16,26 @@ async function waitForTaskAdmission(): Promise<void> {
 }
 
 describe("system-agent Gateway execution lifecycle", () => {
+  it("waits for a retired mutation retained while an older settlement is pending", async () => {
+    const releaseFirst = createDeferred();
+    const releaseSecond = createDeferred();
+    retainRetiredSystemAgentMutationSettlement(releaseFirst.promise);
+
+    let settled = false;
+    const waiting = waitForRetiredSystemAgentMutationSettlement().then(() => {
+      settled = true;
+    });
+    retainRetiredSystemAgentMutationSettlement(releaseSecond.promise);
+
+    releaseFirst.resolve();
+    await waitForTaskAdmission();
+    expect(settled).toBe(false);
+
+    releaseSecond.resolve();
+    await waiting;
+    expect(settled).toBe(true);
+  });
+
   it("rejects a queued callback after its Gateway generation is disposed", async () => {
     const sessions: GatewayRequestContext["systemAgentSessions"] = new Map();
     const firstStarted = createDeferred();
