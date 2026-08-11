@@ -1176,6 +1176,76 @@ describe("SystemAgentChatEngine", () => {
     });
   });
 
+  it("keeps a QR-owned hosted commit successful when runner expiry fires during the write", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_800_000_000_000);
+    let settleOwner!: () => void;
+    const owner = new Promise<void>((resolve) => {
+      settleOwner = resolve;
+    });
+    let markWriteStarted!: () => void;
+    const writeStarted = new Promise<void>((resolve) => {
+      markWriteStarted = resolve;
+    });
+    let releaseWrite!: () => void;
+    const writeGate = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    const baseConfig: OpenClawConfig = {};
+    mocks.readSetupConfigFileSnapshot.mockResolvedValue({
+      exists: true,
+      valid: true,
+      path: "/tmp/openclaw.json",
+      hash: "base-hash",
+      config: baseConfig,
+      sourceConfig: baseConfig,
+      issues: [],
+    });
+    mocks.setupChannels.mockImplementation(
+      async (config: OpenClawConfig, _runtime: unknown, prompter: WizardPrompter) => {
+        await prompter.qrCode?.({
+          title: "Link a device",
+          message: "Scan this QR code to continue.",
+          text: QR_TEXT,
+          dismissed: owner,
+          expiresAtMs: Date.now() + 60_000,
+        });
+        return config;
+      },
+    );
+    mocks.writeWizardConfigFile.mockImplementation(async (config: OpenClawConfig) => {
+      markWriteStarted();
+      await writeGate;
+      return config;
+    });
+    const engine = new SystemAgentChatEngine({
+      surface: "gateway",
+      supportsQrCode: true,
+      runAgentTurn: async () => null,
+      planWithAssistant: async () => null,
+      deps: { loadOverview: fakeOverviewLoader() },
+    });
+
+    const prompt = await engine.handle("connect telegram");
+    const stepId = expectDefined(prompt.step, "QR step").id;
+    await engine.answerWizard({ stepId });
+    settleOwner();
+    await writeStarted;
+
+    await vi.advanceTimersByTimeAsync(25 * 60_000);
+    await expect(engine.pollStep(stepId)).resolves.toMatchObject({
+      text: "Setup is still finishing the QR attempt.",
+      wizardSettling: true,
+    });
+
+    releaseWrite();
+    await vi.waitFor(() => expect(engine.hasPendingQrCode()).toBe(false));
+    const completed = await engine.pollStep(stepId);
+    expect(completed.text).toContain("telegram is configured");
+    expect(completed.text).not.toContain("setup cancelled");
+    expect(mocks.writeWizardConfigFile).toHaveBeenCalledOnce();
+  });
+
   it("polls a QR step until its owner reports the terminal result", async () => {
     let settleOwner!: () => void;
     const owner = new Promise<void>((resolve) => {
