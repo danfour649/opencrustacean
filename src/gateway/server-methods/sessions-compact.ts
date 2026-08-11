@@ -67,7 +67,8 @@ export const sessionCompactHandlers: GatewayRequestHandlers = {
       return;
     }
     const requestedAgentId = requestedAgent.agentId;
-    const compatibilityDefaultAgentId = tryResolveLegacyCompatibilityAgentId(cfg);
+    const compatibilityDefaultAgentId =
+      requestedAgentId ?? tryResolveLegacyCompatibilityAgentId(cfg);
     const { target, storePath } = resolveGatewaySessionTargetFromKey(key, cfg, {
       agentId: requestedAgentId,
     });

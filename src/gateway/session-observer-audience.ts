@@ -1,4 +1,5 @@
 import { tryResolveLegacyCompatibilityAgentId } from "../config/legacy.default-agent-owner.js";
+import { resolvePersistedSessionStoreOwnerForKey } from "../config/sessions/session-store-owner.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import type {
@@ -17,14 +18,19 @@ export function createSessionObserverAudience(params: {
     // sessions.messages.subscribe canonicalizes selected-agent global aliases
     // to this same qualified key before registering the connection.
     const scopedKey = sessionObserverScopeKey(sessionKey, agentId);
-    const compatibilityAgentId = tryResolveLegacyCompatibilityAgentId(params.getConfig());
+    const config = params.getConfig();
+    const persistedOwner = resolvePersistedSessionStoreOwnerForKey(config, sessionKey);
+    const compatibilityAgentId =
+      persistedOwner.kind === "configured"
+        ? persistedOwner.agentId
+        : tryResolveLegacyCompatibilityAgentId(config);
     if (
       sessionKey === "global" &&
       compatibilityAgentId !== undefined &&
       normalizeAgentId(agentId) === normalizeAgentId(compatibilityAgentId)
     ) {
-      // Keep legacy default-agent global subscribers while non-default global
-      // sessions remain confined to their agent-qualified stream.
+      // Keep the durable/legacy owner on the canonical bare global stream while
+      // non-owner global sessions remain confined to their agent-qualified stream.
       return [scopedKey, sessionKey];
     }
     return [scopedKey];

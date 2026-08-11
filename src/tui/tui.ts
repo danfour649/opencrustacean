@@ -208,12 +208,11 @@ export function resolveInitialTuiAgentId(params: {
   if (parsed?.agentId) {
     return normalizeAgentId(parsed.agentId);
   }
-  const effectiveUnscopedSessionKey =
-    initialSessionInput === "global" || initialSessionInput === "unknown"
-      ? initialSessionInput
-      : !initialSessionInput && params.cfg.session?.scope === "global"
-        ? "global"
-        : undefined;
+  const effectiveUnscopedSessionKey = initialSessionInput
+    ? initialSessionInput
+    : params.cfg.session?.scope === "global"
+      ? "global"
+      : undefined;
   if (effectiveUnscopedSessionKey) {
     return resolveSessionAgentId({
       config: params.cfg,

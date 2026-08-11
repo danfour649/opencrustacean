@@ -18,8 +18,10 @@ const projectChatDisplayMessageMock = vi.hoisted(() => vi.fn((message: unknown) 
 const loadAccessorSessionEntryReadOnlyMock = vi.hoisted(() => vi.fn());
 const loadGatewaySessionEntryReadOnlyMock = vi.hoisted(() => vi.fn());
 const readSessionMessageCountAsyncMock = vi.hoisted(() => vi.fn());
+const loadGatewaySessionRowMock = vi.hoisted(() => vi.fn());
+const runtimeConfigState = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 
-vi.mock("../config/io.js", () => ({ getRuntimeConfig: () => ({}) }));
+vi.mock("../config/io.js", () => ({ getRuntimeConfig: () => runtimeConfigState.value }));
 vi.mock("../config/sessions/session-accessor.js", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../config/sessions/session-accessor.js")>();
   return {
@@ -32,7 +34,7 @@ vi.mock("./chat-display-projection.js", () => ({
 }));
 vi.mock("./session-utils.js", () => ({
   attachOpenClawTranscriptMeta: (message: unknown) => message,
-  loadGatewaySessionRow: () => sessionRow,
+  loadGatewaySessionRow: (...args: unknown[]) => loadGatewaySessionRowMock(...args),
   loadSessionEntry: () => ({ entry: undefined, storePath: "" }),
   loadSessionEntryReadOnly: loadGatewaySessionEntryReadOnlyMock,
 }));
@@ -103,6 +105,9 @@ describe("createTranscriptUpdateBroadcastHandler", () => {
     loadAccessorSessionEntryReadOnlyMock.mockReturnValue(undefined);
     loadGatewaySessionEntryReadOnlyMock.mockReturnValue({ entry: undefined, storePath: "" });
     readSessionMessageCountAsyncMock.mockResolvedValue(undefined);
+    loadGatewaySessionRowMock.mockReturnValue(sessionRow);
+    runtimeConfigState.value = {};
+    sessionRow.key = "agent:main:main";
     sessionRow.thinkingLevel = "ultra";
   });
 
@@ -462,6 +467,51 @@ describe("createTranscriptUpdateBroadcastHandler", () => {
     expect(isEmbeddedAgentRunInProgressMock).toHaveBeenCalledWith("sess-main");
   });
 
+  it("routes an ownerless bare transcript event through the persisted fixed-store owner", async () => {
+    runtimeConfigState.value = {
+      session: { store: "/tmp/owned-shared.sqlite" },
+      agents: {
+        ownership: "explicit",
+        defaults: { sessionStore: { agentId: "ops" } },
+        entries: { ops: {}, research: {} },
+      },
+    };
+    sessionRow.key = "global";
+    const getSessionMessageSubscribers = vi.fn((sessionKey: string) =>
+      sessionKey === "global"
+        ? new Set(["conn-global"])
+        : sessionKey === "agent:ops:global"
+          ? new Set(["conn-scoped"])
+          : new Set<string>(),
+    );
+    const broadcastToConnIds = vi.fn();
+    const handler = createTranscriptUpdateBroadcastHandler({
+      broadcastToConnIds,
+      sessionEventSubscribers: { getAll: () => new Set<string>() },
+      sessionMessageSubscribers: { get: getSessionMessageSubscribers },
+      chatAbortControllers: new Map(),
+    });
+
+    await handler({
+      sessionKey: "global",
+      message: { role: "assistant", content: [{ type: "text", text: "Owner reply" }] },
+      messageId: "message-global-owner",
+      messageSeq: 1,
+    });
+
+    expect(getSessionMessageSubscribers).toHaveBeenCalledWith("agent:ops:global");
+    expect(getSessionMessageSubscribers).toHaveBeenCalledWith("global");
+    expect(loadGatewaySessionRowMock).toHaveBeenCalledWith("global", {
+      agentId: "ops",
+      transcriptUsageMaxBytes: 64 * 1024,
+    });
+    expect(broadcastToConnIds).toHaveBeenCalledWith(
+      "session.message",
+      expect.objectContaining({ sessionKey: "global" }),
+      new Set(["conn-scoped", "conn-global"]),
+    );
+  });
+
   it("broadcasts user idempotency keys in session.message metadata", async () => {
     await expect(
       emitAssistantTranscriptUpdate(false, {
@@ -553,6 +603,14 @@ describe("createTranscriptUpdateBroadcastHandler", () => {
 });
 
 describe("createLifecycleEventBroadcastHandler", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    isEmbeddedAgentRunInProgressMock.mockReturnValue(false);
+    loadGatewaySessionRowMock.mockReturnValue(sessionRow);
+    runtimeConfigState.value = {};
+    sessionRow.key = "agent:main:main";
+  });
+
   it("projects swarm phase and log payload fields", () => {
     const broadcastToConnIds = vi.fn();
     const handler = createLifecycleEventBroadcastHandler({
@@ -600,11 +658,49 @@ describe("createLifecycleEventBroadcastHandler", () => {
       await Promise.resolve();
       expect(received).toHaveBeenCalledWith({
         sessionKey: "agent:main:main",
+        agentId: "main",
         label: "Renamed session",
         reason: "rename",
       });
     } finally {
       unsubscribe();
     }
+  });
+
+  it("projects active state for a bare lifecycle event through the persisted owner", () => {
+    runtimeConfigState.value = {
+      session: { store: "/tmp/owned-shared.sqlite" },
+      agents: {
+        ownership: "explicit",
+        defaults: { sessionStore: { agentId: "ops" } },
+        entries: { ops: {}, research: {} },
+      },
+    };
+    sessionRow.key = "global";
+    const activeRun = {
+      ...createActiveRun(true),
+      agentId: "ops",
+      sessionKey: "global",
+    };
+    const broadcastToConnIds = vi.fn();
+    const handler = createLifecycleEventBroadcastHandler({
+      broadcastToConnIds,
+      sessionEventSubscribers: { getAll: () => new Set(["conn-1"]) },
+      chatAbortControllers: new Map([["run-before-finalize", activeRun]]),
+    });
+
+    handler({ sessionKey: "global", reason: "updated" });
+
+    expect(loadGatewaySessionRowMock).toHaveBeenCalledWith("global", { agentId: "ops" });
+    expect(broadcastToConnIds).toHaveBeenCalledWith(
+      "sessions.changed",
+      expect.objectContaining({
+        sessionKey: "global",
+        hasActiveRun: true,
+        activeRunIds: ["run-before-finalize"],
+      }),
+      new Set(["conn-1"]),
+      { dropIfSlow: true },
+    );
   });
 });
