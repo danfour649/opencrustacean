@@ -965,10 +965,13 @@ export class SystemAgentChatEngine {
     const step = bridge?.step;
     // Owner completion retires the presentation before the browser's retained Continue arrives.
     // Keep routing that one acknowledgement so WizardSession can settle its pending qrCode call.
+    const targetsDismissedQr = bridge !== null && bridge.dismissedQrStepId === answer.stepId;
     const staleQrAcknowledgement =
-      bridge !== null && !bridge.qrExpired && bridge.dismissedQrStepId === answer.stepId;
+      targetsDismissedQr &&
+      !bridge.qrExpired &&
+      (answer.value !== false || step === null || step === undefined);
     const dismissedQrCancellation =
-      bridge !== null && bridge.dismissedQrStepId === answer.stepId && answer.value === false;
+      targetsDismissedQr && answer.value === false && (step === null || step === undefined);
     if (!bridge) {
       if (this.retainedQrTerminalReply?.stepId === answer.stepId) {
         return { ...this.retainedQrTerminalReply.reply };
