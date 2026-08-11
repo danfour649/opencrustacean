@@ -2314,6 +2314,9 @@ export const en: TranslationMap = {
       submitting: "Submitting answer",
       submitted: "Answer submitted",
       confirmationUnavailable: "Answer sent; confirmation unavailable",
+      cancelling: "Cancelling setup",
+      cancelled: "Setup cancelled",
+      cancellationUnavailable: "Cancellation sent; confirmation unavailable",
     },
     panel: {
       title: "OpenClaw",
