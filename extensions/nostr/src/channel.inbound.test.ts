@@ -8,6 +8,8 @@ import type { NostrIngressLifecycle } from "./nostr-ingress.js";
 import { setNostrRuntime } from "./runtime.js";
 import { buildResolvedNostrAccount } from "./test-fixtures.js";
 
+const platformDispatchInfo = { onPlatformSendDispatch: async () => {} };
+
 const mocks = vi.hoisted(() => ({
   dispatchInboundDirectDm: vi.fn(),
   normalizePubkey: vi.fn((value: string) =>
@@ -171,8 +173,11 @@ describe("nostr inbound gateway path", () => {
   it("routes allowed DMs through the standard reply pipeline", async () => {
     mocks.dispatchInboundDirectDm.mockImplementationOnce(
       async (params: Parameters<typeof DispatchInboundDirectDm>[0]) => {
-        await params.deliver({ text: "**Table:** [docs](https://example.com)" });
-        await params.deliver({ text: "***" });
+        await params.deliver(
+          { text: "**Table:** [docs](https://example.com)" },
+          platformDispatchInfo,
+        );
+        await params.deliver({ text: "***" }, platformDispatchInfo);
       },
     );
     const { cleanup } = await startGatewayHarness({
@@ -265,7 +270,7 @@ describe("nostr inbound gateway path", () => {
   ])("$name before sending an inbound Nostr DM reply", async ({ text, expected }) => {
     mocks.dispatchInboundDirectDm.mockImplementationOnce(
       async (params: Parameters<typeof DispatchInboundDirectDm>[0]) => {
-        await params.deliver({ text });
+        await params.deliver({ text }, platformDispatchInfo);
       },
     );
     const { harness, cleanup } = await startGatewayHarness({

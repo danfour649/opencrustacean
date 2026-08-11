@@ -453,6 +453,8 @@ export function resetMessageActionPollMocks() {
   mocks.executeSendAction.mockImplementation(async () => {
     throw new Error("executeSendAction should not run in poll tests");
   });
+  mocks.beginTerminalSourceReplyDelivery.mockReset();
+  mocks.beginTerminalSourceReplyDelivery.mockResolvedValue(undefined);
   mocks.executePollAction.mockReset();
   mocks.executePollAction.mockImplementation(async (input) => ({
     handledBy: "core",

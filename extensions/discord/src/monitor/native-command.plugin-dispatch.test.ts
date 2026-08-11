@@ -40,6 +40,11 @@ const runtimeModuleMocks = vi.hoisted(() => ({
   getSessionEntry: vi.fn(),
 }));
 
+const deliveryInfo = (kind: "block" | "final") => ({
+  kind,
+  onPlatformSendDispatch: async () => {},
+});
+
 const dispatchChannelInboundTurnForTest: typeof dispatchChannelInboundTurn = async (plan) => {
   const dispatchResult = await runtimeModuleMocks.dispatchReplyWithDispatcher({
     ctx: plan.ctxPayload,
@@ -1204,7 +1209,7 @@ describe("Discord native plugin command dispatch", () => {
       if (!("deliver" in plan.delivery) || !plan.delivery.deliver) {
         throw new Error("expected direct deliverer");
       }
-      const info = { kind: "final" as const };
+      const info = deliveryInfo("final");
       const deliveryResult = await plan.delivery.deliver(finalReply, info);
       await plan.delivery.onDelivered?.(finalReply, info, deliveryResult);
       return {
@@ -1383,7 +1388,7 @@ describe("Discord native plugin command dispatch", () => {
         throw new Error("expected direct deliverer");
       }
       const payload = { text: "expired before delivery" };
-      const info = { kind: "final" as const };
+      const info = deliveryInfo("final");
       let deliveryError: unknown;
       try {
         await deliver(payload, info);
@@ -1446,7 +1451,7 @@ describe("Discord native plugin command dispatch", () => {
       let failedFinals = 0;
       for (const outcome of outcomes) {
         const payload = { text: `${outcome} final` };
-        const info = { kind: "final" as const };
+        const info = deliveryInfo("final");
         if (outcome === "suppressed") {
           await plan.delivery.onDelivered?.(payload, info, {
             visibleReplySent: false,

@@ -91,7 +91,7 @@ function createMockQaRuntime(params?: {
             {
               text: `qa-echo: ${turn.ctxPayload.BodyForAgent ?? turn.ctxPayload.Body ?? ""}`,
             },
-            { kind: "final" },
+            { kind: "final", onPlatformSendDispatch: async () => {} },
           );
           return {
             admission: turn.admission ?? { kind: "dispatch" as const },

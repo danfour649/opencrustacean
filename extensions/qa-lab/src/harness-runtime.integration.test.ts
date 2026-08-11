@@ -107,7 +107,10 @@ describe("QA runner runtime integration", () => {
       if (!("deliver" in params.delivery) || typeof params.delivery.deliver !== "function") {
         throw new Error("QA failure fixture requires core-managed delivery");
       }
-      await params.delivery.deliver({ text: failureText, isError: true }, { kind: "final" });
+      await params.delivery.deliver(
+        { text: failureText, isError: true },
+        { kind: "final", onPlatformSendDispatch: async () => {} },
+      );
       return {
         admission: params.admission ?? { kind: "dispatch" as const },
         dispatched: true,

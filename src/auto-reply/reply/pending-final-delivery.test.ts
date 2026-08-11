@@ -7,11 +7,16 @@ import {
 import { markInboundContextLabel } from "./inbound-context-marker.js";
 import {
   buildRecoverablePendingFinalDeliveryText,
-  buildPendingFinalDeliveryText,
   normalizePendingFinalDeliveryPayloads,
   normalizePendingFinalRecoveryPayloads,
   sanitizePendingFinalDeliveryText,
 } from "./pending-final-delivery.js";
+
+function buildPendingFinalDeliveryText(payloads: Array<{ text?: string }>): string {
+  return sanitizePendingFinalDeliveryText(
+    payloads.flatMap((payload) => payload.text ?? []).join("\n\n"),
+  );
+}
 
 describe("sanitizePendingFinalDeliveryText", () => {
   it("strips internal metadata from durable pending delivery text", () => {

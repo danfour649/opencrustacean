@@ -27,7 +27,11 @@ import {
   requiresDurableToolResultDelivery,
   shouldDeliverDespiteSourceReplySuppression,
 } from "./dispatch-from-config.payloads.js";
-import { extendPreparedDispatchState } from "./dispatch-from-config.phase-state.js";
+import {
+  accumulateBlockProgress,
+  extendPreparedDispatchState,
+  resetBlockProgress,
+} from "./dispatch-from-config.phase-state.js";
 import type { PrepareDispatchExecutionReadyState } from "./dispatch-from-config.prepare-execution.js";
 import { bindPreparedReplyDispatchRuntime } from "./prepared-reply-dispatch-context.js";
 import { waitForReplyDispatcherIdle } from "./reply-dispatcher.js";
@@ -105,8 +109,7 @@ export async function executeDispatch(state: PrepareDispatchExecutionReadyState)
       return false;
     }
     didDeliverVisiblePartialReply = true;
-    state.progressState.accumulatedBlockText = "";
-    state.progressState.accumulatedBlockTtsText = "";
+    resetBlockProgress(state.progressState);
     return true;
   };
   const replyResult = await runWithDispatchLifecycleAdmission(
@@ -471,18 +474,12 @@ export async function executeDispatch(state: PrepareDispatchExecutionReadyState)
                     ) {
                       const joinsBufferedTtsDirective =
                         cleanBlockTtsDirectiveText?.hasBufferedDirectiveText() === true;
-                      if (state.progressState.accumulatedBlockText.length > 0) {
-                        state.progressState.accumulatedBlockText += "\n";
-                      }
-                      state.progressState.accumulatedBlockText += payload.text;
-                      if (
-                        state.progressState.accumulatedBlockTtsText.length > 0 &&
-                        !joinsBufferedTtsDirective
-                      ) {
-                        state.progressState.accumulatedBlockTtsText += "\n";
-                      }
-                      state.progressState.accumulatedBlockTtsText += payload.text;
-                      state.progressState.blockCount++;
+                      accumulateBlockProgress(
+                        state.progressState,
+                        payload,
+                        payload.text,
+                        joinsBufferedTtsDirective,
+                      );
                     }
                     let visiblePayload =
                       payload.text &&

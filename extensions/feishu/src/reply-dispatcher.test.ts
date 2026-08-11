@@ -5,6 +5,7 @@ import {
   createChannelPartialDeliveryError,
   isChannelPartialDeliveryError,
 } from "openclaw/plugin-sdk/channel-inbound";
+import { PlatformMessageNotDispatchedError } from "openclaw/plugin-sdk/error-runtime";
 import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -179,8 +180,15 @@ afterAll(() => {
 describe("createFeishuReplyDispatcher streaming behavior", () => {
   type ReplyDispatcherArgs = Parameters<typeof createFeishuReplyDispatcher>[0];
   type ReplyDispatcherPlan = ReturnType<typeof createFeishuReplyDispatcher>;
+  type Delivery = ReplyDispatcherPlan["delivery"];
+  type DeliveryInfo = Parameters<Delivery["deliver"]>[1];
   type TypingDispatcherOptions = ReplyDispatcherPlan["dispatcherOptions"] &
-    ReplyDispatcherPlan["delivery"];
+    Omit<Delivery, "deliver"> & {
+      deliver: (
+        payload: Parameters<Delivery["deliver"]>[0],
+        info: Pick<DeliveryInfo, "kind"> & Partial<Pick<DeliveryInfo, "onPlatformSendDispatch">>,
+      ) => ReturnType<Delivery["deliver"]>;
+    };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -320,7 +328,15 @@ describe("createFeishuReplyDispatcher streaming behavior", () => {
   }
 
   function toTypingDispatcherOptions(result: ReplyDispatcherPlan): TypingDispatcherOptions {
-    return { ...result.dispatcherOptions, ...result.delivery };
+    return {
+      ...result.dispatcherOptions,
+      ...result.delivery,
+      deliver: (payload, info) =>
+        result.delivery.deliver(payload, {
+          ...info,
+          onPlatformSendDispatch: info.onPlatformSendDispatch ?? (async () => {}),
+        }),
+    };
   }
 
   function requireRecord(value: unknown, label: string): Record<string, unknown> {
@@ -1582,6 +1598,34 @@ describe("createFeishuReplyDispatcher streaming behavior", () => {
       .catch((caught: unknown) => caught);
 
     expect(error).toBe(marker);
+  });
+
+  it("does not enter media fallback when final custody is denied", async () => {
+    useNonStreamingAutoAccount();
+    const custodyError = new PlatformMessageNotDispatchedError("pending owner changed", {
+      cause: new Error("stale pending owner"),
+      retryable: false,
+    });
+    const onPlatformSendDispatch = vi.fn(async () => {
+      throw custodyError;
+    });
+    const { options } = createDispatcherHarness();
+
+    const error = await options
+      .deliver(
+        {
+          text: "voice caption",
+          mediaUrl: "https://example.com/reply.mp3",
+          audioAsVoice: true,
+        },
+        { kind: "final", onPlatformSendDispatch },
+      )
+      .catch((caught: unknown) => caught);
+
+    expect(error).toBe(custodyError);
+    expect(onPlatformSendDispatch).toHaveBeenCalledOnce();
+    expect(sendMediaFeishuMock).not.toHaveBeenCalled();
+    expect(sendMessageFeishuMock).not.toHaveBeenCalled();
   });
 
   it("never sends media fallback text after an accepted attachment loses its receipt", async () => {

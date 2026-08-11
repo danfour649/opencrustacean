@@ -21,18 +21,6 @@ import {
 import type { AgentRunSessionTarget } from "../run-session-target.js";
 import type { AgentCommandOpts } from "./types.js";
 
-export function clearPendingFinalDelivery(entry: SessionEntry, updatedAt: number): SessionEntry {
-  return {
-    ...entry,
-    pendingFinalDelivery: undefined,
-    restartRecoveryForceSafeTools: undefined,
-    restartRecoveryDeliveryMediaUrls: undefined,
-    restartRecoveryDisableMessageTool: undefined,
-    restartRecoverySuppressTextDelivery: undefined,
-    updatedAt,
-  };
-}
-
 type PreparedCurrentRunDelivery = {
   context: DeliveryContext;
   targetMode: ChannelOutboundTargetMode;

@@ -8,6 +8,11 @@ import { setQaChannelRuntime } from "../api.js";
 import { deleteQaBusMessage, editQaBusMessage, sendQaBusMessage } from "./bus-client.js";
 import { handleQaInbound } from "./inbound.js";
 
+const deliveryInfo = (kind: "block" | "final") => ({
+  kind,
+  onPlatformSendDispatch: async () => {},
+});
+
 const QA_GENERATED_IMAGE_BASE64 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7Z0nQAAAAASUVORK5CYII=";
 
@@ -108,7 +113,7 @@ describe("handleQaInbound", () => {
     const assembled = firstRunAssembledParams(runtime);
     await assembled.delivery.deliver(
       { text: "Here is your generated image.", mediaUrls: [mediaPath] },
-      { kind: "final" },
+      deliveryInfo("final"),
     );
 
     expect(loadOutboundMediaFromUrl).toHaveBeenCalledOnce();
@@ -144,7 +149,7 @@ describe("handleQaInbound", () => {
     const assembled = firstRunAssembledParams(runtime);
     await assembled.replyOptions?.onPartialReply?.({ text: "preview" });
     await assembled.replyOptions?.onPartialReply?.({ text: "preview expanded" });
-    await assembled.delivery.deliver({ text: "final answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "final answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledOnce();
     expect(sendQaBusMessage).toHaveBeenCalledWith(
@@ -165,26 +170,6 @@ describe("handleQaInbound", () => {
     );
   });
 
-  it("treats deliveries without dispatcher metadata as final replies", async () => {
-    const runtime = createPluginRuntimeMock();
-    setQaChannelRuntime(runtime);
-
-    await handleQaInbound(createQaInboundParams());
-
-    const assembled = firstRunAssembledParams(runtime);
-    await assembled.replyOptions?.onPartialReply?.({ text: "preview" });
-    const missingDeliveryInfo = undefined as unknown as Parameters<
-      typeof assembled.delivery.deliver
-    >[1];
-    await assembled.delivery.deliver({ text: "final answer" }, missingDeliveryInfo);
-
-    expect(sendQaBusMessage).toHaveBeenCalledOnce();
-    expect(editQaBusMessage).toHaveBeenCalledWith(
-      expect.objectContaining({ messageId: "preview-1", text: "final answer" }),
-    );
-    expect(deleteQaBusMessage).not.toHaveBeenCalled();
-  });
-
   it("keeps block deliveries separate and retains tool calls discovered after a preview", async () => {
     const runtime = createPluginRuntimeMock();
     setQaChannelRuntime(runtime);
@@ -198,8 +183,8 @@ describe("handleQaInbound", () => {
       name: "search",
       args: { query: "qa" },
     });
-    await assembled.delivery.deliver({ text: "tool result" }, { kind: "block" });
-    await assembled.delivery.deliver({ text: "final answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "tool result" }, deliveryInfo("block"));
+    await assembled.delivery.deliver({ text: "final answer" }, deliveryInfo("final"));
 
     expect(deleteQaBusMessage).toHaveBeenCalledOnce();
     expect(sendQaBusMessage).toHaveBeenCalledTimes(3);
@@ -226,8 +211,8 @@ describe("handleQaInbound", () => {
     await handleQaInbound(createQaInboundParams());
 
     const assembled = firstRunAssembledParams(runtime);
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "block" });
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("block"));
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledOnce();
     expect(sendQaBusMessage).toHaveBeenCalledWith(
@@ -242,9 +227,9 @@ describe("handleQaInbound", () => {
     await handleQaInbound(createQaInboundParams());
 
     const assembled = firstRunAssembledParams(runtime);
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "block" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("block"));
     await assembled.replyOptions?.onToolStart?.({ phase: "start", name: "search" });
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledTimes(2);
     expect(sendQaBusMessage).toHaveBeenNthCalledWith(
@@ -265,13 +250,13 @@ describe("handleQaInbound", () => {
       name: "search",
       args: { second: 2, first: 1 },
     });
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "block" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("block"));
     const toolCalls = vi.mocked(sendQaBusMessage).mock.calls[0]?.[0].toolCalls;
     if (!toolCalls?.[0]) {
       throw new Error("expected durable tool-call trace");
     }
     toolCalls[0].arguments = { first: 1, second: 2 };
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledOnce();
   });
@@ -288,13 +273,13 @@ describe("handleQaInbound", () => {
       name: "search",
       args: { attempt: 1 },
     });
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "block" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("block"));
     const toolCalls = vi.mocked(sendQaBusMessage).mock.calls[0]?.[0].toolCalls;
     if (!toolCalls?.[0]) {
       throw new Error("expected durable tool-call trace");
     }
     toolCalls[0] = { name: "search", arguments: { attempt: 2 } };
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledTimes(2);
     expect(sendQaBusMessage).toHaveBeenNthCalledWith(
@@ -313,9 +298,9 @@ describe("handleQaInbound", () => {
     await handleQaInbound(createQaInboundParams());
 
     const assembled = firstRunAssembledParams(runtime);
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "block" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("block"));
     await assembled.replyOptions?.onPartialReply?.({ text: "new preview" });
-    await assembled.delivery.deliver({ text: "single answer" }, { kind: "final" });
+    await assembled.delivery.deliver({ text: "single answer" }, deliveryInfo("final"));
 
     expect(sendQaBusMessage).toHaveBeenCalledTimes(2);
     expect(deleteQaBusMessage).toHaveBeenCalledOnce();

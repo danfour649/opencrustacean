@@ -184,7 +184,7 @@ describe("createFeishuCommentReplyDispatcher", () => {
     const created = createTestCommentReplyDispatcher();
 
     const error = await created.delivery
-      .deliver({ text: "firstsecond" }, { kind: "final" })
+      .deliver({ text: "firstsecond" }, { kind: "final", onPlatformSendDispatch: async () => {} })
       .catch((caught: unknown) => caught);
 
     expect(error).toMatchObject({

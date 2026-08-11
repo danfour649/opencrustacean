@@ -24,7 +24,7 @@ export type GatewayRecoveryRuntime = {
     threadId?: string | number;
     text: string;
     idempotencyKey: string;
-  }) => Promise<void>;
+  }) => Promise<"sent" | "suppressed" | void>;
 };
 
 export type GatewayInstanceRuntime = {

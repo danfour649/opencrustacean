@@ -273,7 +273,7 @@ export function buildRestartRecoveryTerminalDeliveryEvidence(
   };
 }
 
-export function shouldPersistCurrentRunSessionCleanup(
+function shouldPersistCurrentRunSessionCleanup(
   current: SessionEntry | undefined,
   sessionId: string,
 ): boolean {

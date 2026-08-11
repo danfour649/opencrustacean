@@ -101,7 +101,11 @@ export function installMSTeamsTestRuntime(options: MSTeamsTestRuntimeOptions = {
           cfg: turn.cfg,
           dispatcherOptions: {
             ...turn.dispatcherOptions,
-            deliver: turn.delivery.deliver,
+            deliver: (payload, info) =>
+              turn.delivery.deliver(payload, {
+                ...info,
+                onPlatformSendDispatch: info.onPlatformSendDispatch ?? (async () => {}),
+              }),
             onError: turn.delivery.onError,
           },
           toolsAllow: turn.toolsAllow,

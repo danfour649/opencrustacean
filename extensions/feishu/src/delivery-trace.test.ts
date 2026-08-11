@@ -19,6 +19,10 @@ import { FeishuConfigSchema } from "./config-schema.js";
 import type { ResolvedFeishuAccount } from "./types.js";
 
 type RecordedWireCall = Parameters<WireRecorder["recordWireCall"]>[0];
+const deliveryInfo = (kind: "block" | "final") => ({
+  kind,
+  onPlatformSendDispatch: async () => {},
+});
 type CreateFeishuReplyDispatcher =
   typeof import("./reply-dispatcher.js").createFeishuReplyDispatcher;
 type StreamingStartBackoffMap =
@@ -366,7 +370,7 @@ function setupFeishuTrace(recorder: WireRecorder, scenario: DeliveryTraceScenari
         created.replyOptions.onPartialReply?.({ text: step.text });
         break;
       case "block-final":
-        await created.delivery.deliver({ text: step.text }, { kind: "block" });
+        await created.delivery.deliver({ text: step.text }, deliveryInfo("block"));
         break;
       case "tool-progress":
         created.replyOptions.onToolStart?.({ name: step.name, phase: step.phase });
@@ -378,7 +382,7 @@ function setupFeishuTrace(recorder: WireRecorder, scenario: DeliveryTraceScenari
             ...(step.mediaUrls ? { mediaUrls: step.mediaUrls } : {}),
             ...(step.isError ? { isError: true } : {}),
           },
-          { kind: "final" },
+          deliveryInfo("final"),
         );
         break;
       case "cancel":

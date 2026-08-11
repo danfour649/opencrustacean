@@ -298,10 +298,11 @@ describe("handleBuzzInbound", () => {
       ThreadParentId: ROOM_ID,
     });
 
-    await dispatch.delivery.deliver({ text: "  " }, { kind: "final" });
+    const deliveryInfo = { kind: "final" as const, onPlatformSendDispatch: async () => {} };
+    await dispatch.delivery.deliver({ text: "  " }, deliveryInfo);
     expect(bus.sendText).not.toHaveBeenCalled();
 
-    await dispatch.delivery.deliver({ text: "threaded reply to @Alice" }, { kind: "final" });
+    await dispatch.delivery.deliver({ text: "threaded reply to @Alice" }, deliveryInfo);
     expect(bus.sendText).toHaveBeenCalledWith({
       channelId: ROOM_ID,
       text: "threaded reply to @Alice",

@@ -22,6 +22,7 @@ import {
   type OutboundPayloadDeliveryOutcome,
 } from "./deliver-types.js";
 import { attachOutboundDeliveryCommitHook } from "./delivery-commit-hooks.js";
+import { completeDurableDelivery } from "./delivery-completion.js";
 import { pruneOrphanedDeliveryQueueMedia } from "./delivery-queue-media-spool.js";
 import { OUTBOUND_DELIVERY_QUEUE_NAME } from "./delivery-queue-media-staging.js";
 import {
@@ -375,10 +376,23 @@ describe("delivery-queue recovery", () => {
   it("finalizes a persisted conversation operation during queue recovery", async () => {
     const scope = await createConversationRecoveryFixture("operation-recovery");
     const deliveryResult = { channel: "reef" as const, messageId: "reef-platform" };
-    const deliver = vi.fn(async (params: { onDeliveryResult?: (result: unknown) => unknown }) => {
-      await params.onDeliveryResult?.(deliveryResult);
-      return [deliveryResult];
-    });
+    const deliver = vi.fn(
+      async (params: {
+        deliveryCompletion?: Parameters<typeof completeDurableDelivery>[0];
+        deliveryQueueStateDir?: string;
+        onDeliveryResult?: (result: unknown) => unknown;
+      }) => {
+        if (params.deliveryCompletion) {
+          await completeDurableDelivery(
+            params.deliveryCompletion,
+            deliveryResult,
+            params.deliveryQueueStateDir,
+          );
+        }
+        await params.onDeliveryResult?.(deliveryResult);
+        return [deliveryResult];
+      },
+    );
     try {
       const { result } = await runRecovery({ deliver });
       expect(result.recovered).toBe(1);

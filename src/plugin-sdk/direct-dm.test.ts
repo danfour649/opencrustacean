@@ -290,6 +290,9 @@ describe("channel-inbound direct-message helpers", () => {
     expect(result.ctxPayload.CommandAuthorized).toBe(true);
     expect(recordInboundSession).toHaveBeenCalledTimes(1);
     expect(dispatchReplyWithBufferedBlockDispatcher).toHaveBeenCalledTimes(1);
-    expect(deliver).toHaveBeenCalledWith({ text: "reply text" });
+    expect(deliver).toHaveBeenCalledWith(
+      expect.objectContaining({ text: "reply text" }),
+      undefined,
+    );
   });
 });

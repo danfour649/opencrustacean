@@ -316,7 +316,10 @@ describe("channel turn pipeline", () => {
       messageId: "om-preview",
     });
     expect(onError).toHaveBeenCalledOnce();
-    expect(onError).toHaveBeenCalledWith(partialError, { kind: "final" });
+    expect(onError).toHaveBeenCalledWith(partialError, {
+      kind: "final",
+      onPlatformSendDispatch: expect.any(Function),
+    });
   });
 
   it("preserves deferred partial delivery when dispatch also fails", async () => {
@@ -466,7 +469,10 @@ describe("channel turn pipeline", () => {
     });
 
     expect(deliverOutboundPayloads).not.toHaveBeenCalled();
-    expect(deliver).toHaveBeenCalledWith({ text: "reply" }, { kind: "final" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "reply" },
+      { kind: "final", onPlatformSendDispatch: expect.any(Function) },
+    );
   });
 
   it("prepares payloads and observes legacy delivery results", async () => {
@@ -487,12 +493,18 @@ describe("channel turn pipeline", () => {
       },
     });
 
-    expect(deliver).toHaveBeenCalledWith({ text: "reply!" }, { kind: "final" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "reply!" },
+      { kind: "final", onPlatformSendDispatch: expect.any(Function) },
+    );
     expect(onDelivered).toHaveBeenCalledTimes(1);
     const [deliveredPayload, deliveredInfo, deliveredResult] = onDelivered.mock
       .calls[0] as unknown as [ReplyPayload, unknown, DeliveryResult];
     expect(deliveredPayload).toEqual({ text: "reply!" });
-    expect(deliveredInfo).toEqual({ kind: "final" });
+    expect(deliveredInfo).toEqual({
+      kind: "final",
+      onPlatformSendDispatch: expect.any(Function),
+    });
     expect(deliveredResult.messageIds).toEqual(["local-1"]);
     expect(deliveredResult.visibleReplySent).toBe(true);
   });
@@ -527,7 +539,10 @@ describe("channel turn pipeline", () => {
     });
 
     expect(transformReplyPayload).toHaveBeenCalledWith({ text: "reply" });
-    expect(deliver).toHaveBeenCalledWith({ text: "reply from pipeline" }, { kind: "final" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "reply from pipeline" },
+      { kind: "final", onPlatformSendDispatch: expect.any(Function) },
+    );
   });
 
   it("records inbound session before dispatching delivery", async () => {
@@ -558,7 +573,10 @@ describe("channel turn pipeline", () => {
       .calls[0] as unknown as [{ sessionKey?: string; storePath?: string }];
     expect(recordRequest.sessionKey).toBe("agent:main:test:peer");
     expect(recordRequest.storePath).toBe("/tmp/sessions.json");
-    expect(deliver).toHaveBeenCalledWith({ text: "reply" }, { kind: "final" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "reply" },
+      { kind: "final", onPlatformSendDispatch: expect.any(Function) },
+    );
   });
 
   it("can record a target session without changing the command dispatch session", async () => {

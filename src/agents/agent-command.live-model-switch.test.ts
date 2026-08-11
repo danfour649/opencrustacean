@@ -3043,22 +3043,6 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
 
     await runDiscordDelivery({ to: "channel:general" });
 
-    const pendingEntries = state.persistSessionEntryMock.mock.calls
-      .map((call) => (call[0] as { entry?: SessionEntry }).entry)
-      .filter((entry): entry is SessionEntry => entry?.pendingFinalDelivery !== undefined);
-    expect(pendingEntries).toContainEqual(
-      expect.objectContaining({
-        pendingFinalDelivery: expect.objectContaining({
-          kind: "replayable",
-          text: "ok",
-          context: {
-            channel: "discord",
-            to: "channel:1524410080953634829",
-            accountId: "main",
-          },
-        }),
-      }),
-    );
     expect(state.deliverAgentCommandResultMock).toHaveBeenCalledWith(
       expect.objectContaining({
         opts: expect.objectContaining({
@@ -3127,10 +3111,10 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     expect(pendingEntries).toEqual([]);
   });
 
-  it("clears a pre-existing transport-only pending delivery after an empty delivered run", async () => {
+  it("does not infer cleanup for a pre-existing transport-only delivery from an empty run", async () => {
     setupSingleAttemptFallback();
     state.runAgentAttemptMock.mockResolvedValue(makeEmptyResult("openai", "gpt-5.4"));
-    setupBareStoredSession({
+    const { store } = setupBareStoredSession({
       pendingFinalDelivery: {
         kind: "transport-only",
         createdAt: 2,
@@ -3147,11 +3131,10 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
       deliver: true,
     });
 
-    expect(state.persistSessionEntryMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        entry: expect.objectContaining({ pendingFinalDelivery: undefined }),
-      }),
-    );
+    expect(store["agent:main:main"]?.pendingFinalDelivery).toMatchObject({
+      kind: "transport-only",
+      intentId: "intent-1",
+    });
   });
 
   it("passes SQLite transcript markers to visible agent attempts", async () => {

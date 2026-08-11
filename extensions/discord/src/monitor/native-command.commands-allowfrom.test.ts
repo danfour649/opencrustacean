@@ -95,7 +95,10 @@ const dispatchChannelInboundTurnForTest: typeof dispatchChannelInboundTurn = asy
         if (!("deliver" in plan.delivery) || !plan.delivery.deliver) {
           throw new Error("expected core-managed Discord delivery");
         }
-        await plan.delivery.deliver(payload, info);
+        await plan.delivery.deliver(payload, {
+          ...info,
+          onPlatformSendDispatch: info.onPlatformSendDispatch ?? (async () => {}),
+        });
       },
       onError: plan.delivery.onError,
     },
@@ -530,7 +533,7 @@ describe("Discord native slash commands with commands.allowFrom", () => {
 
     await firstDispatchReplyCall().dispatcherOptions.deliver(
       { text: longReply },
-      { kind: "final" },
+      { kind: "final", onPlatformSendDispatch: async () => {} },
     );
 
     expect(interaction.followUp).toHaveBeenCalledWith({ content: longReply, ephemeral: true });

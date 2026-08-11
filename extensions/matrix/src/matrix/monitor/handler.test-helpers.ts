@@ -241,7 +241,11 @@ export function createMatrixHandlerTestHarness(
             cfg: turn.cfg,
             dispatcherOptions: {
               ...turn.dispatcherOptions,
-              deliver: turn.delivery.deliver,
+              deliver: (payload, info) =>
+                turn.delivery.deliver(payload, {
+                  ...info,
+                  onPlatformSendDispatch: info.onPlatformSendDispatch ?? (async () => {}),
+                }),
               onError: turn.delivery.onError,
             },
             replyOptions: turn.replyOptions,

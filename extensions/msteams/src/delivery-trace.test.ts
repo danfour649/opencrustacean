@@ -33,9 +33,17 @@ import type { MSTeamsTurnContext } from "./sdk-types.js";
 /** Core-owned dispatcher options returned by the Teams delivery plan. */
 type CapturedDispatcherOptions = {
   onReplyStart?: () => Promise<void> | void;
-  deliver: (payload: ReplyPayload, info: { kind: string }) => Promise<void> | void;
+  deliver: (
+    payload: ReplyPayload,
+    info: { kind: "block" | "final"; onPlatformSendDispatch?: () => Promise<void> },
+  ) => unknown;
   typingCallbacks?: { onIdle?: () => void };
 };
+
+const deliveryInfo = (kind: "block" | "final") => ({
+  kind,
+  onPlatformSendDispatch: async () => {},
+});
 
 /**
  * Deterministic stream write fault. Writes are counted across emit/update/close;
@@ -266,8 +274,12 @@ function setupMSTeamsTrace(recorder: WireRecorder, traceCase: MSTeamsTraceCase) 
   });
   const options = {
     ...created.dispatcherOptions,
-    deliver: created.delivery.deliver,
-  } as CapturedDispatcherOptions;
+    deliver: (payload, info) =>
+      created.delivery.deliver(payload, {
+        ...info,
+        onPlatformSendDispatch: info.onPlatformSendDispatch ?? (async () => {}),
+      }),
+  } satisfies CapturedDispatcherOptions;
 
   return async (step: DeliveryTraceInStep) => {
     switch (step.kind) {
@@ -280,7 +292,7 @@ function setupMSTeamsTrace(recorder: WireRecorder, traceCase: MSTeamsTraceCase) 
         created.replyOptions.onPartialReply?.({ text: step.text });
         break;
       case "block-final":
-        await options.deliver({ text: step.text }, { kind: "block" });
+        await options.deliver({ text: step.text }, deliveryInfo("block"));
         break;
       case "tool-progress":
         // Progress lines only render in streaming.mode=progress; with the
@@ -294,7 +306,7 @@ function setupMSTeamsTrace(recorder: WireRecorder, traceCase: MSTeamsTraceCase) 
             ...(step.mediaUrls ? { mediaUrls: step.mediaUrls } : {}),
             ...(step.isError ? { isError: true } : {}),
           },
-          { kind: "final" },
+          deliveryInfo("final"),
         );
         break;
       case "cancel":

@@ -10,7 +10,7 @@ import { outboundMessageIdentities } from "../message/outbound-echo-state.js";
 import type { RecordInboundSession } from "../session.types.js";
 import { hasVisibleChannelTurnDispatch } from "./dispatch-result.js";
 import { dispatchAssembledChannelTurn, dispatchRoutedChannelTurn } from "./lifecycle.js";
-import type { ChannelTurnResult } from "./types.js";
+import type { ChannelDeliveryInfo, ChannelTurnResult } from "./types.js";
 
 const deliverOutboundPayloads = vi.hoisted(() => vi.fn());
 const resolveOutboundDurableFinalDeliverySupport = vi.hoisted(() => vi.fn());
@@ -262,7 +262,7 @@ describe("channel turn delivery", () => {
     expect(events).toEqual(["prepare", "message_sending", "deliver"]);
     expect(deliver).toHaveBeenCalledWith(
       { text: "reply + prepared + message-hook", mediaUrls: ["media://1"] },
-      { kind: "final" },
+      expect.objectContaining({ kind: "final" }),
     );
     expect(runMessageSending).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -424,7 +424,10 @@ describe("channel turn delivery", () => {
 
     expect(runMessageSending).toHaveBeenCalledTimes(2);
     expect(deliver).toHaveBeenCalledTimes(1);
-    expect(deliver).toHaveBeenCalledWith({ text: "deliver me" }, { kind: "block" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "deliver me" },
+      expect.objectContaining({ kind: "block" }),
+    );
     expectDispatched(result);
     expect(result.dispatchResult).toMatchObject({
       queuedFinal: false,
@@ -454,7 +457,7 @@ describe("channel turn delivery", () => {
 
     expect(deliverWithProviderMessageSending).toHaveBeenCalledWith(
       { text: "reply" },
-      { kind: "final" },
+      expect.objectContaining({ kind: "final", onPlatformSendDispatch: expect.any(Function) }),
     );
     expect(runMessageSending).not.toHaveBeenCalled();
   });
@@ -485,7 +488,12 @@ describe("channel turn delivery", () => {
       ok: false,
       reason: "missing_outbound_handler",
     });
-    const fallbackDeliver = vi.fn(async () => ({ visibleReplySent: true }));
+    const fallbackDispatch = vi.fn();
+    const fallbackDeliver = vi.fn(async (_payload: ReplyPayload, info: ChannelDeliveryInfo) => {
+      await info.onPlatformSendDispatch?.();
+      fallbackDispatch();
+      return { visibleReplySent: true };
+    });
     await dispatchRoutedChannelTurn({
       cfg,
       channel: "telegram",
@@ -495,9 +503,10 @@ describe("channel turn delivery", () => {
     });
 
     expect(runMessageSending).toHaveBeenCalledTimes(1);
+    expect(fallbackDispatch).toHaveBeenCalledOnce();
     expect(fallbackDeliver).toHaveBeenCalledWith(
       { text: "reply + direct-hook" },
-      { kind: "final" },
+      expect.objectContaining({ kind: "final" }),
     );
   });
 
@@ -522,7 +531,7 @@ describe("channel turn delivery", () => {
 
     expect(onDelivered).toHaveBeenCalledWith(
       { text: "reply" },
-      { kind: "final" },
+      expect.objectContaining({ kind: "final" }),
       expect.objectContaining({
         messageIds: ["final-1"],
         visibleReplySent: true,
@@ -747,7 +756,10 @@ describe("channel turn delivery", () => {
       messageSendingHooks: true,
     });
     expect(deliverOutboundPayloads).not.toHaveBeenCalled();
-    expect(deliver).toHaveBeenCalledWith({ text: "reply" }, { kind: "final" });
+    expect(deliver).toHaveBeenCalledWith(
+      { text: "reply" },
+      expect.objectContaining({ kind: "final" }),
+    );
     const delivered = deliveryResult(deliveredResult);
     expect(delivered.messageIds).toEqual(["legacy-1"]);
     expect(delivered.visibleReplySent).toBe(true);

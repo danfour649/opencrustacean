@@ -383,7 +383,17 @@ describe("dispatchReplyFromConfig reply_dispatch hook", () => {
             replyResolver: async () =>
               setReplyPayloadMetadata(
                 { text: "older reply" },
-                { pendingFinalDeliveryIntentId: "older-intent" },
+                {
+                  pendingFinalDeliveryCompletion: {
+                    context: { channel: "telegram", to: "chat-1" },
+                    createdAt: 1,
+                    deliveryId: "older-delivery",
+                    intentId: "older-intent",
+                    sessionId: "session-1",
+                    sessionKey: "agent:test:session",
+                    storePath: "/tmp/mock-sessions.json",
+                  },
+                },
               ),
           }),
       });

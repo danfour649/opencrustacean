@@ -121,7 +121,12 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
         const dispatcher = {
           sendFinalReply: (payload: { text: string }) => {
             pendingDeliveries.push(
-              Promise.resolve(resolved.delivery.deliver(payload, { kind: "final" })),
+              Promise.resolve(
+                resolved.delivery.deliver(payload, {
+                  kind: "final",
+                  onPlatformSendDispatch: async () => {},
+                }),
+              ),
             );
           },
           markComplete: () => {},

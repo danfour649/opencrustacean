@@ -306,7 +306,10 @@ describe("WhatsApp canonical message_sent delivery", () => {
     const delivery = plan.delivery as ChannelInboundTurnPlan["delivery"];
 
     const failure = await delivery
-      .deliver({ text: "caption", mediaUrls: ["/tmp/accepted-voice.ogg"] }, { kind: "final" })
+      .deliver(
+        { text: "caption", mediaUrls: ["/tmp/accepted-voice.ogg"] },
+        { kind: "final", onPlatformSendDispatch: async () => {} },
+      )
       .catch((caught: unknown) => caught);
 
     expect(isChannelPartialDeliveryError(failure)).toBe(true);
