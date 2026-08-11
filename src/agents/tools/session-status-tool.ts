@@ -711,12 +711,16 @@ export function createSessionStatusTool(opts?: {
         }
       }
 
-      let agentId = resolveSessionToolTargetAgentId({
-        cfg,
-        targetSessionKey: requestedKeyInput,
-        requesterAgentId,
-      });
-      if (!isSemanticCurrentRequest) {
+      const deferTargetOwnerResolution =
+        !isSemanticCurrentRequest && shouldResolveSessionIdInput(requestedKeyInput);
+      let agentId = deferTargetOwnerResolution
+        ? requesterAgentId
+        : resolveSessionToolTargetAgentId({
+            cfg,
+            targetSessionKey: requestedKeyInput,
+            requesterAgentId,
+          });
+      if (!isSemanticCurrentRequest && !deferTargetOwnerResolution) {
         ensureAgentAccess(agentId);
       }
       let storePath = resolveStorePath(cfg.session?.store, { agentId });

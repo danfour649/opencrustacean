@@ -623,15 +623,16 @@ export async function runAnnounceDeliveryWithRetry<T>(params: {
 
 export function loadRequesterSessionEntry(requesterSessionKey: string, explicitAgentId?: string) {
   const cfg = subagentAnnounceDeliveryDeps.getRuntimeConfig();
+  const storageKey = requesterSessionKey.trim();
   const canonicalKey = resolveRequesterStoreKey(cfg, requesterSessionKey);
-  const agentId = tryResolveRequesterAgentId(cfg, canonicalKey, explicitAgentId);
+  const agentId = tryResolveRequesterAgentId(cfg, storageKey, explicitAgentId);
   if (!agentId) {
     return { cfg, entry: undefined, canonicalKey };
   }
   const storePath = resolveStorePath(cfg.session?.store, { agentId });
   const entry = subagentAnnounceDeliveryDeps.loadSessionEntry({
     storePath,
-    sessionKey: canonicalKey,
+    sessionKey: storageKey,
     agentId,
     clone: false,
   });
@@ -681,7 +682,10 @@ async function maybeSteerSubagentAnnounce(params: {
     requesterAgentId,
   );
   const canonicalKey = resolveRequesterStoreKey(cfg, params.requesterSessionKey);
-  const { sessionId, isActive } = resolveRequesterSessionActivity(canonicalKey, requesterAgentId);
+  const { sessionId, isActive } = resolveRequesterSessionActivity(
+    params.requesterSessionKey,
+    requesterAgentId,
+  );
   if (subagentAnnounceDeliveryDeps.isRequesterSessionAbandoned(canonicalKey, sessionId)) {
     return { status: "none" };
   }
@@ -727,7 +731,10 @@ async function maybeSteerSubagentAnnounce(params: {
   if (queueOutcome.reason === "stale_run") {
     return { status: "none" };
   }
-  const currentActivity = resolveRequesterSessionActivity(canonicalKey, requesterAgentId);
+  const currentActivity = resolveRequesterSessionActivity(
+    params.requesterSessionKey,
+    requesterAgentId,
+  );
   return { status: currentActivity.isActive ? "dropped" : "none" };
 }
 
@@ -1037,7 +1044,7 @@ async function sendSubagentAnnounceDirectly(params: {
       completionRouteRequiresMessageToolDelivery ||
       subagentDirectMessageCompletionRequiresMessageTool;
     const requesterActivity = resolveRequesterSessionActivity(
-      canonicalRequesterSessionKey,
+      params.targetRequesterSessionKey,
       params.requesterAgentId,
     );
     if (
@@ -1137,7 +1144,7 @@ async function sendSubagentAnnounceDirectly(params: {
     if (
       params.expectsCompletionMessage &&
       isCronRunSessionKey(canonicalRequesterSessionKey) &&
-      !resolveRequesterSessionActivity(canonicalRequesterSessionKey, params.requesterAgentId)
+      !resolveRequesterSessionActivity(params.targetRequesterSessionKey, params.requesterAgentId)
         .isActive &&
       !agentMediatedCompletion
     ) {
