@@ -328,6 +328,31 @@ describe("disposeSystemAgentSessions", () => {
     expect(replacementTask).toHaveBeenCalledOnce();
   });
 
+  it("keeps replacement fenced until every engine commit settles after a sibling fails", async () => {
+    const commitFailure = new Error("first engine commit failed");
+    const releaseSibling = createDeferred();
+    const sessions = new Map<string, SystemAgentChatSession>([
+      ["failing", sessionWithDispose(async () => {}, Promise.reject(commitFailure))],
+      ["pending", sessionWithDispose(async () => {}, releaseSibling.promise)],
+    ]);
+
+    const disposal = disposeSystemAgentSessions(sessions, new Map());
+    const disposalRejection = expect(disposal).rejects.toMatchObject({
+      name: "AggregateError",
+      errors: [commitFailure],
+    });
+    const replacementTask = vi.fn(async () => "replacement");
+    const replacement = runSystemAgentGatewayTask(replacementTask, new Map());
+    await waitForTaskAdmission();
+
+    expect(replacementTask).not.toHaveBeenCalled();
+
+    releaseSibling.resolve();
+    await disposalRejection;
+    await expect(replacement).resolves.toBe("replacement");
+    expect(replacementTask).toHaveBeenCalledOnce();
+  });
+
   it("rejects replacement work within a bounded wait when an engine commit stalls", async () => {
     vi.useFakeTimers();
     const releaseMutation = createDeferred();

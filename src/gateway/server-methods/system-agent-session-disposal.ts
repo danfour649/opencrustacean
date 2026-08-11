@@ -102,11 +102,18 @@ export async function disposeSystemAgentSessions(
   const persistentApplySettlements = ownedSessions
     .map((session) => session.engine.getPersistentApplySettlement())
     .filter((settlement): settlement is Promise<void> => settlement !== null);
-  const mutationSettlement = Promise.all([
+  const mutationSettlement = Promise.allSettled([
     gatewayMutationSettlement,
     wizardSettlement,
     ...persistentApplySettlements,
-  ]).then(() => undefined);
+  ]).then((results) => {
+    // The restart fence owns the whole retired generation. Report a mutation
+    // failure only after every sibling has stopped writing shared state.
+    const failure = results.find((result) => result.status === "rejected");
+    if (failure) {
+      throw failure.reason;
+    }
+  });
   retainRetiredSystemAgentMutationSettlement(mutationSettlement);
   // Expiration persists durable state and may fail. Retain the mutation fence first,
   // then keep cleanup progressing so replacement work cannot overlap this generation.
