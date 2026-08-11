@@ -151,7 +151,7 @@ describe("openclaw.chat reset boundary", () => {
         at: 2,
         sessionId: "recover-session",
       });
-      appendTranscriptReset();
+      appendTranscriptReset({ sessionId: "recover-session" });
       const fixture = await createSystemAgentVerifiedInferenceTestFixture(verifiedConfig);
       const engine = new SystemAgentChatEngine({
         surface: "gateway",
@@ -232,6 +232,44 @@ describe("openclaw.chat reset boundary", () => {
         },
       });
       expect(historyResponses[0]).not.toHaveProperty("payload.turns.0.sessionId");
+    });
+  });
+
+  it("does not truncate another live session's recovery when one session resets", async () => {
+    await withTranscriptState("openclaw-session-reset-isolation-", async () => {
+      appendTranscriptTurn({
+        role: "user",
+        text: "session one question",
+        at: 1,
+        sessionId: "s1",
+      });
+      appendTranscriptTurn({
+        role: "user",
+        text: "session two question",
+        at: 2,
+        sessionId: "s2",
+      });
+      const sessions = discardableSessions(async () => undefined);
+      sessions.set("s2", {
+        engine: { dispose: vi.fn(async () => undefined) },
+        welcome: "welcome text",
+        lastUsedAt: 2,
+        ownerKey: "device:device-test",
+      } as unknown as SystemAgentChatSession);
+      inferenceFallbackMocks.verifySystemAgentInferenceWithFallback.mockResolvedValueOnce({
+        ok: false,
+        status: "unavailable",
+        error: "no configured model",
+      });
+
+      await resetSession({ sessions });
+
+      expect(readTranscriptTail(10, { afterLastReset: true, sessionId: "s1" })).toEqual([]);
+      expect(readTranscriptTail(10, { afterLastReset: true, sessionId: "s2" })).toEqual([
+        { role: "user", text: "session two question", at: 2 },
+      ]);
+      expect(sessions.has("s1")).toBe(false);
+      expect(sessions.has("s2")).toBe(true);
     });
   });
 

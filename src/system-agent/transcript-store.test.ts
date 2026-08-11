@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it } from "vitest";
+import { createSqliteAuditRecordStore } from "../infra/sqlite-audit-record-store.js";
 import { closeOpenClawStateDatabase } from "../state/openclaw-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
-import { appendTranscriptTurn, readTranscriptTail } from "./transcript-store.js";
+import {
+  appendTranscriptReset,
+  appendTranscriptTurn,
+  readTranscriptTail,
+} from "./transcript-store.js";
 
 // Mirrors the store's internal retention bound (kept module-local there).
 const SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES = 1_000;
@@ -59,6 +64,37 @@ describe("system-agent transcript store", () => {
       expect(readTranscriptTail(0, { env, sessionId: "session-one" })).toEqual([]);
     });
   });
+
+  it("keeps session attribution out of payloads read by released versions", async () => {
+    await withTempDir(
+      { prefix: "openclaw-system-agent-transcript-downgrade-" },
+      async (stateDir) => {
+        const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+        appendTranscriptTurn(
+          { role: "user", text: "scoped question", at: 1, sessionId: "session-one" },
+          { env },
+        );
+
+        const releasedReader = createSqliteAuditRecordStore<{
+          role: "user" | "assistant" | "reset";
+          text: string;
+          at: number;
+        }>({
+          scope: "system-agent-transcript",
+          maxEntries: SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES,
+          env,
+        });
+        expect(releasedReader.latest({ limit: 1 })[0]?.value).toEqual({
+          role: "user",
+          text: "scoped question",
+          at: 1,
+        });
+        expect(readTranscriptTail(1, { env, sessionId: "session-one" })).toEqual([
+          { role: "user", text: "scoped question", at: 1 },
+        ]);
+      },
+    );
+  });
   it("prunes the oldest rows beyond the rolling retention limit", async () => {
     await withTempDir({ prefix: "openclaw-system-agent-transcript-prune-" }, async (stateDir) => {
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
@@ -94,6 +130,46 @@ describe("system-agent transcript store", () => {
         { role: "assistant", text: "new answer", at: 5 },
       ]);
     });
+  });
+
+  it("does not let one session reset truncate another session's recovery", async () => {
+    await withTempDir(
+      { prefix: "openclaw-system-agent-transcript-scoped-reset-" },
+      async (stateDir) => {
+        const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+        appendTranscriptTurn(
+          { role: "user", text: "session one before", at: 1, sessionId: "session-one" },
+          { env },
+        );
+        appendTranscriptTurn(
+          { role: "user", text: "session two before", at: 2, sessionId: "session-two" },
+          { env },
+        );
+        appendTranscriptReset({ env, sessionId: "session-one" });
+        appendTranscriptTurn(
+          { role: "assistant", text: "session one after", at: 4, sessionId: "session-one" },
+          { env },
+        );
+        appendTranscriptTurn(
+          { role: "assistant", text: "session two after", at: 5, sessionId: "session-two" },
+          { env },
+        );
+
+        expect(
+          readTranscriptTail(10, { afterLastReset: true, env, sessionId: "session-one" }),
+        ).toEqual([{ role: "assistant", text: "session one after", at: 4 }]);
+        expect(
+          readTranscriptTail(10, { afterLastReset: true, env, sessionId: "session-two" }),
+        ).toEqual([
+          { role: "user", text: "session two before", at: 2 },
+          { role: "assistant", text: "session two after", at: 5 },
+        ]);
+        expect(readTranscriptTail(10, { afterLastReset: true, env })).toEqual([
+          { role: "assistant", text: "session one after", at: 4 },
+          { role: "assistant", text: "session two after", at: 5 },
+        ]);
+      },
+    );
   });
 
   it("does not let a reset marker older than the requested tail truncate newer turns", async () => {

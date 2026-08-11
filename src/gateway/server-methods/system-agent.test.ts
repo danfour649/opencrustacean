@@ -1087,7 +1087,7 @@ describe("openclaw.chat", () => {
     expect(sessions.get("s1")?.engine).not.toBe(engine);
     expect(calls[0]?.ok).toBe(true);
     expect(seedHistory).not.toHaveBeenCalled();
-    expect(transcriptStoreMocks.appendTranscriptReset).toHaveBeenCalledOnce();
+    expect(transcriptStoreMocks.appendTranscriptReset).toHaveBeenCalledWith({ sessionId: "s1" });
 
     transcriptStoreMocks.readTranscriptTail.mockReturnValue([
       { role: "user", text: "After reset", at: 3 },

@@ -9,6 +9,8 @@ type SystemAgentTranscriptEntry = {
   sessionId?: string;
 };
 
+type StoredSystemAgentTranscriptEntry = Omit<SystemAgentTranscriptEntry, "sessionId">;
+
 type SystemAgentTranscriptTurn = {
   role: "user" | "assistant";
   text: string;
@@ -17,13 +19,35 @@ type SystemAgentTranscriptTurn = {
 
 const SYSTEM_AGENT_TRANSCRIPT_SCOPE = "system-agent-transcript";
 const SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES = 1_000;
+const SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX = "session:";
 
 function openTranscriptStore(env?: NodeJS.ProcessEnv) {
-  return createSqliteAuditRecordStore<SystemAgentTranscriptEntry>({
+  return createSqliteAuditRecordStore<StoredSystemAgentTranscriptEntry>({
     scope: SYSTEM_AGENT_TRANSCRIPT_SCOPE,
     maxEntries: SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES,
     ...(env ? { env } : {}),
   });
+}
+
+function createTranscriptEntryKey(turn: SystemAgentTranscriptEntry): string {
+  const suffix = `${turn.at}:${randomUUID()}`;
+  return turn.sessionId
+    ? `${SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX}${Buffer.from(turn.sessionId, "utf8").toString("base64url")}:${suffix}`
+    : suffix;
+}
+
+function readTranscriptSessionId(key: string): string | undefined {
+  if (!key.startsWith(SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX)) {
+    return undefined;
+  }
+  const encoded = key.slice(SYSTEM_AGENT_TRANSCRIPT_SESSION_KEY_PREFIX.length).split(":", 1)[0];
+  if (!encoded) {
+    return undefined;
+  }
+  const sessionId = Buffer.from(encoded, "base64url").toString("utf8");
+  return sessionId && Buffer.from(sessionId, "utf8").toString("base64url") === encoded
+    ? sessionId
+    : undefined;
 }
 
 /** Append one already-sanitized engine history turn to the rolling logbook. */
@@ -31,12 +55,25 @@ export function appendTranscriptTurn(
   turn: SystemAgentTranscriptEntry,
   opts: { env?: NodeJS.ProcessEnv } = {},
 ): void {
-  openTranscriptStore(opts.env).register(`${turn.at}:${randomUUID()}`, turn, turn.at);
+  const { sessionId: _sessionId, ...storedTurn } = turn;
+  // Keep session attribution in the audit key, not the payload. Released readers
+  // return payloads verbatim, so adding fields there would break downgrade responses.
+  openTranscriptStore(opts.env).register(createTranscriptEntryKey(turn), storedTurn, turn.at);
 }
 
 /** Mark a durable context boundary without deleting earlier logbook rows. */
-export function appendTranscriptReset(opts: { env?: NodeJS.ProcessEnv } = {}): void {
-  appendTranscriptTurn({ role: "reset", text: "", at: Date.now() }, opts);
+export function appendTranscriptReset(
+  opts: { env?: NodeJS.ProcessEnv; sessionId?: string } = {},
+): void {
+  appendTranscriptTurn(
+    {
+      role: "reset",
+      text: "",
+      at: Date.now(),
+      ...(opts.sessionId ? { sessionId: opts.sessionId } : {}),
+    },
+    opts,
+  );
 }
 
 /**
@@ -54,9 +91,17 @@ export function readTranscriptTail(
   const entries = openTranscriptStore(opts.env)
     .latest({ limit: readLimit })
     .toReversed()
-    .map((entry) => entry.value);
+    .map((entry) => ({ ...entry.value, sessionId: readTranscriptSessionId(entry.key) }));
+  // New reset markers fence only their owning session. Legacy unattributed markers
+  // remain global so upgraded installs preserve the old machine-wide boundary.
   const resetIndex = opts.afterLastReset
-    ? entries.findLastIndex((turn) => turn.role === "reset")
+    ? entries.findLastIndex(
+        (turn) =>
+          turn.role === "reset" &&
+          (opts.sessionId === undefined ||
+            turn.sessionId === undefined ||
+            turn.sessionId === opts.sessionId),
+      )
     : -1;
   const window = opts.afterLastReset ? entries.slice(resetIndex + 1) : entries;
   return window

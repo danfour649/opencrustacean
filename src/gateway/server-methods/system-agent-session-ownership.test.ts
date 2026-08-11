@@ -240,7 +240,9 @@ describe("openclaw.chat session ownership", () => {
       "transcript store unavailable",
     );
 
-    expect(transcriptStoreMocks.appendTranscriptReset).toHaveBeenCalledOnce();
+    expect(transcriptStoreMocks.appendTranscriptReset).toHaveBeenCalledWith({
+      sessionId: "owned-session",
+    });
     expect(sessions.get("owned-session")).toBe(session);
     expect(session.pendingApproval).toEqual({
       id: "approval-1",
