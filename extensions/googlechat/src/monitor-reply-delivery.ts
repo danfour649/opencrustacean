@@ -1,4 +1,5 @@
 // Googlechat plugin module implements monitor reply delivery behavior.
+import { PlatformMessageNotDispatchedError } from "openclaw/plugin-sdk/error-runtime";
 import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
 import type { OpenClawConfig } from "../runtime-api.js";
 import type { ResolvedGoogleChatAccount } from "./accounts.js";
@@ -101,8 +102,11 @@ export async function deliverGoogleChatReply(params: {
     } catch (err) {
       runtime.error?.(`Google Chat typing cleanup failed: ${String(err)}`);
     }
-    throw new Error(
+    // Permanent policy rejection before any recipient-visible send; the typed
+    // contract keeps delivery custody from recording a false ambiguous attempt.
+    throw new PlatformMessageNotDispatchedError(
       "Google Chat outbound attachments require user OAuth and no text fallback is available.",
+      { cause: undefined, retryable: false },
     );
   }
 

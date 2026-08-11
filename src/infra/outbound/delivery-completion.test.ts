@@ -7,6 +7,7 @@ import { loadSessionEntry, replaceSessionEntry } from "../../config/sessions/ses
 import type { InternalSessionEntry } from "../../config/sessions/types.js";
 import {
   claimPreparedPendingFinalDelivery,
+  rejectDurableDelivery,
   settlePendingFinalDelivery,
 } from "./delivery-completion.js";
 
@@ -118,6 +119,17 @@ describe("pending-final delivery completion", () => {
     await expect(settlePendingFinalDelivery(completion, "delivered")).resolves.toEqual({
       state: "delivered",
     });
+    expect(loadSessionEntry({ sessionKey, storePath })?.pendingFinalDelivery).toBeUndefined();
+    expect(loadSessionEntry({ sessionKey, storePath })?.pendingDeliveryNotice).toBeUndefined();
+  });
+
+  it("settles a proven pre-dispatch rejection as suppressed without notice debt", async () => {
+    await claimPreparedPendingFinalDelivery(completion, "queued");
+
+    await expect(rejectDurableDelivery(completion, "payload rejected")).resolves.toEqual({
+      state: "suppressed",
+    });
+
     expect(loadSessionEntry({ sessionKey, storePath })?.pendingFinalDelivery).toBeUndefined();
     expect(loadSessionEntry({ sessionKey, storePath })?.pendingDeliveryNotice).toBeUndefined();
   });

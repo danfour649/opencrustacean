@@ -319,8 +319,10 @@ export function rejectDurableDelivery(
   error: string,
   stateDir?: string,
 ): Promise<DurableDeliveryCompletionResult> | DurableDeliveryCompletionResult {
+  // Proven no-send: terminal suppression, not the unknown state that owes an
+  // uncertainty notice for a send the provider asserts never began.
   return completion.kind === "pending-final"
-    ? settlePendingFinalDelivery(completion, "unknown", stateDir)
+    ? settlePendingFinalDelivery(completion, "suppressed", stateDir)
     : conversationResult(
         markConversationDeliveryRejected(
           scopeForCompletion(completion),

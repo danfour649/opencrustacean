@@ -12,7 +12,10 @@ import {
 import { formatErrorMessage, toErrorObject } from "../../infra/errors.js";
 import { applyMessageSendingHook } from "../../infra/outbound/deliver-hooks.js";
 import { normalizeEmptyPayloadForDelivery } from "../../infra/outbound/deliver-payload.js";
-import { isPlatformMessageNotDispatchedError } from "../../infra/outbound/deliver-types.js";
+import {
+  isPlatformMessageNotDispatchedError,
+  isPlatformMessageRejectedError,
+} from "../../infra/outbound/deliver-types.js";
 import { settlePendingFinalDelivery } from "../../infra/outbound/delivery-completion.js";
 import { createMessageSentEmitter } from "../../infra/outbound/message-sent-hook.js";
 import { summarizeOutboundPayloadForTransport } from "../../infra/outbound/payloads.js";
@@ -220,6 +223,18 @@ async function settleChannelDeliveryAttempts(params: {
   }
 }
 
+// Failed-send custody policy shared by the direct-adapter and finalization
+// catches: an untyped error after adapter entry is an ambiguous recipient-visible
+// attempt (unknown → notice debt); a permanent typed non-dispatch rejection is a
+// proven no-send (suppressed, no replay, no notice); a retryable typed rejection
+// leaves the prepared record for safe recovery replay.
+function classifyFailedPendingFinalState(error: unknown): "unknown" | "suppressed" | undefined {
+  if (!isPlatformMessageNotDispatchedError(error)) {
+    return "unknown";
+  }
+  return isPlatformMessageRejectedError(error) ? "suppressed" : undefined;
+}
+
 async function settleChannelDeliveryAttempt(params: {
   attempt: PendingChannelDeliveryAttempt;
   onDelivered: AnyChannelDeliveryAdapter["onDelivered"] | undefined;
@@ -254,12 +269,13 @@ async function settleChannelDeliveryAttempt(params: {
     } catch {
       // Error observers are best-effort and must not replace the native settlement failure.
     }
-    if (!isPlatformMessageNotDispatchedError(error)) {
+    const failedState = classifyFailedPendingFinalState(error);
+    if (failedState === "unknown") {
       await attempt.info.onPlatformSendDispatch?.();
-      const completion = resolvePendingFinalCompletion(attempt.payload);
-      if (completion) {
-        await settlePendingFinalDelivery(completion, "unknown");
-      }
+    }
+    const completion = resolvePendingFinalCompletion(attempt.payload);
+    if (completion && failedState) {
+      await settlePendingFinalDelivery(completion, failedState);
     }
     const partial = resolvePartialChannelDeliveryResult(error);
     if (!isPlatformMessageNotDispatchedError(error)) {
@@ -602,20 +618,17 @@ async function dispatchChannelTurnWithDeliveryOwner(
                         }
                       }
                     } catch (error: unknown) {
+                      const failedState = classifyFailedPendingFinalState(error);
                       if (
                         directAdapterEntered &&
-                        !isPlatformMessageNotDispatchedError(error) &&
+                        failedState === "unknown" &&
                         directInfo.onPlatformSendDispatch
                       ) {
                         await directInfo.onPlatformSendDispatch();
                       }
                       const completion = resolvePendingFinalCompletion(effectivePayload);
-                      if (
-                        directAdapterEntered &&
-                        completion &&
-                        !isPlatformMessageNotDispatchedError(error)
-                      ) {
-                        await settlePendingFinalDelivery(completion, "unknown");
+                      if (directAdapterEntered && completion && failedState) {
+                        await settlePendingFinalDelivery(completion, failedState);
                       }
                       if (delivery.observeMessageSent) {
                         await settleChannelDeliveryAttempt({

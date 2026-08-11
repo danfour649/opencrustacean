@@ -1,4 +1,5 @@
 // Googlechat tests cover monitor.reply delivery plugin behavior.
+import { PlatformMessageNotDispatchedError } from "openclaw/plugin-sdk/error-runtime";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../runtime-api.js";
 import type { ResolvedGoogleChatAccount } from "./accounts.js";
@@ -371,8 +372,12 @@ describe("Google Chat reply delivery", () => {
           deliveredThreadName: "spaces/AAA/threads/root",
         },
       }),
-    ).rejects.toThrow(
-      "Google Chat outbound attachments require user OAuth and no text fallback is available.",
+    ).rejects.toSatisfy(
+      (error: unknown) =>
+        error instanceof PlatformMessageNotDispatchedError &&
+        !error.retryable &&
+        error.message ===
+          "Google Chat outbound attachments require user OAuth and no text fallback is available.",
     );
 
     expect(mocks.deleteGoogleChatMessage).toHaveBeenCalledWith({

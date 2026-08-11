@@ -82,7 +82,6 @@ const deliveryMocks = vi.hoisted(() => ({
 
 const dispatchChannelInboundTurnForTest: TelegramNativeCommandDeps["dispatchChannelInboundTurn"] =
   async (plan) => {
-    const delivery = plan.delivery;
     const dispatchResult = await replyPipelineMocks.dispatchReplyWithBufferedBlockDispatcher({
       ctx: plan.ctxPayload,
       cfg: plan.cfg,

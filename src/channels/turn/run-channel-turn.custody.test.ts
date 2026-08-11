@@ -180,6 +180,18 @@ describe("channel turn direct delivery custody", () => {
     });
     await expect(run(preflight)).rejects.toBe(preflight);
     expect(claimPreparedPendingFinalDelivery).not.toHaveBeenCalled();
+    expect(settlePendingFinalDelivery).not.toHaveBeenCalled();
+
+    const permanentRejection = new PlatformMessageNotDispatchedError(
+      "media-only payload rejected before dispatch",
+      { cause: undefined, retryable: false },
+    );
+    await expect(run(permanentRejection)).rejects.toBe(permanentRejection);
+    expect(claimPreparedPendingFinalDelivery).not.toHaveBeenCalled();
+    expect(settlePendingFinalDelivery).toHaveBeenCalledExactlyOnceWith(
+      { kind: "pending-final", ...completion },
+      "suppressed",
+    );
 
     const ambiguous = new Error("legacy adapter failed after entry");
     await expect(run(ambiguous)).rejects.toBe(ambiguous);
