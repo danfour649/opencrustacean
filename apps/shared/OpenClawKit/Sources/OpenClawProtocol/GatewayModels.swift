@@ -13118,6 +13118,7 @@ public struct CommandEntry: Codable, Sendable {
     public let scope: AnyCodable
     public let acceptsargs: Bool
     public let args: [[String: AnyCodable]]?
+    public let clientpresentation: [String: AnyCodable]?
 
     public init(
         name: String,
@@ -13129,7 +13130,8 @@ public struct CommandEntry: Codable, Sendable {
         skillmodelvisible: Bool? = nil,
         scope: AnyCodable,
         acceptsargs: Bool,
-        args: [[String: AnyCodable]]? = nil)
+        args: [[String: AnyCodable]]? = nil,
+        clientpresentation: [String: AnyCodable]? = nil)
     {
         self.name = name
         self.nativename = nativename
@@ -13141,6 +13143,7 @@ public struct CommandEntry: Codable, Sendable {
         self.scope = scope
         self.acceptsargs = acceptsargs
         self.args = args
+        self.clientpresentation = clientpresentation
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -13154,6 +13157,7 @@ public struct CommandEntry: Codable, Sendable {
         case scope
         case acceptsargs = "acceptsArgs"
         case args
+        case clientpresentation = "clientPresentation"
     }
 }
 
