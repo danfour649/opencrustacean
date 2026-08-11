@@ -1745,15 +1745,12 @@ export class SystemAgentChatEngine {
   private async startChannelSetupWizard(channel: string): Promise<string> {
     this.clearPendingProposals();
     this.lastSensitiveChannel = undefined;
-    const beforePersistentApply = async (runtime: RuntimeEnv) => {
-      await this.requirePersistentApplyInference(runtime);
-    };
     const runWizard = this.opts.runChannelSetupWizard;
     return await this.startHostedWizard({
       kind: "channel",
       label: channel,
       autoSelectChannel: channel,
-      run: (prompter, signal) =>
+      run: (prompter, signal, beforePersistentApply) =>
         runWizard
           ? runWizard(channel, prompter, beforePersistentApply, signal)
           : defaultChannelSetupWizardRunner(channel, prompter, beforePersistentApply, signal),
@@ -1762,40 +1759,31 @@ export class SystemAgentChatEngine {
 
   private async startSkillsSetupWizard(): Promise<string> {
     this.clearPendingProposals();
-    const beforePersistentApply = async (runtime: RuntimeEnv) => {
-      await this.requirePersistentApplyInference(runtime);
-    };
     const runWizard = this.opts.runSkillsSetupWizard ?? defaultSkillsSetupWizardRunner;
     return await this.startHostedWizard({
       kind: "skills",
       label: "skills",
-      run: (prompter) => runWizard(prompter, beforePersistentApply),
+      run: (prompter, _signal, beforePersistentApply) => runWizard(prompter, beforePersistentApply),
     });
   }
 
   private async startSearchSetupWizard(): Promise<string> {
     this.clearPendingProposals();
-    const beforePersistentApply = async (runtime: RuntimeEnv) => {
-      await this.requirePersistentApplyInference(runtime);
-    };
     const runWizard = this.opts.runSearchSetupWizard ?? defaultSearchSetupWizardRunner;
     return await this.startHostedWizard({
       kind: "search",
       label: "web search",
-      run: (prompter) => runWizard(prompter, beforePersistentApply),
+      run: (prompter, _signal, beforePersistentApply) => runWizard(prompter, beforePersistentApply),
     });
   }
 
   private async startGatewaySetupWizard(): Promise<string> {
     this.clearPendingProposals();
-    const beforePersistentApply = async (runtime: RuntimeEnv) => {
-      await this.requirePersistentApplyInference(runtime);
-    };
     const runWizard = this.opts.runGatewaySetupWizard ?? defaultGatewaySetupWizardRunner;
     const firstStep = await this.startHostedWizard({
       kind: "gateway",
       label: "gateway",
-      run: (prompter) => runWizard(prompter, beforePersistentApply),
+      run: (prompter, _signal, beforePersistentApply) => runWizard(prompter, beforePersistentApply),
     });
     // Warn only while an interactive wizard is actually pending; a refusal
     // (remote mode, invalid snapshot) already finished and needs no lockout note.
@@ -1811,16 +1799,13 @@ export class SystemAgentChatEngine {
 
   private async startMemoryImportWizard(): Promise<string> {
     this.clearPendingProposals();
-    const beforePersistentApply = async (runtime: RuntimeEnv) => {
-      await this.requirePersistentApplyInference(runtime);
-    };
     const runWizard = this.opts.runMemoryImportWizard ?? defaultMemoryImportWizardRunner;
     const providerOutcomes: MemoryImportProviderOutcome[] = [];
     return await this.startHostedWizard({
       kind: "memory-import",
       label: "memory import",
       memoryImportProviders: providerOutcomes,
-      run: (prompter) =>
+      run: (prompter, _signal, beforePersistentApply) =>
         runWizard(prompter, beforePersistentApply, (outcome) => providerOutcomes.push(outcome)),
     });
   }
@@ -1830,7 +1815,11 @@ export class SystemAgentChatEngine {
     label: string;
     autoSelectChannel?: string;
     memoryImportProviders?: MemoryImportProviderOutcome[];
-    run: (prompter: WizardPrompterLike, signal: AbortSignal) => Promise<HostedWizardRunResult>;
+    run: (
+      prompter: WizardPrompterLike,
+      signal: AbortSignal,
+      beforePersistentApply: (runtime: RuntimeEnv) => Promise<void>,
+    ) => Promise<HostedWizardRunResult>;
   }): Promise<string> {
     // Disposal may race an admitted model turn. Recheck at the ownership
     // boundary so that turn cannot install a fresh wizard, secret, or timer.
@@ -1844,8 +1833,15 @@ export class SystemAgentChatEngine {
         : {}),
     };
     const session = new WizardSession(
-      async (prompter, signal) => {
-        const result = await params.run(prompter, signal);
+      async (prompter, signal, runnerSession) => {
+        const beforePersistentApply = async (runtime: RuntimeEnv) => {
+          signal.throwIfAborted();
+          await this.requirePersistentApplyInference(runtime);
+          signal.throwIfAborted();
+          // Once a durable effect starts, its truthful result must win over a late cancel.
+          runnerSession.lockCancellation();
+        };
+        const result = await params.run(prompter, signal, beforePersistentApply);
         if (typeof result === "string") {
           completion.status = result;
         } else if (result) {
