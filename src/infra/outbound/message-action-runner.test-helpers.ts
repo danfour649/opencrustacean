@@ -439,8 +439,11 @@ export async function runPollAction(params: {
   };
 }
 
-export function resetMessageActionPollMocks() {
-  setActivePluginRegistry(
+export async function resetMessageActionPollMocks() {
+  vi.resetModules();
+  const { setActivePluginRegistry: setReloadedPluginRegistry } =
+    await import("../../plugins/runtime.js");
+  setReloadedPluginRegistry(
     createTestRegistry([{ pluginId: "poller", source: "test", plugin: pollerTestPlugin }]),
   );
   const mocks = messageActionRunnerMocks;
@@ -461,7 +464,9 @@ export function resetMessageActionPollMocks() {
   }));
 }
 
-export function clearMessageActionPollMocks() {
-  setActivePluginRegistry(createTestRegistry([]));
+export async function clearMessageActionPollMocks() {
+  const { setActivePluginRegistry: setReloadedPluginRegistry } =
+    await import("../../plugins/runtime.js");
+  setReloadedPluginRegistry(createTestRegistry([]));
   messageActionRunnerMocks.executePollAction.mockReset();
 }

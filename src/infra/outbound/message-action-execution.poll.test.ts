@@ -11,12 +11,12 @@ import {
 } from "./message-action-runner.test-helpers.js";
 
 describe("runMessageAction poll handling", () => {
-  beforeEach(() => {
-    resetMessageActionPollMocks();
+  beforeEach(async () => {
+    await resetMessageActionPollMocks();
   });
 
-  afterEach(() => {
-    clearMessageActionPollMocks();
+  afterEach(async () => {
+    await clearMessageActionPollMocks();
   });
   it("passes shared poll fields and auto threadId to executePollAction", async () => {
     const call = await runPollAction({

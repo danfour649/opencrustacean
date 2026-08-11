@@ -10,12 +10,12 @@ import {
 } from "./message-action-runner.test-helpers.js";
 
 describe("runMessageAction poll handling", () => {
-  beforeEach(() => {
-    resetMessageActionPollMocks();
+  beforeEach(async () => {
+    await resetMessageActionPollMocks();
   });
 
-  afterEach(() => {
-    clearMessageActionPollMocks();
+  afterEach(async () => {
+    await clearMessageActionPollMocks();
   });
   it("requires at least two poll options", async () => {
     await expect(
