@@ -14,7 +14,7 @@ import type { GatewayRecoveryRuntime } from "../gateway/server-instance-runtime.
 import { readSessionMessagesAsync } from "../gateway/session-transcript-readers.js";
 import { resolveGatewaySessionStoreTarget } from "../gateway/session-utils.js";
 import { getAgentEventLifecycleGeneration } from "../infra/agent-events.js";
-import { parseAgentSessionKey } from "../routing/session-key.js";
+import { LEGACY_IMPLICIT_AGENT_ID, resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 import {
   listActiveEmbeddedRunSessionIds,
   listActiveEmbeddedRunSessionKeys,
@@ -76,8 +76,10 @@ function resolveRestartRecoveryDispatchTarget(params: {
   storePath: string;
 }): { agentId: string; sessionKey: string } | undefined {
   if (!params.cfg) {
-    const parsed = parseAgentSessionKey(params.sessionKey);
-    return parsed?.agentId ? { agentId: parsed.agentId, sessionKey: params.sessionKey } : undefined;
+    return {
+      agentId: resolveAgentIdFromSessionKey(params.sessionKey, LEGACY_IMPLICIT_AGENT_ID),
+      sessionKey: params.sessionKey,
+    };
   }
   try {
     const target = resolveGatewaySessionStoreTarget({

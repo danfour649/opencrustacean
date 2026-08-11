@@ -123,6 +123,7 @@ export function resolveAcpSpawnRequesterState(params: {
     hasThreadContext,
     heartbeatEnabled: isHeartbeatEnabledForSessionAgent({
       cfg: params.cfg,
+      requesterAgentId: params.requesterAgentId,
       sessionKey: params.parentSessionKey,
     }),
     heartbeatRelayRouteUsable:

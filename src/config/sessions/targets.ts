@@ -709,7 +709,10 @@ export function resolveSessionStoreTargets(
       );
     }
     const target = resolveExplicitSessionStoreTarget({ defaultAgentId, env, store: opts.store });
-    if (hasAgent && target.agentId !== defaultAgentId) {
+    if (
+      (hasAgent || persistedStoreOwner.kind === "configured") &&
+      target.agentId !== defaultAgentId
+    ) {
       throw new Error(
         `Session store belongs to agent "${target.agentId}", not requested agent "${defaultAgentId}".`,
       );
