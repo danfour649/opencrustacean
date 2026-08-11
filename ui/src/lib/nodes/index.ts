@@ -416,23 +416,44 @@ type RotatedDeviceTokenOutcome =
   | { delivery: "withheld-cross-device" };
 
 /**
+ * The Gateway echoes back the raw request `deviceId` and the stored `role`, so a returned
+ * grant is compared on the same trim normalization the device-auth store applies
+ * (`normalizeDeviceAuthRole`) rather than by raw equality.
+ */
+function matchesRequestedGrant(value: unknown, requested: string): boolean {
+  return typeof value === "string" && value.trim().length > 0 && value.trim() === requested.trim();
+}
+
+/**
  * Parses the raw `device.token.rotate` payload, which reaches this client unvalidated:
  * the browser Gateway client resolves `frame.payload` directly, so the registered result
  * schema never runs here. Only `DeviceTokenRotateResultSchema`'s shapes are accepted —
- * an identified grant, a token that is absent or a non-empty string, and `tokenDelivery`
- * paired with the secret. Anything else describes a rotation whose outcome is unknown,
- * and both dialogs would lie about it: one claims a credential arrived, the other that
- * the device re-credentials on its own. The old token is dead either way, so the operator
- * gets the error and the recovery step. Gateways released before `tokenDelivery` omit it
- * and leave the token as the only signal, but still identify the grant they rotated.
+ * a complete envelope for the requested grant, a token that is absent or a non-empty string,
+ * and `tokenDelivery` paired with the secret. Anything else describes a rotation whose
+ * outcome is unknown, and both dialogs would lie about it: one claims a credential arrived,
+ * the other that the device re-credentials on its own. The old token is dead either way, so
+ * the operator gets the error and the recovery step. Gateways released before `tokenDelivery`
+ * omit only that field; they still return the rest of the result they rotated.
  */
-function classifyRotationOutcome(payload: unknown): RotatedDeviceTokenOutcome {
+function classifyRotationOutcome(
+  payload: unknown,
+  requested: { deviceId: string; role: string },
+): RotatedDeviceTokenOutcome {
   const result = isRecord(payload) ? payload : undefined;
+  const scopes = result?.scopes;
+  const rotatedAtMs = result?.rotatedAtMs;
+  // `scopes` and `rotatedAtMs` are required by the result schema, and the grant has to be the
+  // one this page asked to rotate: a reply naming another device or role says nothing about
+  // this request, so reporting it would tell the operator a credential they still hold was
+  // replaced.
   const identified =
-    typeof result?.deviceId === "string" &&
-    result.deviceId.length > 0 &&
-    typeof result.role === "string" &&
-    result.role.length > 0;
+    matchesRequestedGrant(result?.deviceId, requested.deviceId) &&
+    matchesRequestedGrant(result?.role, requested.role) &&
+    Array.isArray(scopes) &&
+    scopes.every((scope: unknown) => typeof scope === "string" && scope.length > 0) &&
+    typeof rotatedAtMs === "number" &&
+    Number.isInteger(rotatedAtMs) &&
+    rotatedAtMs >= 0;
   // An absent token and a present-but-invalid one are different answers: the schema bounds
   // `token` to a non-empty string, so `token: ""` is a malformed envelope rather than a
   // rotation that withheld the secret.
@@ -480,7 +501,7 @@ export async function rotateDeviceToken(
       scopes?: Array<string>;
       tokenDelivery?: string;
     }>("device.token.rotate", requestParams);
-    const outcome = classifyRotationOutcome(res);
+    const outcome = classifyRotationOutcome(res, requestParams);
     // A retired epoch stops every state write below, but never the return: the previous
     // credential is already dead on the server, so discarding this response would leave
     // the operator locked out with no way to ask for the replacement again.

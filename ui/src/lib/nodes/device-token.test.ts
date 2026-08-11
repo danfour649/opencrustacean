@@ -57,6 +57,16 @@ const tokenParams = {
   role: "operator",
 };
 
+// Every Gateway answering this method returns the full result schema for the requested grant.
+// Cases spread this base so each one fails for the reason it names rather than for a required
+// field the fixture happened to omit.
+const rotationResult = {
+  deviceId: tokenParams.deviceId,
+  role: tokenParams.role,
+  scopes: [],
+  rotatedAtMs: 1_700_000_000_000,
+};
+
 function storedTokenKey(): string {
   const key = Array.from({ length: localStorage.length }, (_, index) =>
     localStorage.key(index),
@@ -86,7 +96,7 @@ describe("device token request lifecycle", () => {
 
     const operation = rotateDeviceToken(state, tokenParams);
     state.requestGeneration += 1;
-    response.resolve({ token: "rotated-token", tokenDelivery: "in-band", ...tokenParams });
+    response.resolve({ token: "rotated-token", tokenDelivery: "in-band", ...rotationResult });
 
     expect(await operation).toEqual({ delivery: "in-band", token: "rotated-token" });
     expect(loadDeviceAuthToken(tokenParams)).toBeNull();
@@ -98,7 +108,7 @@ describe("device token request lifecycle", () => {
     const state = createState(async () => ({
       token: "rotated-token",
       tokenDelivery: "in-band",
-      ...tokenParams,
+      ...rotationResult,
     }));
 
     const operation = rotateDeviceToken(state, tokenParams);
@@ -112,8 +122,7 @@ describe("device token request lifecycle", () => {
 
   it("reports a cross-device rotation the Gateway withheld the token for", async () => {
     const state = createState(async () => ({
-      ...tokenParams,
-      scopes: [],
+      ...rotationResult,
       tokenDelivery: "withheld-cross-device",
     }));
 
@@ -123,12 +132,27 @@ describe("device token request lifecycle", () => {
     expect(loadDeviceAuthToken(tokenParams)).toBeNull();
   });
 
+  // The Gateway echoes the raw request deviceId and its own stored role, so a grant that
+  // differs only by surrounding whitespace is still the one this page asked to rotate.
+  it("accepts a result whose grant differs from the request only by whitespace", async () => {
+    const state = createState(async () => ({
+      ...rotationResult,
+      deviceId: " 00 ",
+      role: "operator ",
+      tokenDelivery: "withheld-cross-device",
+    }));
+
+    expect(await rotateDeviceToken(state, tokenParams)).toEqual({
+      delivery: "withheld-cross-device",
+    });
+  });
+
   // Gateways released before tokenDelivery answer without it; a present token is then
   // the only signal, so the outcome must still resolve rather than read as withheld.
   it("classifies a rotate response from a Gateway that omits tokenDelivery", async () => {
     storeIdentity();
     const { digest, digestMock } = deferIdentityFingerprint();
-    const state = createState(async () => ({ token: "legacy-token", ...tokenParams }));
+    const state = createState(async () => ({ token: "legacy-token", ...rotationResult }));
 
     const operation = rotateDeviceToken(state, tokenParams);
     await vi.waitFor(() => expect(digestMock).toHaveBeenCalledOnce());
@@ -141,7 +165,7 @@ describe("device token request lifecycle", () => {
   // The other legacy omission state: no field and no token is the withheld rotation that
   // used to end with nothing on screen, so it must resolve rather than read as an error.
   it("classifies a tokenless response from a Gateway that omits tokenDelivery", async () => {
-    const state = createState(async () => ({ ...tokenParams, scopes: [] }));
+    const state = createState(async () => ({ ...rotationResult }));
 
     expect(await rotateDeviceToken(state, tokenParams)).toEqual({
       delivery: "withheld-cross-device",
@@ -169,22 +193,32 @@ describe("device token request lifecycle", () => {
     ],
     ["a blank token with no delivery field", { token: "" }],
   ])("refuses %s", async (_label, response) => {
-    const state = createState(async () => ({ ...tokenParams, scopes: [], ...response }));
+    const state = createState(async () => ({ ...rotationResult, ...response }));
 
     expect(await rotateDeviceToken(state, tokenParams)).toBeNull();
     expect(state.devicesError).toContain("unusable result");
     expect(loadDeviceAuthToken(tokenParams)).toBeNull();
   });
 
-  // Envelopes that identify no grant are not legacy responses: every Gateway that answers
-  // this method returns deviceId and role. Treating them as the omission state would turn
-  // a broken reply into a completion dialog after the previous credential was invalidated.
+  // Envelopes that identify no grant, drop a required field, or answer for a different grant
+  // are not legacy responses: only `tokenDelivery` predates this client. Reporting any of them
+  // would turn a broken or unrelated reply into a completion dialog for a credential the
+  // operator may still hold, after the previous one was already invalidated.
   it.each([
     ["a null payload", null],
     ["a scalar payload", "rotated"],
     ["an empty object", {}],
     ["an array payload", []],
     ["a payload naming no role", { deviceId: "00" }],
+    ["a payload omitting scopes", { deviceId: "00", role: "operator", rotatedAtMs: 1 }],
+    ["a payload omitting rotatedAtMs", { deviceId: "00", role: "operator", scopes: [] }],
+    [
+      "a payload whose rotatedAtMs is not a whole timestamp",
+      { ...rotationResult, rotatedAtMs: 1.5 },
+    ],
+    ["a payload carrying a blank scope", { ...rotationResult, scopes: [""] }],
+    ["a payload naming a different device", { ...rotationResult, deviceId: "01" }],
+    ["a payload naming a different role", { ...rotationResult, role: "viewer" }],
   ])("refuses %s", async (_label, response) => {
     const state = createState(async () => response);
 

@@ -64,17 +64,23 @@ function stubLocalDeviceIdentity() {
 }
 
 function rotatingClient(token: string | null): GatewayBrowserClient {
-  const request = vi.fn(async (method: string) =>
-    method === "device.token.rotate"
-      ? {
-          deviceId: "device-1",
-          role: "operator",
-          scopes: [],
-          ...(token ? { token } : {}),
-          tokenDelivery: token ? "in-band" : "withheld-cross-device",
-        }
-      : { paired: [], pending: [] },
-  );
+  // Answer for the grant that was actually requested, the way the Gateway does: the page now
+  // refuses a result naming a different device or role, so a hardcoded id would report a
+  // rotation of some other device as this one's.
+  const request = vi.fn(async (method: string, params?: unknown) => {
+    if (method !== "device.token.rotate") {
+      return { paired: [], pending: [] };
+    }
+    const { deviceId, role } = params as { deviceId: string; role: string };
+    return {
+      deviceId,
+      role,
+      scopes: [],
+      rotatedAtMs: 1_700_000_000_000,
+      ...(token ? { token } : {}),
+      tokenDelivery: token ? "in-band" : "withheld-cross-device",
+    };
+  });
   return { request } as unknown as GatewayBrowserClient;
 }
 
