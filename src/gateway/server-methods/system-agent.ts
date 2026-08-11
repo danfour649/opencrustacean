@@ -656,6 +656,7 @@ export const systemAgentHandlers: GatewayRequestHandlers = {
         persistSystemAgentEngineHistory(session.engine, historyStart, {
           sessionId,
           wizardAction,
+          wizardActionAccepted: reply.wizardActionAccepted,
         });
         const delegation = params.delegation;
         let proposalId: string | undefined;

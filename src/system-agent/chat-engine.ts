@@ -137,6 +137,8 @@ type SystemAgentChatReply = {
   sensitive?: boolean;
   /** The hosted wizard will consume the next message as its current step answer. */
   wizardInputPending?: boolean;
+  /** The submitted typed wizard action passed or failed owner-side validation. */
+  wizardActionAccepted?: boolean;
   /** Present when the host must leave chat for an interactive handoff. */
   handoff?: SystemAgentOperation;
   /** Structured choice mirroring the awaited wizard step for card-capable clients. */
@@ -844,7 +846,7 @@ export class SystemAgentChatEngine {
       ? [validationError, renderWizardStep(step)].join("\n\n")
       : await this.pumpWizardBridge();
     return this.completeTurn(
-      { text, action: "none" },
+      { text, action: "none", wizardActionAccepted: validationError === undefined },
       formatStructuredWizardAnswerForHistory(step, answer.value),
     );
   }
@@ -864,7 +866,7 @@ export class SystemAgentChatEngine {
       throw new SystemAgentWizardAnswerError("The hosted wizard cannot be cancelled right now.");
     }
     const text = await this.pumpWizardBridge();
-    return this.completeTurn({ text, action: "none" }, "Cancel");
+    return this.completeTurn({ text, action: "none", wizardActionAccepted: true }, "Cancel");
   }
 
   private completeTurn(reply: SystemAgentChatReply, userHistoryText: string): SystemAgentChatReply {

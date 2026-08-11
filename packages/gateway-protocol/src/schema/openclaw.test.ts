@@ -7,6 +7,7 @@ import {
 } from "../index.js";
 import {
   SystemAgentChatQuestionSchema,
+  SystemAgentChatResultSchema,
   SystemAgentChatHistoryResultSchema,
   SystemAgentSetupDetectResultSchema,
   SystemAgentSetupVerifyResultSchema,
@@ -85,6 +86,23 @@ describe("OpenClaw chat question protocol", () => {
     expect(Value.Check(SystemAgentChatQuestionSchema, { ...question, skipAction: "dismiss" })).toBe(
       false,
     );
+  });
+});
+
+describe("OpenClaw chat result protocol", () => {
+  const result = { sessionId: "session-1", reply: "Choose again.", action: "none" };
+
+  it("accepts explicit typed wizard-action outcomes", () => {
+    expect(Value.Check(SystemAgentChatResultSchema, result)).toBe(true);
+    expect(
+      Value.Check(SystemAgentChatResultSchema, { ...result, wizardActionAccepted: true }),
+    ).toBe(true);
+    expect(
+      Value.Check(SystemAgentChatResultSchema, { ...result, wizardActionAccepted: false }),
+    ).toBe(true);
+    expect(
+      Value.Check(SystemAgentChatResultSchema, { ...result, wizardActionAccepted: "yes" }),
+    ).toBe(false);
   });
 });
 

@@ -249,6 +249,61 @@ describe("Custodian wizard reload recovery", () => {
     expect(page.querySelector(".custodian__structured-response")).toBeNull();
   });
 
+  it("restores a validation-rejected wizard answer without a completed receipt", async () => {
+    reconcileCustodianRecoveryForScope(
+      recoveryOwner,
+      {
+        sessionId: "validation-session",
+        reply: "Enter a port.",
+        action: "none",
+        wizardInputPending: true,
+        step: { id: "port", type: "text", message: "Gateway port" },
+      },
+      "validation-session",
+    );
+    const request = vi.fn(async (method: string) => {
+      if (method !== "openclaw.chat.history") {
+        throw new Error(`unexpected method ${method}`);
+      }
+      return {
+        turns: [
+          {
+            role: "assistant",
+            text: "Enter a port.",
+            at: 1,
+            sessionId: "validation-session",
+          },
+          {
+            role: "user",
+            text: "banana",
+            at: 2,
+            sessionId: "validation-session",
+          },
+          {
+            role: "assistant",
+            text: "Enter port 18789.",
+            at: 3,
+            sessionId: "validation-session",
+          },
+        ],
+        activeWizard: {
+          sessionId: "validation-session",
+          step: { id: "port", type: "text", message: "Gateway port" },
+        },
+      };
+    });
+    const { context } = createContext(request, ["openclaw.chat", "openclaw.chat.history"], {
+      gatewayCapabilities: recoveryCapabilities,
+      recoveryScope,
+    });
+    const { page } = await mountPage(context);
+
+    await waitForFast(() => expect(page.textContent).toContain("Enter port 18789."));
+    expect(page.querySelector(".custodian__structured-response")).toBeNull();
+    expect(page.querySelector(".chat-group.user")?.textContent).toContain("banana");
+    expect(page.querySelector(".custodian__wizard-step")).not.toBeNull();
+  });
+
   it("waits for the authenticated recovery scope before starting a fresh session", async () => {
     reconcileCustodianRecoveryForScope(
       recoveryOwner,

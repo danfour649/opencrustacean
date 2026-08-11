@@ -676,7 +676,7 @@ export class CustodianSessionStore extends CustodianTranscriptState {
       } else if (result.action === "exit") {
         this.exitSetup();
       }
-      return "sent";
+      return result.wizardActionAccepted === false ? "rejected" : "sent";
     } catch (error) {
       if (epoch === this.requestEpoch && client === this.activeClient) {
         this.error = custodianErrorMessage(error);

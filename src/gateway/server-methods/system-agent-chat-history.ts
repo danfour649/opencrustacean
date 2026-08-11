@@ -32,10 +32,11 @@ export function persistSystemAgentEngineHistory(
   params: {
     sessionId: string;
     wizardAction?: SystemAgentChatHistoryWizardAction;
+    wizardActionAccepted?: boolean;
   },
 ): void {
   const at = Date.now();
-  let { wizardAction } = params;
+  let wizardAction = params.wizardActionAccepted === true ? params.wizardAction : undefined;
   for (const turn of engine.historySince(startIndex)) {
     const action = turn.role === "user" ? wizardAction : undefined;
     appendTranscriptTurn({

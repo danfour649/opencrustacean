@@ -202,6 +202,53 @@ describe("custodian page", () => {
     expect(page.querySelector(".agent-chat__composer-shell")).not.toBeNull();
   });
 
+  it("keeps a rejected typed answer active without showing a submitted receipt", async () => {
+    const step = {
+      id: "port",
+      type: "text" as const,
+      message: "Gateway port",
+    };
+    const request = vi
+      .fn()
+      .mockResolvedValueOnce({
+        sessionId: "validation-session",
+        reply: "Enter a port.",
+        action: "none",
+        wizardInputPending: true,
+        step,
+      })
+      .mockResolvedValueOnce({
+        sessionId: "validation-session",
+        reply: "Enter port 18789.",
+        action: "none",
+        wizardActionAccepted: false,
+        wizardInputPending: true,
+        step,
+      });
+    const { context } = createContext(request);
+    const { page } = await mountPage(context);
+
+    const input = await waitForFast(() => {
+      const element = page.querySelector<HTMLInputElement>(
+        '.custodian__wizard-step input[name="wizard-text"]',
+      );
+      expect(element).not.toBeNull();
+      return element!;
+    });
+    input.value = "banana";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await page.updateComplete;
+    page.querySelector<HTMLButtonElement>(".custodian__wizard-step .btn.primary")!.click();
+
+    await waitForFast(() => expect(page.textContent).toContain("Enter port 18789."));
+    expect(request.mock.calls[1]?.[1]).toMatchObject({
+      wizardAnswer: { stepId: "port", value: "banana" },
+    });
+    expect(page.querySelector(".custodian__structured-response")).toBeNull();
+    expect(page.querySelector(".custodian__wizard-step")).not.toBeNull();
+    expect(page.querySelector(".chat-group.user")).toBeNull();
+  });
+
   it("keeps Slack guidance visible in one typed card and formats its manifest", async () => {
     const manifest = JSON.stringify(
       {

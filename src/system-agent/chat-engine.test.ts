@@ -3529,10 +3529,38 @@ describe("OpenClaw chat wizard step payload", () => {
 
     const prompt = await engine.handle("connect telegram");
     const stepId = expectDefined(prompt.step?.id, "expected an active wizard step");
-    await engine.answerWizard({ stepId, value: "beta" });
+    const answered = await engine.answerWizard({ stepId, value: "beta" });
 
     expect(selected).toBe("beta");
+    expect(answered.wizardActionAccepted).toBe(true);
     expect(engine.historySince(0)).toContainEqual({ role: "user", text: "Beta" });
+  });
+
+  it("reports whether a typed wizard answer passed validation", async () => {
+    useTempStateDir();
+    const engine = new SystemAgentChatEngine({
+      surface: "gateway",
+      runAgentTurn: async () => null,
+      planWithAssistant: async () => null,
+      deps: { loadOverview: fakeOverviewLoader() },
+      runChannelSetupWizard: async (_channel: string, prompter: WizardPrompter) => {
+        await prompter.text({
+          message: "Port",
+          validate: (value) => (value === "18789" ? undefined : "Enter port 18789"),
+        });
+      },
+    });
+
+    const prompt = await engine.handle("connect telegram");
+    const stepId = expectDefined(prompt.step?.id, "expected an active wizard step");
+    const invalid = await engine.answerWizard({ stepId, value: "banana" });
+    expect(invalid.wizardActionAccepted).toBe(false);
+    expect(invalid.step?.id).toBe(stepId);
+    expect(invalid.text).toContain("Enter port 18789");
+
+    const accepted = await engine.answerWizard({ stepId, value: "18789" });
+    expect(accepted.wizardActionAccepted).toBe(true);
+    expect(accepted.step).toBeUndefined();
   });
 
   it("cancels the current hosted wizard through a typed direct action", async () => {
@@ -3552,6 +3580,7 @@ describe("OpenClaw chat wizard step payload", () => {
     const cancelled = await engine.cancelWizard({ stepId });
 
     expect(cancelled.text).toContain("cancelled");
+    expect(cancelled.wizardActionAccepted).toBe(true);
     expect(cancelled.step).toBeUndefined();
     expect(cancelled.wizardInputPending).toBeUndefined();
     expect(engine.historySince(0)).toContainEqual({ role: "user", text: "Cancel" });

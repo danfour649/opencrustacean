@@ -91,7 +91,7 @@ describe("openclaw.chat.history wizard recovery", () => {
         ],
       },
       0,
-      { sessionId: "twitch-session", wizardAction },
+      { sessionId: "twitch-session", wizardAction, wizardActionAccepted: true },
     );
 
     expect(vi.mocked(appendTranscriptTurn).mock.calls.map(([turn]) => turn)).toEqual([
@@ -106,6 +106,31 @@ describe("openclaw.chat.history wizard recovery", () => {
       }),
     ]);
     expect(vi.mocked(appendTranscriptTurn).mock.calls[1]?.[0]).not.toHaveProperty("wizardAction");
+  });
+
+  it("omits action metadata when the engine rejects the typed answer", () => {
+    persistSystemAgentEngineHistory(
+      {
+        historySince: () => [
+          { role: "user", text: "Invalid value" },
+          { role: "assistant", text: "Choose again." },
+        ],
+      },
+      0,
+      {
+        sessionId: "validation-session",
+        wizardAction: {
+          kind: "answer",
+          step: { id: "port", type: "text", message: "Port" },
+        },
+        wizardActionAccepted: false,
+      },
+    );
+
+    expect(vi.mocked(appendTranscriptTurn)).toHaveBeenCalledTimes(2);
+    for (const [turn] of vi.mocked(appendTranscriptTurn).mock.calls) {
+      expect(turn).not.toHaveProperty("wizardAction");
+    }
   });
 
   it("returns an active wizard only to its bound owner", async () => {

@@ -86,6 +86,8 @@ export const SystemAgentChatResultSchema = closedObject({
   sensitive: Type.Optional(Type.Boolean()),
   /** The hosted wizard will consume the next message as its current step answer. */
   wizardInputPending: Type.Optional(Type.Boolean()),
+  /** Whether the submitted typed wizard action passed owner-side validation. */
+  wizardActionAccepted: Type.Optional(Type.Boolean()),
   action: Type.Union([
     Type.Literal("none"),
     // The user asked to talk to their agent; clients should move to their
