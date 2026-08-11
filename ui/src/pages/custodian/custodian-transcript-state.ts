@@ -54,7 +54,18 @@ export abstract class CustodianTranscriptState {
     if (auth) {
       this.lastHelloDeviceToken = auth.deviceToken ?? "";
     }
-    return JSON.stringify([gatewayUrl, token, password, bootstrapToken, this.lastHelloDeviceToken]);
+    const client = context.gateway.snapshot.client;
+    const recoveryScope = client?.recoveryScopeReady
+      ? (client.recoveryScope?.trim() ?? "")
+      : (this.sessionRecoveryScope?.recoveryScope ?? "");
+    return JSON.stringify([
+      gatewayUrl,
+      token,
+      password,
+      bootstrapToken,
+      this.lastHelloDeviceToken,
+      recoveryScope,
+    ]);
   }
 
   protected clearSessionRecovery(expectedSessionId = this.sessionId): void {

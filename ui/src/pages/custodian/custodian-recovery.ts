@@ -12,8 +12,14 @@ export type CustodianRecoveryScope = {
   recoveryScope: string;
 };
 
+// Web Storage keys are JS strings, so frame UTF-16 code units directly.
+// This keeps variable gateway and identity components unambiguous.
+function frameStorageKeyPart(value: string): string {
+  return `${value.length}:${value}`;
+}
+
 function storageKey(gatewayUrl: string, recoveryScope: string): string {
-  return `${STORAGE_PREFIX}${gatewayUrl}:${recoveryScope}`;
+  return `${STORAGE_PREFIX}${frameStorageKeyPart(gatewayUrl)}:${frameStorageKeyPart(recoveryScope)}`;
 }
 
 function validScope(gatewayUrl: string, recoveryScope: string): boolean {

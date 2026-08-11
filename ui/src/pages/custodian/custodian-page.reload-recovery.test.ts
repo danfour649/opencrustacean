@@ -320,14 +320,12 @@ describe("Custodian wizard reload recovery", () => {
     );
 
     harness.setRecoveryScopeReady(false);
-    const hello = harness.context.gateway.snapshot.hello!;
-    harness.setGatewaySnapshot({
-      hello: { ...hello, auth: { ...hello.auth!, deviceToken: "rotated-identity" } },
-    });
     harness.setRecoveryScope("principal-b");
     harness.setRecoveryScopeReady(true);
 
     await waitForFast(() => expect(page.textContent).toContain("Rotated scope ready."));
+    expect(page.textContent).not.toContain("Enter the secret.");
+    expect(page.querySelector(".custodian__wizard-step")).toBeNull();
     expect(readCustodianRecoveryForClient(recoveryClient, gatewayUrl)).toBeNull();
     expect(
       readCustodianRecoveryForClient(

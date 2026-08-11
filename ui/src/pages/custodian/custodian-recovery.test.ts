@@ -39,7 +39,7 @@ describe("Custodian wizard reload recovery", () => {
       sessionId: "custodian-live",
     });
     expect([...Array(sessionStorage.length)].map((_, index) => sessionStorage.key(index))).toEqual([
-      `openclaw.custodian.recovery.v1:${gatewayUrl}:${recoveryScope}`,
+      `openclaw.custodian.recovery.v1:${gatewayUrl.length}:${gatewayUrl}:${recoveryScope.length}:${recoveryScope}`,
     ]);
     expect(sessionStorage.getItem(sessionStorage.key(0)!)).toBe(
       JSON.stringify({ sessionId: "custodian-live" }),
@@ -48,7 +48,7 @@ describe("Custodian wizard reload recovery", () => {
 
   it("rejects malformed state and clears only the expected session", () => {
     sessionStorage.setItem(
-      `openclaw.custodian.recovery.v1:${gatewayUrl}:${recoveryScope}`,
+      `openclaw.custodian.recovery.v1:${gatewayUrl.length}:${gatewayUrl}:${recoveryScope.length}:${recoveryScope}`,
       JSON.stringify({ sessionId: "", draft: "secret" }),
     );
     expect(readCustodianRecoveryForClient(client, gatewayUrl)).toBeNull();
@@ -58,6 +58,41 @@ describe("Custodian wizard reload recovery", () => {
     expect(readCustodianRecoveryForClient(client, gatewayUrl)).not.toBeNull();
     clearCustodianRecoveryForScope(recoveryOwner, "custodian-live");
     expect(readCustodianRecoveryForClient(client, gatewayUrl)).toBeNull();
+  });
+
+  it("keeps colliding unframed gateway and scope tuples independent", () => {
+    const first = { gatewayUrl: "ws://gateway.test:18789", recoveryScope: "principal-a" };
+    const second = { gatewayUrl: "ws://gateway.test", recoveryScope: "18789:principal-a" };
+    const result = {
+      reply: "Enter a secret",
+      action: "none" as const,
+      wizardInputPending: true,
+      step: { id: "secret", type: "text" as const, message: "Secret", sensitive: true },
+    };
+
+    reconcileCustodianRecoveryForScope(first, { ...result, sessionId: "first" }, "first");
+    reconcileCustodianRecoveryForScope(second, { ...result, sessionId: "second" }, "second");
+
+    expect(
+      readCustodianRecoveryForClient(
+        { recoveryScope: first.recoveryScope, recoveryScopeReady: true } as never,
+        first.gatewayUrl,
+      ),
+    ).toEqual({ sessionId: "first" });
+    expect(
+      readCustodianRecoveryForClient(
+        { recoveryScope: second.recoveryScope, recoveryScopeReady: true } as never,
+        second.gatewayUrl,
+      ),
+    ).toEqual({ sessionId: "second" });
+
+    clearCustodianRecoveryForScope(first, "first");
+    expect(
+      readCustodianRecoveryForClient(
+        { recoveryScope: second.recoveryScope, recoveryScopeReady: true } as never,
+        second.gatewayUrl,
+      ),
+    ).toEqual({ sessionId: "second" });
   });
 
   it("degrades cleanly when session storage access is denied", () => {
