@@ -10,7 +10,7 @@ import {
 } from "../test-support/home-env.test-support.js";
 import { createCanonicalFixtureSkill } from "../test-support/test-helpers.js";
 import type { SkillEntry } from "../types.js";
-import { formatSkillsForPrompt, type Skill } from "./skill-contract.js";
+import { formatSkillsForPromptCore, type Skill } from "./skill-contract.js";
 import {
   formatSkillsCompact,
   buildWorkspaceSkillsPrompt,
@@ -75,12 +75,12 @@ describe("formatSkillsCompact", () => {
       { ...makeSkill("weather", "Get weather <data> & forecasts"), promptVersion: "sha256:abc123" },
       makeSkill("notes", "Summarize notes", "/tmp/notes/SKILL.md"),
     ];
-    expect(formatSkillsForPrompt(skills)).toBe(upstreamFormatSkillsForPrompt(skills));
+    expect(formatSkillsForPromptCore(skills)).toBe(upstreamFormatSkillsForPrompt(skills));
   });
 
   it("renders all passed skills in the full formatter without reapplying visibility policy", () => {
     const hidden: Skill = { ...makeSkill("hidden"), disableModelInvocation: true };
-    const out = formatSkillsForPrompt([makeSkill("visible"), hidden]);
+    const out = formatSkillsForPromptCore([makeSkill("visible"), hidden]);
     expect(out).toContain("visible");
     expect(out).toContain("hidden");
   });
@@ -145,7 +145,7 @@ describe("formatSkillsCompact", () => {
   it("is significantly smaller than full format", () => {
     const skills = Array.from({ length: 50 }, (_, i) => makeSkill(`skill-${i}`, "A".repeat(800)));
     const compact = formatSkillsCompact(skills);
-    expect(compact.length).toBeLessThan(formatSkillsForPrompt(skills).length / 2);
+    expect(compact.length).toBeLessThan(formatSkillsForPromptCore(skills).length / 2);
   });
 });
 
@@ -191,7 +191,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
 
   it("tier 2: compact when full exceeds budget but compact fits", () => {
     const skills = Array.from({ length: 20 }, (_, i) => makeSkill(`skill-${i}`, "A".repeat(800)));
-    const fullLen = formatSkillsForPrompt(skills).length;
+    const fullLen = formatSkillsForPromptCore(skills).length;
     const compactLen = formatSkillsCompact(skills).length;
     const budget = `${COMPACT_SHORTENED_NOTICE}\n${formatSkillsCompact(skills)}`.length;
     expect(fullLen).toBeGreaterThan(budget);
@@ -219,7 +219,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
     const skills = Array.from({ length: 50 }, (_, i) => makeSkill(`skill-${i}`, "A".repeat(800)));
     const identityCatalog = formatSkillsCompact(skills, { descriptionMaxChars: 0 });
     const budget = `${COMPACT_OMITTED_NOTICE}\n${identityCatalog}`.length;
-    expect(formatSkillsForPrompt(skills).length).toBeGreaterThan(budget);
+    expect(formatSkillsForPromptCore(skills).length).toBeGreaterThan(budget);
 
     const prompt = buildPrompt(skills, { maxChars: budget });
 
@@ -249,7 +249,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
     // 30 skills but maxCount=10, and full format of 10 exceeds budget
     const skills = Array.from({ length: 30 }, (_, i) => makeSkill(`skill-${i}`, "A".repeat(800)));
     const tenSkills = skills.slice(0, 10);
-    const fullLen = formatSkillsForPrompt(tenSkills).length;
+    const fullLen = formatSkillsForPromptCore(tenSkills).length;
     const truncatedNotice =
       "⚠️ Skills truncated: included 10 of 30 (compact format, descriptions shortened). Run `openclaw skills check` to audit.";
     const budget = `${truncatedNotice}\n${formatSkillsCompact(tenSkills)}`.length;
@@ -279,7 +279,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
 
   it("drops an oversized optional remote note before discarding a complete fitting skill catalog", () => {
     const skill = makeSkill("weather", "Get weather data");
-    const maxChars = formatSkillsForPrompt([skill]).length;
+    const maxChars = formatSkillsForPromptCore([skill]).length;
     const remoteNote = `REMOTE_NOTE_${"x".repeat(maxChars + 512)}`;
     const prompt = buildWorkspaceSkillsPrompt("/fake", {
       entries: [makeEntry(skill)],

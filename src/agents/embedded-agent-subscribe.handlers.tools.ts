@@ -88,11 +88,11 @@ import {
   sanitizeToolResult,
   truncateLiveExecOutput,
 } from "./embedded-agent-subscribe.tools.js";
-import { inferToolMetaFromArgs } from "./embedded-agent-utils.js";
 import { parseExecApprovalResultText } from "./exec-approval-result.js";
 import { buildAgentHarnessQuestionPromptPayload } from "./harness/user-input-bridge.js";
 import { readMcpAppChannelView } from "./mcp-ui-resource.js";
 import type { AgentEvent } from "./runtime/index.js";
+import { inferToolMetaFromArgsCore } from "./tool-display.js";
 import { isCommandBearingToolCall } from "./tool-display.js";
 import {
   createToolValidationErrorSummary,
@@ -1202,7 +1202,7 @@ export function handleToolExecutionStart(
     const meta = extendExecMeta(
       toolName,
       args,
-      inferToolMetaFromArgs(toolName, args, {
+      inferToolMetaFromArgsCore(toolName, args, {
         detailMode: ctx.params.toolProgressDetail ?? "explain",
       }),
     );

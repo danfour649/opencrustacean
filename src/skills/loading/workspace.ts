@@ -58,7 +58,7 @@ import {
 } from "./local-loader.js";
 import { resolvePluginSkillDirs } from "./plugin-skills.js";
 import { serializeByKey } from "./serialize.js";
-import { formatSkillsForPrompt, type Skill } from "./skill-contract.js";
+import { formatSkillsForPromptCore, type Skill } from "./skill-contract.js";
 import { resolveSkillTelemetrySource } from "./source.js";
 import { resolveAllowedSkillSymlinkTargetRealPaths, tryRealpath } from "./symlink-targets.js";
 
@@ -1444,7 +1444,7 @@ function buildRenderedSkillsPrompt(params: {
       ? formatSkillsCompact(params.skills, {
           descriptionMaxChars: params.format.descriptionMaxChars,
         })
-      : formatSkillsForPrompt(params.skills);
+      : formatSkillsForPromptCore(params.skills);
   return [params.remoteNote, limitNote, catalog].filter(Boolean).join("\n");
 }
 
