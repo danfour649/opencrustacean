@@ -129,11 +129,18 @@ export function readTranscriptTail(
     .map((entry): SystemAgentTranscriptEntry => {
       const sessionId = readTranscriptSessionId(entry.key);
       const wizardAction = readTranscriptWizardAction(entry.key);
-      return {
-        ...entry.value,
-        ...(sessionId ? { sessionId } : {}),
-        ...(wizardAction ? { wizardAction } : {}),
+      const turn: SystemAgentTranscriptEntry = {
+        role: entry.value.role,
+        text: entry.value.text,
+        at: entry.value.at,
       };
+      if (sessionId) {
+        turn.sessionId = sessionId;
+      }
+      if (wizardAction) {
+        turn.wizardAction = wizardAction;
+      }
+      return turn;
     });
   // New reset markers fence only their owning session. Legacy unattributed markers
   // remain global so upgraded installs preserve the old machine-wide boundary.
@@ -153,11 +160,18 @@ export function readTranscriptTail(
         turn.role !== "reset" && (!opts.sessionId || turn.sessionId === opts.sessionId),
     )
     .slice(-limit)
-    .map(({ role, text, at, sessionId, wizardAction }) => ({
-      role,
-      text,
-      at,
-      ...(sessionId ? { sessionId } : {}),
-      ...(wizardAction ? { wizardAction } : {}),
-    }));
+    .map((turn): SystemAgentTranscriptTurn => {
+      const result: SystemAgentTranscriptTurn = {
+        role: turn.role,
+        text: turn.text,
+        at: turn.at,
+      };
+      if (turn.sessionId) {
+        result.sessionId = turn.sessionId;
+      }
+      if (turn.wizardAction) {
+        result.wizardAction = turn.wizardAction;
+      }
+      return result;
+    });
 }
