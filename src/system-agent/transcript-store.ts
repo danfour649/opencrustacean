@@ -126,11 +126,15 @@ export function readTranscriptTail(
   const entries = openTranscriptStore(opts.env)
     .latest({ limit: readLimit })
     .toReversed()
-    .map((entry) => ({
-      ...entry.value,
-      sessionId: readTranscriptSessionId(entry.key),
-      wizardAction: readTranscriptWizardAction(entry.key),
-    }));
+    .map((entry): SystemAgentTranscriptEntry => {
+      const sessionId = readTranscriptSessionId(entry.key);
+      const wizardAction = readTranscriptWizardAction(entry.key);
+      return {
+        ...entry.value,
+        ...(sessionId ? { sessionId } : {}),
+        ...(wizardAction ? { wizardAction } : {}),
+      };
+    });
   // New reset markers fence only their owning session. Legacy unattributed markers
   // remain global so upgraded installs preserve the old machine-wide boundary.
   const resetIndex = opts.afterLastReset
