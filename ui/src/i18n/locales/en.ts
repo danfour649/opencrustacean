@@ -3931,6 +3931,8 @@ export const en: TranslationMap = {
       expired: "Expired",
       missing: "Not signed in",
       apiKey: "API key",
+      authRejected: "Credentials rejected",
+      catalogUnavailable: "Catalog unavailable",
     },
     expiresIn: "Credential expires in {time}",
     models: "{count} models",
