@@ -25,6 +25,11 @@ import {
   resetGatewayWorkAdmission,
   tryBeginGatewayRootWorkAdmission,
 } from "../../../process/gateway-work-admission.js";
+import { getDetachedTaskLifecycleRuntime } from "../../../tasks/detached-task-runtime.js";
+import {
+  resetDetachedTaskLifecycleRuntimeForTests,
+  setDetachedTaskLifecycleRuntime,
+} from "../../../tasks/detached-task-runtime.test-support.js";
 import { captureEnv, setTestEnvValue } from "../../../test-utils/env.js";
 import { subagentRuns } from "../../subagent-registry-memory.js";
 import { markSubagentRunTerminated } from "../../subagent-registry.js";
@@ -135,6 +140,7 @@ describe("spawnSubagentDirect in-process Gateway collector launch", () => {
     resetSubagentRegistryForTests({ persist: false });
     subagentRegistryTesting.setDepsForTest();
     subagentSpawnTesting.setDepsForTest();
+    resetDetachedTaskLifecycleRuntimeForTests();
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     envSnapshot.restore();
@@ -460,6 +466,72 @@ describe("spawnSubagentDirect in-process Gateway collector launch", () => {
       ),
     ).toBe(true);
   });
+
+  // The registry entry only counts as ownership once the canonical `subagent` task row
+  // exists. A task runtime is plugin-replaceable and may legally create no row, so both
+  // fault shapes have to fail registration and abort — otherwise the accepted child keeps
+  // running with the gateway CLI row suppressed and nothing in the tasks rail.
+  const taskRowFaults: Array<[label: string, createTaskRun: () => null]> = [
+    ["creates no task row", () => null],
+    [
+      "throws while creating the task row",
+      () => {
+        throw new Error("task store unavailable");
+      },
+    ],
+  ];
+  it.each(taskRowFaults)(
+    "aborts the accepted child run when the task runtime %s",
+    async (_label, createTaskRun) => {
+      const gatewayContext = makeGatewayContext();
+      const requests: Array<{ method: string; params: Record<string, unknown> }> = [];
+      subagentSpawnTesting.setDepsForTest({
+        dispatchGatewayMethodInProcess: async <T>(
+          method: string,
+          params: Record<string, unknown>,
+        ) => {
+          requests.push({ method, params });
+          if (method === "agent") {
+            return { runId: "gateway-accepted-run", status: "accepted" } as T;
+          }
+          if (method === "chat.abort") {
+            return { aborted: true, runIds: [params.runId] } as T;
+          }
+          return {} as T;
+        },
+      });
+      // Registry persistence succeeds here; only the task row is missing.
+      setDetachedTaskLifecycleRuntime({
+        ...getDetachedTaskLifecycleRuntime(),
+        createQueuedTaskRun: createTaskRun,
+        createRunningTaskRun: createTaskRun,
+      });
+
+      const result = await withPluginRuntimeGatewayRequestScope(
+        {
+          context: gatewayContext,
+          client: externalCliClient(),
+          isWebchatConnect: () => false,
+        },
+        () =>
+          spawnSubagentDirect(
+            { task: "orphan me", context: "isolated", lightContext: true },
+            { agentSessionKey: "agent:main:main", requesterRunId: "parent-run" },
+          ),
+      );
+
+      expect(result.status).toBe("error");
+      expect(
+        requests.some(
+          (request) =>
+            request.method === "chat.abort" && request.params.runId === "gateway-accepted-run",
+        ),
+      ).toBe(true);
+      // Rolled back rather than half-registered: a retained entry would report a live run
+      // that owns no task row.
+      expect(subagentRuns.size).toBe(0);
+    },
+  );
 
   it("launches child runs as a Gateway client that does not own a second task row", async () => {
     const gatewayContext = makeGatewayContext();

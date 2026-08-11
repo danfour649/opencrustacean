@@ -1255,14 +1255,18 @@ export function createSubagentRunManager(params: {
     });
     params.runs.set(runId, entry);
     const killReconciliationSnapshots = markOlderKillReconciliationsSuperseded(entry);
-    try {
-      params.persistOrThrow(
-        runId,
-        ...[...killReconciliationSnapshots.keys()].map((candidate) => candidate.runId),
-      );
-    } catch (error) {
+    const registeredRunIds = [
+      runId,
+      ...[...killReconciliationSnapshots.keys()].map((candidate) => candidate.runId),
+    ];
+    const rollbackRegistration = () => {
       params.runs.delete(runId);
       restoreKillReconciliationSnapshots(killReconciliationSnapshots);
+    };
+    try {
+      params.persistOrThrow(...registeredRunIds);
+    } catch (error) {
+      rollbackRegistration();
       throw error;
     }
     try {
@@ -1291,15 +1295,16 @@ export function createSubagentRunManager(params: {
             lastEventAt: now,
           });
       if (!task) {
-        log.warn("Failed to persist background task for subagent run", {
-          runId: registerParams.runId,
-        });
+        throw new Error(`detached task runtime created no task row for run ${runId}`);
       }
     } catch (error) {
-      log.warn("Failed to create background task for subagent run", {
-        runId: registerParams.runId,
-        error,
-      });
+      // This row is the run's only tasks-rail owner: the gateway skips its CLI fallback for
+      // native subagent launches (src/gateway/server-methods/agent-task-tracking.ts). Undo the
+      // already-persisted registration so the caller's register-failure path aborts the
+      // accepted run, instead of leaving it executing with nothing on screen.
+      rollbackRegistration();
+      params.persistOrThrow(...registeredRunIds);
+      throw error;
     }
     params.ensureListener();
     // Always start sweeper — session-mode runs (no archiveAtMs) also need TTL cleanup.
