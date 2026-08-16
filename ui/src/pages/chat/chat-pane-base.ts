@@ -95,6 +95,7 @@ export abstract class ChatPaneBase extends OpenClawLightDomElement {
   @property({ attribute: false }) boardProvider?: BoardProvider;
 
   protected readonly chatState = new ChatStateController<ChatPageHost>(this);
+  protected readonly observerDigestHistory = new ObserverDigestHistory();
   protected readonly composerCapabilities = new ChatComposerCapabilityHost(() =>
     this.requestUpdate(),
   );
