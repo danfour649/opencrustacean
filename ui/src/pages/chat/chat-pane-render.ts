@@ -211,9 +211,6 @@ export class ChatPane extends ChatPaneHeader {
         this.onPaneSessionChange?.(this.paneId, sessionKey);
       },
     });
-    const tasksSideDocked = !backgroundTasks.collapsed && !backgroundTasks.narrowLayout;
-    // Only side-docked rails narrow the conversation region.
-    const sideRailCount = (railSideDocked ? 1 : 0) + (tasksSideDocked ? 1 : 0);
     const selfUser = resolveCurrentSelfUser({
       snapshotUser: gatewaySnapshot.selfUser,
       presenceEntries: readPresenceEntries(gatewaySnapshot.hello?.snapshot),

@@ -18,7 +18,6 @@ import {
 } from "../../components/browser/browser-annotation.ts";
 import { t } from "../../i18n/index.ts";
 import { resolveAsciiShortcutKey } from "../../lib/keyboard-shortcuts.ts";
-import { resolveChatPaneObserverRunId } from "../../lib/observer-digest.ts";
 import { sessionPullRequestsForGateway } from "../../lib/session-pull-requests.ts";
 import { parseCatalogSessionKey } from "../../lib/sessions/catalog-key.ts";
 import { resolveSessionKey, scopedAgentParamsForSession } from "../../lib/sessions/index.ts";
@@ -44,7 +43,7 @@ import {
 import { handlePageGatewayEvent } from "./chat-state-events.ts";
 import { createPageState } from "./chat-state-page.ts";
 import { invalidateChatMetadataCache, refreshPageChat } from "./chat-state-refresh.ts";
-import { selectedChatSessionRow, canCreateChatSession } from "./chat-state-route.ts";
+import { canCreateChatSession } from "./chat-state-route.ts";
 import { resetChatViewState } from "./chat-view-state.ts";
 import { chatAttachmentFromDataUrl } from "./components/chat-attachments.ts";
 import { dismissConfirmedActionPopovers } from "./components/chat-message.ts";
@@ -637,7 +636,6 @@ export abstract class ChatPaneLifecycle extends ChatPaneBoard {
     this.connectionGeneration += 1;
     this.deferredSessionHydrationRequestVersion += 1;
     this.sessionDiscussionPanels.clear();
-    this.sessionCompanionHydrationKey = "";
     this.taskSuggestionsRequestVersion += 1;
     this.taskSuggestions = [];
     this.taskSuggestionBusyIds.clear();
