@@ -415,6 +415,7 @@ export async function prepareReplyAgentPayloads(state: {
         runResult.meta?.yielded === true || (runResult.meta?.pendingToolCalls?.length ?? 0) > 0,
       hasExplicitSilentReply: hasDeliberateSilentTerminalReply(runResult),
       hasCommittedDelivery: successfulTerminalDelivery,
+      fallbackModels: cfg.agents?.defaults?.model?.fallbacks,
     });
     if (emptyReplyRecovery.kind === "retry" && runFollowupTurn) {
       const retryQueueKey = queueKey ?? followupRun.run.sessionKey ?? sessionKey;

@@ -29,6 +29,9 @@ export function resolveEmptyReplyRecovery(params: {
   hasPendingContinuation: boolean;
   hasExplicitSilentReply: boolean;
   hasCommittedDelivery: boolean;
+  /** Configured fallback model refs (\"provider/model\"); the retry prefers the
+   * first one so a model that habitually ends turns empty is not re-run as-is. */
+  fallbackModels?: readonly string[];
 }): EmptyReplyRecovery {
   if (
     !params.isInteractive ||
@@ -47,10 +50,39 @@ export function resolveEmptyReplyRecovery(params: {
   if (params.base.emptyReplyRetry === true || params.base.strandedReplyRetry === true) {
     return { kind: "banner" };
   }
-  return { kind: "retry", run: buildEmptyReplyRetryFollowupRun(params.base) };
+  return {
+    kind: "retry",
+    run: buildEmptyReplyRetryFollowupRun(params.base, params.fallbackModels),
+  };
 }
 
-function buildEmptyReplyRetryFollowupRun(base: FollowupRun): FollowupRun {
+function resolveEmptyReplyFallbackRef(
+  base: FollowupRun,
+  fallbackModels: readonly string[] | undefined,
+): { provider: string; model: string } | undefined {
+  // Never override a user-locked model choice; the pipeline fallback surface
+  // only applies to auto-selected models.
+  if (base.run.modelSelectionLocked === true) {
+    return undefined;
+  }
+  const ref = fallbackModels?.find((candidate) => candidate.includes("/"));
+  if (!ref) {
+    return undefined;
+  }
+  const slash = ref.indexOf("/");
+  return { provider: ref.slice(0, slash), model: ref.slice(slash + 1) };
+}
+
+function buildEmptyReplyRetryFollowupRun(
+  base: FollowupRun,
+  fallbackModels: readonly string[] | undefined,
+): FollowupRun {
+  const run = { ...base.run, suppressNextUserMessagePersistence: true };
+  const fallbackRef = resolveEmptyReplyFallbackRef(base, fallbackModels);
+  if (fallbackRef) {
+    run.provider = fallbackRef.provider;
+    run.model = fallbackRef.model;
+  }
   return {
     ...base,
     prompt: EMPTY_REPLY_RETRY_PROMPT,
@@ -61,9 +93,6 @@ function buildEmptyReplyRetryFollowupRun(base: FollowupRun): FollowupRun {
     userTurnTranscriptRecorder: undefined,
     currentInboundContext: undefined,
     turnAdoptionLifecycle: undefined,
-    run: {
-      ...base.run,
-      suppressNextUserMessagePersistence: true,
-    },
+    run,
   };
 }

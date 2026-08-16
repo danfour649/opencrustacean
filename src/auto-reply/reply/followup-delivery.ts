@@ -258,6 +258,7 @@ export function resolveFollowupDeliveryDecision(params: {
           result.meta?.yielded === true || (result.meta?.pendingToolCalls?.length ?? 0) > 0,
         hasExplicitSilentReply: hasDeliberateSilentTerminalReply(result),
         hasCommittedDelivery,
+        fallbackModels: turn.config.agents?.defaults?.model?.fallbacks,
       });
       if (emptyReplyRecovery.kind === "retry") {
         return {
