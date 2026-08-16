@@ -1,4 +1,12 @@
+import type { AgentModelConfig } from "../../config/types.agents-shared.js";
 import type { FollowupRun } from "./queue/types.js";
+
+/** Narrow the union AgentModelConfig (string | object) to its fallback list. */
+export function resolveAgentModelFallbacks(
+  model: AgentModelConfig | undefined,
+): string[] | undefined {
+  return typeof model === "object" ? model.fallbacks : undefined;
+}
 
 const EMPTY_REPLY_RETRY_MARKER = "empty-reply-retry";
 

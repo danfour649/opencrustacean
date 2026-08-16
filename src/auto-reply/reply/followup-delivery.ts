@@ -23,7 +23,7 @@ import type { AgentTurnExecutionResult } from "./agent-runner-execution.types.js
 import { buildEmptyInteractiveReplyPayload } from "./agent-runner-failure-reply.js";
 import type { AccountedAgentTurn } from "./agent-runner-result-accounting.js";
 import { appendUsageLine, resolveResponseUsageLine } from "./agent-runner-usage-line.js";
-import { resolveEmptyReplyRecovery } from "./empty-reply-recovery.js";
+import { resolveAgentModelFallbacks, resolveEmptyReplyRecovery } from "./empty-reply-recovery.js";
 import { resolveFollowupDeliveryPayloads } from "./followup-delivery-payloads.js";
 import type { AdmittedFollowupTurn, FollowupRunnerParams } from "./followup-turn-admission.js";
 import type { InternalGetReplyOptions } from "./get-reply.types.js";
@@ -258,7 +258,7 @@ export function resolveFollowupDeliveryDecision(params: {
           result.meta?.yielded === true || (result.meta?.pendingToolCalls?.length ?? 0) > 0,
         hasExplicitSilentReply: hasDeliberateSilentTerminalReply(result),
         hasCommittedDelivery,
-        fallbackModels: turn.config.agents?.defaults?.model?.fallbacks,
+        fallbackModels: resolveAgentModelFallbacks(turn.config.agents?.defaults?.model),
       });
       if (emptyReplyRecovery.kind === "retry") {
         return {
