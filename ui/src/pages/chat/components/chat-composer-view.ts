@@ -17,7 +17,7 @@ import {
   renderChatAttachmentInputs,
 } from "./chat-attachments.ts";
 import type { ChatRunControlsProps } from "./chat-composer-controls.ts";
-import { renderChatPrimaryActions } from "./chat-composer-controls.ts";
+import { renderChatPrimaryActions, renderChatStatusAction } from "./chat-composer-controls.ts";
 import {
   disconnectQuestionDock,
   focusComposerFromChrome,
@@ -425,7 +425,10 @@ export function renderChatComposerView(context: ChatComposerViewContext) {
                 >
               </div>
               <div class="agent-chat__composer-actions">
-                ${renderChatPrimaryActions(runControlsProps)}
+                <div class="agent-chat__composer-status-stack">
+                  ${renderChatStatusAction(runControlsProps)}
+                  ${renderChatPrimaryActions(runControlsProps)}
+                </div>
               </div>
             </div>
 

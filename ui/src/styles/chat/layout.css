@@ -2569,6 +2569,16 @@ openclaw-chat-video-player {
   flex: 0 0 auto;
 }
 
+/* The status quick-action (green "?" sending "Status?") sits directly
+   above the primary send control in a compact column. */
+.agent-chat__composer-status-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
 .agent-chat__input-btn,
 .agent-chat__toolbar-right .btn--ghost {
   display: inline-flex;
@@ -3148,6 +3158,19 @@ openclaw-chat-video-player {
 /* Idle voice fill stays muted so the idle -> hover -> recording progression
    escalates (10% -> 18% -> live meter + breathing glow); a full-strength idle
    fill makes recording state indistinguishable at a glance. */
+/* Status quick-action: same solid green family as send, but a slightly
+   smaller circle so the pair reads as one stacked control. */
+.chat-send-btn--status {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+}
+
+.chat-send-btn--status svg {
+  width: 15px;
+  height: 15px;
+}
+
 .chat-send-btn--voice {
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   color: var(--accent);

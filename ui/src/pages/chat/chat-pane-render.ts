@@ -460,6 +460,12 @@ export class ChatPane extends ChatPaneHeader {
           : suggestionViewer
             ? void this.addCurrentSessionSuggestion()
             : void state.handleSendChat(),
+      onSendStatus: () =>
+        catalogKey
+          ? void this.continueCatalogSession(catalogKey)
+          : suggestionViewer
+            ? void this.addCurrentSessionSuggestion()
+            : void state.handleSendChat("Status?"),
       onCompact: () => void state.handleSendChat("/compact"),
       onOpenSessionCheckpoints: () => {
         const search = new URLSearchParams({ session: state.sessionKey });
