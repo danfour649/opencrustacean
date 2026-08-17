@@ -2570,8 +2570,10 @@ openclaw-chat-video-player {
 }
 
 /* The status quick-action (green "?" sending "Status?") sits directly
-   above the primary send control in a compact column. */
-.agent-chat__composer-status-stack {
+   above the primary send control in a compact column. Its own class keeps
+   the composer-actions stack distinct from the indicator row above the
+   input, whose :not(:has(...)) rule must not hide the send control. */
+.agent-chat__composer-actions-stack {
   display: flex;
   flex-direction: column;
   align-items: center;

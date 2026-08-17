@@ -425,7 +425,7 @@ export function renderChatComposerView(context: ChatComposerViewContext) {
                 >
               </div>
               <div class="agent-chat__composer-actions">
-                <div class="agent-chat__composer-status-stack">
+                <div class="agent-chat__composer-actions-stack">
                   ${renderChatStatusAction(runControlsProps)}
                   ${renderChatPrimaryActions(runControlsProps)}
                 </div>
