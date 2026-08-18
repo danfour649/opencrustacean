@@ -34,6 +34,7 @@ export type ChatRunControlsProps = {
   onExport: () => void;
   onNewSession: () => void;
   onSend: () => void;
+  onSendStatus?: () => void;
   onStoreDraft: (draft: string) => void;
   onToggleVoice?: () => void;
   onToggleCamera?: () => void;
@@ -164,6 +165,28 @@ function renderComposerVoiceButton(props: ChatRunControlsProps) {
       </openclaw-tooltip>
       ${holding ? nothing : props.microphonePicker}
     </span>
+  `;
+}
+
+/** Compact green quick-action that sends a literal "Status?" prompt to the
+ * session without touching the composer draft. Rendered directly above the
+ * primary send control. */
+export function renderChatStatusAction(props: ChatRunControlsProps) {
+  if (!props.onSendStatus) {
+    return nothing;
+  }
+  return html`
+    <openclaw-tooltip .content=${t("chat.runControls.status")}>
+      <button
+        type="button"
+        class="chat-send-btn chat-send-btn--status"
+        @click=${props.onSendStatus}
+        ?disabled=${!props.canSend || props.sending}
+        aria-label=${t("chat.runControls.statusMessage")}
+      >
+        ${icons.helpCircle}
+      </button>
+    </openclaw-tooltip>
   `;
 }
 

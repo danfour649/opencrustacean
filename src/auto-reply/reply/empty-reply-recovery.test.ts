@@ -49,6 +49,66 @@ describe("resolveEmptyReplyRecovery", () => {
     expect(result.kind).toBe("none");
   });
 
+  it("retries on the first configured fallback model when provided", () => {
+    const modelRun = {
+      ...baseRun,
+      run: {
+        ...baseRun.run,
+        provider: "deepseek",
+        model: "deepseek-v4-flash",
+      },
+    } as unknown as FollowupRun;
+    const result = resolveEmptyReplyRecovery({
+      base: modelRun,
+      ...defaultParams,
+      fallbackModels: ["xai/grok-4.3", "claude-cli/claude-sonnet-5"],
+    });
+    expect(result.kind).toBe("retry");
+    if (result.kind === "retry") {
+      expect(result.run.run.provider).toBe("xai");
+      expect(result.run.run.model).toBe("grok-4.3");
+    }
+  });
+
+  it("keeps the original model when no fallback models are configured", () => {
+    const modelRun = {
+      ...baseRun,
+      run: {
+        ...baseRun.run,
+        provider: "deepseek",
+        model: "deepseek-v4-flash",
+      },
+    } as unknown as FollowupRun;
+    const result = resolveEmptyReplyRecovery({ base: modelRun, ...defaultParams });
+    expect(result.kind).toBe("retry");
+    if (result.kind === "retry") {
+      expect(result.run.run.provider).toBe("deepseek");
+      expect(result.run.run.model).toBe("deepseek-v4-flash");
+    }
+  });
+
+  it("never overrides a user-locked model choice", () => {
+    const lockedRun = {
+      ...baseRun,
+      run: {
+        ...baseRun.run,
+        provider: "deepseek",
+        model: "deepseek-v4-flash",
+        modelSelectionLocked: true,
+      },
+    } as unknown as FollowupRun;
+    const result = resolveEmptyReplyRecovery({
+      base: lockedRun,
+      ...defaultParams,
+      fallbackModels: ["xai/grok-4.3"],
+    });
+    expect(result.kind).toBe("retry");
+    if (result.kind === "retry") {
+      expect(result.run.run.provider).toBe("deepseek");
+      expect(result.run.run.model).toBe("deepseek-v4-flash");
+    }
+  });
+
   it("does not retry heartbeats, message-tool-only, or committed deliveries", () => {
     expect(
       resolveEmptyReplyRecovery({ base: baseRun, ...defaultParams, isHeartbeat: true }).kind,

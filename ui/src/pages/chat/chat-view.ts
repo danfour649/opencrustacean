@@ -199,6 +199,7 @@ export type ChatProps = {
   onHistoryKeydown?: (input: ChatInputHistoryKeyInput) => ChatInputHistoryKeyResult;
   onSlashIntent?: () => void | Promise<void>;
   onSend: () => void;
+  onSendStatus?: () => void;
   onCompact?: () => void | Promise<void>;
   onOpenSessionCheckpoints?: () => void | Promise<void>;
   onToggleRealtimeTalk?: () => void;
@@ -429,6 +430,7 @@ export function renderChat(props: ChatProps) {
     onHistoryKeydown: props.onHistoryKeydown,
     onSlashIntent: props.onSlashIntent,
     onSend: props.onSend,
+    onSendStatus: props.onSendStatus,
     onCompact: props.suggestionComposer ? undefined : props.onCompact,
     onToggleRealtimeTalk: props.suggestionComposer ? undefined : props.onToggleRealtimeTalk,
     onToggleRealtimeCamera: props.onToggleRealtimeCamera,

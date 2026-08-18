@@ -658,6 +658,7 @@ export function renderChatComposer(props: ChatComposerProps) {
     onExport: () => exportMarkdown(props),
     onNewSession: props.onNewSession,
     onSend: handleSend,
+    onSendStatus: props.onSendStatus,
     onStoreDraft: () => {},
     onToggleVoice: props.onToggleRealtimeTalk ? handleVoicePrimaryAction : undefined,
     onToggleCamera: props.onToggleRealtimeCamera,

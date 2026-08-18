@@ -4793,6 +4793,8 @@ export const en: TranslationMap = {
       stopGenerating: "Stop generating",
       send: "Send",
       sendMessage: "Send message",
+      status: "Ask for status",
+      statusMessage: 'Send "Status?" to the session',
     },
     queue: {
       retry: "Retry",
