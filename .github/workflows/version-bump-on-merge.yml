@@ -64,7 +64,12 @@ jobs:
           git add package.json
           git commit -m "chore: bump version to ${VERSION}"
           git push origin "${BRANCH}"
-          NEW_PR="$(gh pr create --base main --head "${BRANCH}"             --title "chore: bump version to ${VERSION}"             --body "Automated version bump (one per merged PR). The header version chip shows this after the next rebuild."             --json number --jq '.number')"
+          gh pr create --base main --head "${BRANCH}"             --title "chore: bump version to ${VERSION}"             --body "Automated version bump (one per merged PR). The header version chip shows this after the next rebuild."
+          NEW_PR="$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number' 2>/dev/null || true)"
+          if [ -z "${NEW_PR}" ]; then
+            echo "Failed to find bump PR for ${BRANCH}" >&2
+            exit 1
+          fi
           echo "Created bump PR #${NEW_PR} for ${VERSION}; merging it."
           if ! gh pr merge "${NEW_PR}" --squash --delete-branch; then
             echo "Not immediately mergeable; enabling auto-merge instead."
