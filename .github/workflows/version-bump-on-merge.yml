@@ -2,8 +2,9 @@ name: version-bump-on-merge
 
 # Bumps package.json (and therefore the Control UI version chip, which embeds
 # the package version at build time) once per merged PR on main.
-# main is branch-protected (no direct pushes), so the bump lands via an
-# auto-merged PR. The workflow skips its own bump PRs to avoid a loop.
+# main is branch-protected (no direct pushes), so the bump lands via a
+# squash-merged PR (reused if one is already open for that version).
+# The workflow skips its own bump PRs to avoid a loop.
 on:
   pull_request:
     types: [closed]
@@ -31,7 +32,7 @@ jobs:
         id: bump
         run: echo "version=$(node .github/scripts/bump-version.mjs)" >> "$GITHUB_OUTPUT"
 
-      - name: Open auto-merged bump PR
+      - name: Land version bump (create or reuse PR)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -40,11 +41,32 @@ jobs:
           BRANCH="version-bump-${VERSION}"
           git config user.name "opencrustacean-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # If a bump PR for this version is already open (e.g. a previous run
+          # failed to land it), merge it instead of colliding on the branch name.
+          EXISTING_PR="$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)"
+          if [ -n "${EXISTING_PR}" ]; then
+            echo "Bump PR #${EXISTING_PR} for ${VERSION} already exists; merging it."
+            if ! gh pr merge "${EXISTING_PR}" --squash --delete-branch; then
+              echo "Not immediately mergeable; enabling auto-merge instead."
+              gh pr merge "${EXISTING_PR}" --auto --squash --delete-branch
+            fi
+            exit 0
+          fi
+
+          # Orphaned branch with no open PR: clear it before recreating.
+          if git ls-remote --exit-code origin "refs/heads/${BRANCH}" >/dev/null 2>&1; then
+            echo "Branch ${BRANCH} exists with no open PR; removing it."
+            git push origin --delete "${BRANCH}"
+          fi
+
           git checkout -b "${BRANCH}"
           git add package.json
           git commit -m "chore: bump version to ${VERSION}"
           git push origin "${BRANCH}"
-          gh pr create --base main --head "${BRANCH}" \
-            --title "chore: bump version to ${VERSION}" \
-            --body "Automated version bump (one per merged PR). The header version chip shows this after the next rebuild."
-          gh pr merge --auto --squash --delete-branch
+          NEW_PR="$(gh pr create --base main --head "${BRANCH}"             --title "chore: bump version to ${VERSION}"             --body "Automated version bump (one per merged PR). The header version chip shows this after the next rebuild."             --json number --jq '.number')"
+          echo "Created bump PR #${NEW_PR} for ${VERSION}; merging it."
+          if ! gh pr merge "${NEW_PR}" --squash --delete-branch; then
+            echo "Not immediately mergeable; enabling auto-merge instead."
+            gh pr merge "${NEW_PR}" --auto --squash --delete-branch
+          fi
