@@ -59,7 +59,7 @@ describe("tmp-openclaw-dir browser-safe import", () => {
 
     try {
       expect((globalThis as Record<string, unknown>)[resultKey]).toEqual({
-        posixTmpDir: "/tmp/openclaw",
+        posixTmpDir: "/tmp/opencrustacean",
         resolverType: "function",
       });
     } finally {

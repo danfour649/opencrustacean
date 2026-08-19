@@ -15,7 +15,7 @@ const EMPTY_REPLY_RETRY_PROMPT =
   "Answer the user's last message now with a visible text reply. " +
   "Only call tools if strictly necessary to answer; otherwise reply directly.";
 
-export type EmptyReplyRecovery =
+type EmptyReplyRecovery =
   | { kind: "none" }
   | { kind: "retry"; run: FollowupRun }
   | { kind: "banner" };

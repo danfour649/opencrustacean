@@ -80,11 +80,11 @@ describe("logger helpers", () => {
     await withTempDir({ prefix: "openclaw-log-test-" }, async (dir) => {
       resetLogger();
       const today = localDateString(new Date());
-      const todayPath = path.join(dir, `openclaw-${today}.log`);
+      const todayPath = path.join(dir, `opencrustacean-${today}.log`);
       setLoggerOverride({ level: "info", file: todayPath });
 
       // create an old file to be pruned
-      const oldPath = path.join(dir, "openclaw-2000-01-01.log");
+      const oldPath = path.join(dir, "opencrustacean-2000-01-01.log");
       fs.writeFileSync(oldPath, "old");
       fs.utimesSync(oldPath, new Date(0), new Date(0));
 

@@ -7,7 +7,7 @@ import { DEFAULT_POSIX_TMP_ROOT, resolvePreferredOpenClawTmpDir } from "./tmp-op
 type TmpDirOptions = NonNullable<Parameters<typeof resolvePreferredOpenClawTmpDir>[0]>;
 
 function fallbackTmp(uid = 501) {
-  return path.join("/var/fallback", `openclaw-${uid}`);
+  return path.join("/var/fallback", `opencrustacean-${uid}`);
 }
 
 function nodeErrorWithCode(code: string) {
@@ -145,7 +145,7 @@ function resolveWithMocks(params: {
 }
 
 describe("resolvePreferredOpenClawTmpDir", () => {
-  it("prefers /tmp/openclaw when it already exists and is writable", () => {
+  it("prefers /tmp/opencrustacean when it already exists and is writable", () => {
     const lstatSync: NonNullable<TmpDirOptions["lstatSync"]> = vi.fn(() => ({
       isDirectory: () => true,
       isSymbolicLink: () => false,
@@ -160,7 +160,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     expect(tmpdir).not.toHaveBeenCalled();
   });
 
-  it("prefers /tmp/openclaw when it does not exist but /tmp is writable", () => {
+  it("prefers /tmp/opencrustacean when it does not exist but /tmp is writable", () => {
     const lstatSyncMock = missingThenSecureLstat();
 
     const { resolved, accessSync, mkdirSync, tmpdir } = resolveWithMocks({
@@ -178,11 +178,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
 
   it.each([
     {
-      name: "falls back to os.tmpdir()/openclaw when /tmp/openclaw is not a directory",
+      name: "falls back to os.tmpdir()/opencrustacean when /tmp/opencrustacean is not a directory",
       lstatSync: vi.fn(() => makeDirStat({ isDirectory: false, mode: 0o100644 })),
     },
     {
-      name: "falls back to os.tmpdir()/openclaw when /tmp is not writable",
+      name: "falls back to os.tmpdir()/opencrustacean when /tmp is not writable",
       lstatSync: vi.fn(() => {
         throw nodeErrorWithCode("ENOENT");
       }),
@@ -193,7 +193,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       }),
     },
     {
-      name: "falls back when /tmp/openclaw exists but is not writable",
+      name: "falls back when /tmp/opencrustacean exists but is not writable",
       lstatSync: vi.fn(() => secureDirStat()),
       accessSync: vi.fn((target: string) => {
         if (target === DEFAULT_POSIX_TMP_ROOT) {
@@ -202,15 +202,15 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       }),
     },
     {
-      name: "falls back when /tmp/openclaw is a symlink",
+      name: "falls back when /tmp/opencrustacean is a symlink",
       lstatSync: symlinkTmpDirLstat(),
     },
     {
-      name: "falls back when /tmp/openclaw is not owned by the current user",
+      name: "falls back when /tmp/opencrustacean is not owned by the current user",
       lstatSync: vi.fn(() => makeDirStat({ uid: 0 })),
     },
     {
-      name: "falls back when /tmp/openclaw is group/other writable",
+      name: "falls back when /tmp/opencrustacean is group/other writable",
       lstatSync: vi.fn(() => makeDirStat({ mode: 0o40777 })),
     },
   ])("$name", ({ lstatSync, accessSync }) => {
@@ -221,7 +221,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     expectFallsBackToOsTmpDir({ lstatSync });
   });
 
-  it("repairs existing /tmp/openclaw permissions when they are too broad", () => {
+  it("repairs existing /tmp/opencrustacean permissions when they are too broad", () => {
     let preferredMode = 0o40777;
     const chmodSync = vi.fn((target: string, mode: number) => {
       if (target === DEFAULT_POSIX_TMP_ROOT && mode === 0o700) {
@@ -239,12 +239,12 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     expect(resolved).toBe(DEFAULT_POSIX_TMP_ROOT);
     expect(chmodSync).toHaveBeenCalledWith(DEFAULT_POSIX_TMP_ROOT, 0o700);
     expect(warn).toHaveBeenCalledWith(
-      `[openclaw] tightened permissions on temp dir: ${DEFAULT_POSIX_TMP_ROOT}`,
+      `[opencrustacean] tightened permissions on temp dir: ${DEFAULT_POSIX_TMP_ROOT}`,
     );
     expect(tmpdir).not.toHaveBeenCalled();
   });
 
-  it("repairs /tmp/openclaw after create when the initial mode stays too broad", () => {
+  it("repairs /tmp/opencrustacean after create when the initial mode stays too broad", () => {
     let preferredMode = 0o40775;
     let chmodCalls = 0;
     const lstatSync = vi
@@ -278,7 +278,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     });
     expect(chmodSync).toHaveBeenCalledWith(DEFAULT_POSIX_TMP_ROOT, 0o700);
     expect(warn).toHaveBeenCalledWith(
-      `[openclaw] tightened permissions on temp dir: ${DEFAULT_POSIX_TMP_ROOT}`,
+      `[opencrustacean] tightened permissions on temp dir: ${DEFAULT_POSIX_TMP_ROOT}`,
     );
     expect(tmpdir).not.toHaveBeenCalled();
   });
@@ -292,7 +292,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
         lstatSync,
         fallbackLstatSync,
       }),
-    ).toThrow(/Unsafe fallback OpenClaw temp dir/);
+    ).toThrow(/Unsafe fallback OpenCrustacean temp dir/);
   });
 
   it("creates fallback directory when missing, then validates ownership and mode", () => {
@@ -401,11 +401,11 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     expect(resolved).toBe(fallbackPath);
     expect(chmodSync).toHaveBeenCalledWith(fallbackPath, 0o700);
     expect(warn).toHaveBeenCalledWith(
-      `[openclaw] tightened permissions on temp dir: ${fallbackPath}`,
+      `[opencrustacean] tightened permissions on temp dir: ${fallbackPath}`,
     );
   });
 
-  it("uses /tmp/openclaw when another process tightened permissions before repair", () => {
+  it("uses /tmp/opencrustacean when another process tightened permissions before repair", () => {
     const chmodSync = vi.fn();
     const warn = vi.fn();
     const tmpdir = vi.fn(() => "/var/fallback");
@@ -451,7 +451,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it("uses /tmp/openclaw when chmod loses a concurrent repair race", () => {
+  it("uses /tmp/opencrustacean when chmod loses a concurrent repair race", () => {
     const chmodSync = vi.fn((target: string, mode: number) => {
       if (target === DEFAULT_POSIX_TMP_ROOT && mode === 0o700) {
         throw nodeErrorWithCode("EPERM");
@@ -521,16 +521,16 @@ describe("resolvePreferredOpenClawTmpDir", () => {
         tmpdir: vi.fn(() => "/var/fallback"),
         warn: vi.fn(),
       }),
-    ).toThrow(/Unable to create fallback OpenClaw temp dir/);
+    ).toThrow(/Unable to create fallback OpenCrustacean temp dir/);
   });
 
   it("skips the POSIX preferred path on Windows even when /tmp is accessible (#60713)", () => {
     // Node on Windows resolves the POSIX path `/tmp` to `C:\tmp` against the
     // current drive root. If `C:\tmp` happens to exist (Git, MSYS2, etc.
-    // create it), the previous code path returned `/tmp/openclaw` and routed
+    // create it), the previous code path returned `/tmp/opencrustacean` and routed
     // log files / TTS temp files there instead of `%TEMP%\openclaw`. The
     // platform: "win32" branch must skip the POSIX path entirely.
-    const winFallback = path.win32.join("C:\\Users\\u\\AppData\\Local\\Temp", "openclaw-501");
+    const winFallback = path.win32.join("C:\\Users\\u\\AppData\\Local\\Temp", "opencrustacean-501");
     const accessSync = vi.fn();
     const lstatSync = vi.fn((target: string) => {
       if (target === DEFAULT_POSIX_TMP_ROOT || target === winFallback) {

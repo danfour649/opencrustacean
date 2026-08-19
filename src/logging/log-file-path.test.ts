@@ -12,21 +12,21 @@ const date = new Date(2026, 6, 22, 12, 0, 0);
 
 describe("resolveConfiguredLogFilePath", () => {
   it.each([
-    { name: "unset", env: {}, expected: "openclaw-2026-07-22.log" },
+    { name: "unset", env: {}, expected: "opencrustacean-2026-07-22.log" },
     {
       name: "explicit default",
       env: { OPENCLAW_PROFILE: "Default" },
-      expected: "openclaw-2026-07-22.log",
+      expected: "opencrustacean-2026-07-22.log",
     },
     {
       name: "named",
       env: { OPENCLAW_PROFILE: "dev" },
-      expected: "openclaw-dev-2026-07-22.log",
+      expected: "opencrustacean-dev-2026-07-22.log",
     },
     {
       name: "sanitized",
       env: { OPENCLAW_PROFILE: "QA_Profile" },
-      expected: "openclaw--1q-1a-0-1profile-2026-07-22.log",
+      expected: "opencrustacean--1q-1a-0-1profile-2026-07-22.log",
     },
   ])("uses the $name profile filename", ({ env, expected }) => {
     const resolved = resolveConfiguredLogFilePath(undefined, { date, env });
@@ -45,7 +45,7 @@ describe("resolveConfiguredLogFilePath", () => {
     });
 
     expect(underscored).not.toBe(dashed);
-    expect(path.basename(dashed)).toBe("openclaw-qa--profile-2026-07-22.log");
+    expect(path.basename(dashed)).toBe("opencrustacean-qa--profile-2026-07-22.log");
   });
 
   it("keeps escaped output distinct from a profile that resembles the encoding", () => {
@@ -71,7 +71,7 @@ describe("resolveConfiguredLogFilePath", () => {
       env: { OPENCLAW_PROFILE: "B".repeat(80) },
     });
 
-    expect(path.basename(first)).toMatch(/^openclaw--3[a-f0-9]{64}-2026-07-22\.log$/u);
+    expect(path.basename(first)).toMatch(/^opencrustacean--3[a-f0-9]{64}-2026-07-22\.log$/u);
     expect(path.basename(first).length).toBeLessThanOrEqual(255);
     expect(first).not.toBe(second);
   });
@@ -90,33 +90,39 @@ describe("profile rolling log families", () => {
   it("preserves the profile segment across date rollover", () => {
     expect(
       resolveRollingLogFilePathForDate(
-        "/tmp/openclaw/openclaw-dev-2026-07-22.log",
+        "/tmp/opencrustacean/opencrustacean-dev-2026-07-22.log",
         new Date(2026, 6, 23, 12, 0, 0),
       ),
-    ).toBe("/tmp/openclaw/openclaw-dev-2026-07-23.log");
+    ).toBe("/tmp/opencrustacean/opencrustacean-dev-2026-07-23.log");
   });
 
   it("expands the legacy YYYY-MM-DD placeholder", () => {
     expect(
       resolveRollingLogFilePathForDate(
-        "/tmp/openclaw/openclaw-YYYY-MM-DD.log",
+        "/tmp/opencrustacean/opencrustacean-YYYY-MM-DD.log",
         new Date(2026, 6, 23, 12, 0, 0),
       ),
-    ).toBe("/tmp/openclaw/openclaw-2026-07-23.log");
+    ).toBe("/tmp/opencrustacean/opencrustacean-2026-07-23.log");
   });
 
   it("keeps default and named profile fallback families separate", () => {
     expect(
-      isSameRollingLogFileFamily("openclaw-dev-2026-07-22.log", "openclaw-dev-2026-07-21.log"),
+      isSameRollingLogFileFamily(
+        "opencrustacean-dev-2026-07-22.log",
+        "opencrustacean-dev-2026-07-21.log",
+      ),
     ).toBe(true);
     expect(
-      isSameRollingLogFileFamily("openclaw-dev-2026-07-22.log", "openclaw-2026-07-22.log"),
+      isSameRollingLogFileFamily(
+        "opencrustacean-dev-2026-07-22.log",
+        "opencrustacean-2026-07-22.log",
+      ),
     ).toBe(false);
   });
 
   it("keeps legacy explicit dated paths rolling without broadening the override contract", () => {
-    expect(isLegacyRollingLogFilePath("openclaw-2026-07-22.log")).toBe(true);
-    expect(isLegacyRollingLogFilePath("openclaw-YYYY-MM-DD.log")).toBe(true);
-    expect(isLegacyRollingLogFilePath("openclaw-dev-2026-07-22.log")).toBe(false);
+    expect(isLegacyRollingLogFilePath("opencrustacean-2026-07-22.log")).toBe(true);
+    expect(isLegacyRollingLogFilePath("opencrustacean-YYYY-MM-DD.log")).toBe(true);
+    expect(isLegacyRollingLogFilePath("opencrustacean-dev-2026-07-22.log")).toBe(false);
   });
 });

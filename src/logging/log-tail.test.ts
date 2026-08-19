@@ -46,7 +46,7 @@ describe("readConfiguredLogTail", () => {
   it("applies redaction once per request across all returned lines", async () => {
     const { readConfiguredLogTail } = await import("./log-tail.js");
     const tempDir = tempDirs.make("openclaw-log-tail-");
-    const file = path.join(tempDir, "openclaw-2026-01-22.log");
+    const file = path.join(tempDir, "opencrustacean-2026-01-22.log");
 
     await fs.writeFile(file, "custom-secret-abcdefghijklmnopqrstuvwxyz\nsecond line\n");
     setLoggerOverride({ file });
@@ -65,7 +65,7 @@ describe("readConfiguredLogTail", () => {
   it("fills short positional reads before splitting log lines", async () => {
     const { readConfiguredLogTail } = await import("./log-tail.js");
     const tempDir = tempDirs.make("openclaw-log-tail-");
-    const file = path.join(tempDir, "openclaw-2026-01-22.log");
+    const file = path.join(tempDir, "opencrustacean-2026-01-22.log");
     const realOpen = fs.open.bind(fs);
     vi.spyOn(fs, "open").mockImplementation(async (...args) => {
       const handle = await realOpen(...args);
@@ -87,9 +87,9 @@ describe("readConfiguredLogTail", () => {
 
   it("falls back only within the active profile's rolling log family", async () => {
     const tempDir = tempDirs.make("openclaw-log-tail-");
-    const missing = path.join(tempDir, "openclaw-dev-2026-01-22.log");
-    const devLog = path.join(tempDir, "openclaw-dev-2026-01-21.log");
-    const defaultLog = path.join(tempDir, "openclaw-2026-01-21.log");
+    const missing = path.join(tempDir, "opencrustacean-dev-2026-01-22.log");
+    const devLog = path.join(tempDir, "opencrustacean-dev-2026-01-21.log");
+    const defaultLog = path.join(tempDir, "opencrustacean-2026-01-21.log");
     await fs.writeFile(devLog, "dev profile\n");
     await fs.writeFile(defaultLog, "default profile\n");
     await fs.utimes(devLog, new Date(0), new Date(0));
@@ -103,8 +103,8 @@ describe("readConfiguredLogTail", () => {
   it("does not reinterpret an explicit profile-shaped logging.file as rolling", async () => {
     const { readConfiguredLogTail } = await import("./log-tail.js");
     const tempDir = tempDirs.make("openclaw-log-tail-");
-    const configured = path.join(tempDir, "openclaw-dev-2026-01-22.log");
-    const sibling = path.join(tempDir, "openclaw-dev-2026-01-21.log");
+    const configured = path.join(tempDir, "opencrustacean-dev-2026-01-22.log");
+    const sibling = path.join(tempDir, "opencrustacean-dev-2026-01-21.log");
     await fs.writeFile(sibling, "sibling profile log\n");
     setLoggerOverride({ file: configured });
 
