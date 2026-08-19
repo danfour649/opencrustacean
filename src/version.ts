@@ -35,7 +35,7 @@ function readVersionFromJsonCandidates(
         if (!version) {
           continue;
         }
-        if (opts.requirePackageName && !CORE_PACKAGE_NAMES.has(parsed.name)) {
+        if (opts.requirePackageName && (!parsed.name || !CORE_PACKAGE_NAMES.has(parsed.name))) {
           continue;
         }
         return version;
