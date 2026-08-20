@@ -104,8 +104,8 @@ jobs:
         run: |
           pnpm build
           pnpm ui:build
-          node openclaw.mjs --help
-          node openclaw.mjs status --json --timeout 1
+          node opencrustacean.mjs --help
+          node opencrustacean.mjs status --json --timeout 1
           pnpm test:build:singleton
 
       - name: Publish trusted declaration cache artifact
