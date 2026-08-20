@@ -222,7 +222,7 @@ describe("openclaw launcher", () => {
       } else {
         expect(result.status, testCase.version).toBe(1);
         expect(result.stderr, testCase.version).toContain(
-          `openclaw: Node.js >=22.22.3 <23, >=24.15.0 <25, or >=25.9.0 is required (current: v${testCase.version}).`,
+          `opencrustacean: Node.js >=22.22.3 <23, >=24.15.0 <25, or >=25.9.0 is required (current: v${testCase.version}).`,
         );
       }
     }
@@ -1064,7 +1064,9 @@ describe("openclaw launcher", () => {
     });
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain(path.join(".node-compile-cache", "openclaw", "2026.4.29"));
+    expect(result.stdout).toContain(
+      path.join(".node-compile-cache", "opencrustacean", "2026.4.29"),
+    );
   });
 
   it("falls back to the default packaged launcher compile cache when NODE_COMPILE_CACHE is empty", async () => {
@@ -1093,8 +1095,8 @@ describe("openclaw launcher", () => {
     });
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain(path.join("node-compile-cache", "openclaw", "2026.4.29"));
-    expect(result.stdout).not.toContain(path.join(runCwd, "openclaw"));
+    expect(result.stdout).toContain(path.join("node-compile-cache", "opencrustacean", "2026.4.29"));
+    expect(result.stdout).not.toContain(path.join(runCwd, "opencrustacean"));
   });
 
   it("keeps compile cache enabled for unaffected packaged launcher runtimes", async () => {
