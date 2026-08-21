@@ -636,7 +636,7 @@ describe("Apple app i18n catalogs", () => {
         "utf8",
       );
       expect(frenchInfoPlist).toContain(
-        '"NSUserNotificationUsageDescription" = "OpenCrustacean a besoin de l’autorisation d’envoyer des notifications pour afficher des alertes concernant les actions de l’agent.";',
+        '"NSUserNotificationUsageDescription" = "OpenClaw a besoin de l’autorisation d’envoyer des notifications pour afficher des alertes concernant les actions de l’agent.";',
       );
       expect(frenchInfoPlist).toContain('"NSScreenCaptureDescription" = ');
       expect(frenchInfoPlist).toContain('"NSLocationUsageDescription" = ');
