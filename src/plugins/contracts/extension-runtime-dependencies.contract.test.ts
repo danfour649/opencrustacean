@@ -63,8 +63,10 @@ const COMPUTED_RUNTIME_DEPENDENCIES = new Map<string, Set<string>>([
   ],
   [
     "extensions/crab",
-    // Keep Crab external to the plugin bundle; its computed core import is resolved at runtime.
-    new Set(["@clawdbot/crab"]),
+    // Keep the underlying Lobster workflow engine external to the plugin bundle; its
+    // computed core import (@clawdbot/lobster/core) is resolved at runtime. The engine
+    // package itself is third-party and has not been renamed to match this plugin's id.
+    new Set(["@clawdbot/lobster"]),
   ],
 ]);
 

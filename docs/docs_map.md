@@ -6567,6 +6567,14 @@ Do not edit it by hand; run `pnpm docs:map:gen`.
   - H2: Surface
   - H2: Related docs
 
+## plugins/reference/crab.md
+
+- Route: /plugins/reference/crab
+- Headings:
+  - H1: Crab plugin
+  - H2: Distribution
+  - H2: Surface
+
 ## plugins/reference/crabbox.md
 
 - Route: /plugins/reference/crabbox
@@ -6928,14 +6936,6 @@ Do not edit it by hand; run `pnpm docs:map:gen`.
   - H2: Distribution
   - H2: Surface
   - H2: Related docs
-
-## plugins/reference/lobster.md
-
-- Route: /plugins/reference/lobster
-- Headings:
-  - H1: Lobster plugin
-  - H2: Distribution
-  - H2: Surface
 
 ## plugins/reference/logbook.md
 
