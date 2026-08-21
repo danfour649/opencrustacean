@@ -123,6 +123,7 @@ function resolvePackedOpenClawFileName(value) {
   if (
     !filename.endsWith(".tgz") ||
     (!filename.startsWith("openclaw-") &&
+      !filename.startsWith("opencrustacean-") &&
       !filename.includes(":") &&
       !filename.includes("/") &&
       !filename.includes("\\"))
@@ -130,7 +131,7 @@ function resolvePackedOpenClawFileName(value) {
     return "";
   }
   if (
-    !/^openclaw-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
+    !/^(?:openclaw|opencrustacean)-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
     filename.includes("\0") ||
     filename !== path.basename(filename) ||
     filename !== path.win32.basename(filename)

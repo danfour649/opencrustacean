@@ -187,7 +187,7 @@ struct ChatTurnRecapSessionRow: Equatable, Sendable {
         self.outputTokens = outputTokens
     }
 
-    init(_ entry: OpenCrustaceanChatSessionEntry) {
+    init(_ entry: OpenClawChatSessionEntry) {
         self.init(
             status: entry.status,
             endedAt: entry.endedAt,

@@ -73,9 +73,9 @@ openclaw-crab-pet[data-dex-complete]::after {
   background: linear-gradient(
     90deg,
     transparent,
-    #2FBF71 30%,
+    #2fbf71 30%,
     #7ef5dd 50%,
-    #2FBF71 70%,
+    #2fbf71 70%,
     transparent
   );
   opacity: 0.5;
@@ -137,7 +137,7 @@ openclaw-crab-pet[data-dex-complete]::after {
 }
 
 .crab-pet--palette-clawtron {
-  --crab-glint: #2FBF71;
+  --crab-glint: #2fbf71;
 }
 
 .crab-pet--palette-selene {
@@ -222,8 +222,8 @@ openclaw-crab-pet[data-dex-complete]::after {
 }
 
 .crab-portal-ring--orange {
-  color: #2FBF71;
-  filter: drop-shadow(0 0 4px #2FBF71);
+  color: #2fbf71;
+  filter: drop-shadow(0 0 4px #2fbf71);
 }
 
 @keyframes crab-pet-portal-pulse {
@@ -538,7 +538,7 @@ openclaw-crab-pet[data-dex-complete]::after {
 }
 
 .crab-pet--palette-goldenretro .crab-retro-claw-line {
-  stroke: #1F9D57;
+  stroke: #1f9d57;
 }
 
 @keyframes crab-pet-goldenretro-shimmer {
@@ -1526,7 +1526,7 @@ openclaw-crab-pet[data-dex-complete]::after {
   right: -4px;
   font-size: 9px;
   line-height: 1;
-  color: #2FBF71;
+  color: #2fbf71;
   pointer-events: none;
 }
 
@@ -1594,9 +1594,9 @@ openclaw-crab-pet[data-dex-complete]::after {
   background: linear-gradient(
     90deg,
     transparent,
-    #2FBF71 30%,
+    #2fbf71 30%,
     #7ef5dd 50%,
-    #2FBF71 70%,
+    #2fbf71 70%,
     transparent
   );
   opacity: 0.7;
@@ -1631,8 +1631,8 @@ openclaw-crab-pet[data-dex-complete]::after {
 }
 
 .crabdex-page__header--complete .crabdex-page__count {
-  border-color: color-mix(in srgb, #2FBF71 55%, var(--border));
-  color: color-mix(in srgb, #2FBF71 75%, var(--text));
+  border-color: color-mix(in srgb, #2fbf71 55%, var(--border));
+  color: color-mix(in srgb, #2fbf71 75%, var(--text));
 }
 
 .crabdex-page__grid {

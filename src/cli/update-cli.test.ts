@@ -1790,6 +1790,7 @@ describe("update-cli", () => {
         installPath: "/tmp/openclaw-msteams-plugin",
         version: "1.0.0",
         resolvedName: "@openclaw/msteams",
+        resolvedSpec: "@openclaw/msteams@1.0.0",
         integrity: "sha512-newer",
       },
     });

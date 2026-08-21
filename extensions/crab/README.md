@@ -1,11 +1,11 @@
-# Lobster (plugin)
+# Crab (plugin)
 
 Adds the `lobster` agent tool as an **optional** plugin tool.
 
 ## Install
 
 ```bash
-openclaw plugins install @openclaw/lobster
+openclaw plugins install @openclaw/crab
 ```
 
 Restart the Gateway after installing or updating the plugin.
@@ -29,7 +29,7 @@ Enable it in an agent allowlist:
         "id": "main",
         "tools": {
           "allow": [
-            "lobster" // plugin id (enables all tools from this plugin)
+            "lobster" // tool id (enables this plugin's tool)
           ]
         }
       }
@@ -87,7 +87,7 @@ Notes:
 
 ## Package
 
-- Plugin id: `lobster`
+- Plugin id: `crab`
 - Tool: `lobster`
-- Package: `@openclaw/lobster`
+- Package: `@openclaw/crab`
 - Minimum OpenClaw host: `2026.4.25`

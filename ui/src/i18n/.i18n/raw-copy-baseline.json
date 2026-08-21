@@ -41,14 +41,14 @@
       "kind": "html-attribute",
       "name": "aria-label",
       "path": "ui/src/components/app-topbar.ts",
-      "text": "OpenClaw"
+      "text": "OpenCrustacean"
     },
     {
       "count": 1,
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/components/app-topbar.ts",
-      "text": "OpenClaw"
+      "text": "OpenCrustacean"
     },
     {
       "count": 1,
@@ -100,13 +100,6 @@
       "text": "/verbose"
     },
     {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/components/file-preview-modal.ts",
-      "text": "esc"
-    },
-    {
       "count": 2,
       "kind": "html-text",
       "name": "text",
@@ -122,10 +115,17 @@
     },
     {
       "count": 1,
+      "kind": "html-text",
+      "name": "text",
+      "path": "ui/src/components/file-preview-modal.ts",
+      "text": "esc"
+    },
+    {
+      "count": 1,
       "kind": "html-attribute",
       "name": "alt",
       "path": "ui/src/components/login-gate.ts",
-      "text": "OpenClaw"
+      "text": "OpenCrustacean"
     },
     {
       "count": 1,
@@ -146,7 +146,7 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/components/login-gate.ts",
-      "text": "OpenClaw"
+      "text": "OpenCrustacean"
     },
     {
       "count": 1,
@@ -615,7 +615,7 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/pages/profile/profile-page.ts",
-      "text": "OpenClaw"
+      "text": "OpenCrustacean"
     },
     {
       "count": 2,

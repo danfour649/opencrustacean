@@ -67,7 +67,7 @@ describe("printWizardHeader", () => {
     const log = vi.fn();
     await withColumns(50, () => printWizardHeader({ log } as unknown as RuntimeEnv));
     const output = String(log.mock.calls[0]?.[0]);
-    expect(output).toContain("OPENCLAW");
+    expect(output).toContain("OPENCRUSTACEAN");
     expect(output).not.toContain("█");
   });
 });

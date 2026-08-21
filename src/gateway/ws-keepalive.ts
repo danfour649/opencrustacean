@@ -1,10 +1,10 @@
 // Resolves gateway WebSocket keepalive/liveness settings from gateway.ws config.
 import type { GatewayWsConfig } from "../config/types.gateway.js";
 
-export const DEFAULT_WS_PING_INTERVAL_MS = 30_000;
-export const DEFAULT_WS_MAX_MISSED_PONGS = 5;
+const DEFAULT_WS_PING_INTERVAL_MS = 30_000;
+const DEFAULT_WS_MAX_MISSED_PONGS = 5;
 
-export type WsKeepaliveSettings = {
+type WsKeepaliveSettings = {
   pingIntervalMs: number;
   maxMissedPongs: number;
 };

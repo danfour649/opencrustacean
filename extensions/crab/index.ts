@@ -4,8 +4,8 @@ import type { AnyAgentTool, OpenClawPluginApi, OpenClawPluginToolFactory } from 
 import { createLobsterTool } from "./src/lobster-tool.js";
 
 export default definePluginEntry({
-  id: "lobster",
-  name: "Lobster",
+  id: "crab",
+  name: "Crab",
   description: "Optional local shell helper tools",
   register(api: OpenClawPluginApi) {
     api.registerTool(

@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/lobster",
+  "name": "@openclaw/crab",
   "version": "2026.7.2-beta.7",
-  "description": "Lobster workflow tool plugin for typed pipelines and resumable approvals.",
+  "description": "Crab (Lobster) workflow tool plugin for typed pipelines and resumable approvals.",
   "repository": {
     "type": "git",
     "url": "https://github.com/openclaw/openclaw"
@@ -19,7 +19,7 @@
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/lobster",
+      "npmSpec": "@openclaw/crab",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },
