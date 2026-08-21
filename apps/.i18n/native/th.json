@@ -26912,51 +26912,6 @@
       "id": "native.apple.e97067187c9a359d",
       "source": "\\(preview)…",
       "translated": "\\(preview)…"
-    },
-    {
-      "id": "native.apple.30cbdb8fd31bfe48",
-      "source": "OpenCrustacean needs notification permission to show alerts for agent actions.",
-      "translated": "OpenCrustacean ต้องการสิทธิ์การแจ้งเตือนเพื่อแสดงการเตือนสำหรับการดำเนินการของเอเจนต์"
-    },
-    {
-      "id": "native.apple.1a95aa98c8baceac",
-      "source": "OpenCrustacean captures the screen when the agent needs screenshots for context.",
-      "translated": "OpenCrustacean จะจับภาพหน้าจอเมื่อเอเจนต์ต้องการภาพหน้าจอเพื่อเป็นบริบท"
-    },
-    {
-      "id": "native.apple.85232d88eaa44e8a",
-      "source": "OpenCrustacean can capture photos or short video clips when requested by the agent.",
-      "translated": "OpenCrustacean สามารถถ่ายภาพหรือคลิปวิดีโอสั้น ๆ เมื่อเอเจนต์ร้องขอ"
-    },
-    {
-      "id": "native.apple.5f3917f8d95f8c8e",
-      "source": "OpenCrustacean can share your location when requested by the agent.",
-      "translated": "OpenCrustacean สามารถแชร์ตำแหน่งของคุณเมื่อเอเจนต์ร้องขอ"
-    },
-    {
-      "id": "native.apple.8f948e278545b936",
-      "source": "OpenCrustacean uses the local network to connect to your remote OpenCrustacean gateway over LAN, Tailnet, or SSH.",
-      "translated": "OpenCrustacean ใช้เครือข่ายภายในเพื่อเชื่อมต่อกับ gateway OpenCrustacean ระยะไกลของคุณผ่าน LAN, Tailnet หรือ SSH"
-    },
-    {
-      "id": "native.apple.2947ee67f8feb179",
-      "source": "OpenCrustacean uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.",
-      "translated": "OpenCrustacean ใช้ไมโครโฟนสำหรับ Voice Wake, push-to-talk, Talk Mode, การป้อนตามคำบอกของ Quick Chat และการบันทึกเสียงของเอเจนต์"
-    },
-    {
-      "id": "native.apple.8102355f4aba512b",
-      "source": "OpenCrustacean uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.",
-      "translated": "OpenCrustacean ใช้ Apple Speech สำหรับ Voice Wake, push-to-talk, Talk Mode และการป้อนตามคำบอกของ Quick Chat โดย Voice Wake จะทำงานบนอุปกรณ์"
-    },
-    {
-      "id": "native.apple.7cdb5777300d5eaa",
-      "source": "OpenCrustacean needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
-      "translated": "OpenCrustacean ต้องการสิทธิ์ Automation (AppleScript) เพื่อควบคุม Terminal และแอปอื่น ๆ สำหรับการดำเนินการของเอเจนต์"
-    },
-    {
-      "id": "native.apple.5d737102b44d920f",
-      "source": "OpenCrustacean can access Reminders when requested by the agent for the apple-reminders skill.",
-      "translated": "OpenCrustacean สามารถเข้าถึง Reminders เมื่อเอเจนต์ร้องขอสำหรับ skill apple-reminders"
     }
   ]
 }

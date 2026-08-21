@@ -26912,51 +26912,6 @@
       "id": "native.apple.e97067187c9a359d",
       "source": "\\(preview)…",
       "translated": "\\(preview)…"
-    },
-    {
-      "id": "native.apple.30cbdb8fd31bfe48",
-      "source": "OpenCrustacean needs notification permission to show alerts for agent actions.",
-      "translated": "OpenCrustacean برای نمایش هشدارهای مربوط به اقدامات عامل، به مجوز اعلان نیاز دارد."
-    },
-    {
-      "id": "native.apple.1a95aa98c8baceac",
-      "source": "OpenCrustacean captures the screen when the agent needs screenshots for context.",
-      "translated": "OpenCrustacean هنگامی که عامل برای زمینه به نماگرفت‌ها نیاز دارد، صفحه را ضبط می‌کند."
-    },
-    {
-      "id": "native.apple.85232d88eaa44e8a",
-      "source": "OpenCrustacean can capture photos or short video clips when requested by the agent.",
-      "translated": "OpenCrustacean می‌تواند هنگامی که عامل درخواست کند، عکس یا کلیپ‌های ویدیویی کوتاه ضبط کند."
-    },
-    {
-      "id": "native.apple.5f3917f8d95f8c8e",
-      "source": "OpenCrustacean can share your location when requested by the agent.",
-      "translated": "OpenCrustacean می‌تواند هنگامی که عامل درخواست کند، موقعیت مکانی شما را به اشتراک بگذارد."
-    },
-    {
-      "id": "native.apple.8f948e278545b936",
-      "source": "OpenCrustacean uses the local network to connect to your remote OpenCrustacean gateway over LAN, Tailnet, or SSH.",
-      "translated": "OpenCrustacean از شبکه محلی برای اتصال به gateway راه‌دور OpenCrustacean شما از طریق LAN، Tailnet یا SSH استفاده می‌کند."
-    },
-    {
-      "id": "native.apple.2947ee67f8feb179",
-      "source": "OpenCrustacean uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.",
-      "translated": "OpenCrustacean از میکروفون برای Voice Wake، فشار برای صحبت، حالت گفتگو، دیکته Quick Chat و ضبط صدای عامل استفاده می‌کند."
-    },
-    {
-      "id": "native.apple.8102355f4aba512b",
-      "source": "OpenCrustacean uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.",
-      "translated": "OpenCrustacean از Apple Speech برای Voice Wake، فشار برای صحبت، حالت گفتگو و دیکته Quick Chat استفاده می‌کند. Voice Wake روی دستگاه باقی می‌ماند."
-    },
-    {
-      "id": "native.apple.7cdb5777300d5eaa",
-      "source": "OpenCrustacean needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
-      "translated": "OpenCrustacean برای کنترل Terminal و برنامه‌های دیگر جهت اقدامات عامل، به مجوز Automation (AppleScript) نیاز دارد."
-    },
-    {
-      "id": "native.apple.5d737102b44d920f",
-      "source": "OpenCrustacean can access Reminders when requested by the agent for the apple-reminders skill.",
-      "translated": "OpenCrustacean می‌تواند هنگامی که عامل برای مهارت apple-reminders درخواست کند، به Reminders دسترسی داشته باشد."
     }
   ]
 }

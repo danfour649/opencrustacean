@@ -26912,51 +26912,6 @@
       "id": "native.apple.e97067187c9a359d",
       "source": "\\(preview)…",
       "translated": "\\(preview)…"
-    },
-    {
-      "id": "native.apple.30cbdb8fd31bfe48",
-      "source": "OpenCrustacean needs notification permission to show alerts for agent actions.",
-      "translated": "OpenCrustacean को एजेंट कार्रवाइयों के अलर्ट दिखाने के लिए नोटिफ़िकेशन अनुमति चाहिए।"
-    },
-    {
-      "id": "native.apple.1a95aa98c8baceac",
-      "source": "OpenCrustacean captures the screen when the agent needs screenshots for context.",
-      "translated": "जब एजेंट को संदर्भ के लिए स्क्रीनशॉट की आवश्यकता होती है, तो OpenCrustacean स्क्रीन कैप्चर करता है।"
-    },
-    {
-      "id": "native.apple.85232d88eaa44e8a",
-      "source": "OpenCrustacean can capture photos or short video clips when requested by the agent.",
-      "translated": "एजेंट द्वारा अनुरोध किए जाने पर OpenCrustacean फ़ोटो या छोटे वीडियो क्लिप कैप्चर कर सकता है।"
-    },
-    {
-      "id": "native.apple.5f3917f8d95f8c8e",
-      "source": "OpenCrustacean can share your location when requested by the agent.",
-      "translated": "एजेंट द्वारा अनुरोध किए जाने पर OpenCrustacean आपका स्थान साझा कर सकता है।"
-    },
-    {
-      "id": "native.apple.8f948e278545b936",
-      "source": "OpenCrustacean uses the local network to connect to your remote OpenCrustacean gateway over LAN, Tailnet, or SSH.",
-      "translated": "OpenCrustacean स्थानीय नेटवर्क का उपयोग करके LAN, Tailnet, या SSH पर आपके रिमोट OpenCrustacean gateway से कनेक्ट करता है।"
-    },
-    {
-      "id": "native.apple.2947ee67f8feb179",
-      "source": "OpenCrustacean uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.",
-      "translated": "OpenCrustacean माइक्रोफ़ोन का उपयोग Voice Wake, push-to-talk, Talk Mode, Quick Chat डिक्टेशन, और एजेंट ऑडियो कैप्चर के लिए करता है।"
-    },
-    {
-      "id": "native.apple.8102355f4aba512b",
-      "source": "OpenCrustacean uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.",
-      "translated": "OpenCrustacean Voice Wake, push-to-talk, Talk Mode, और Quick Chat डिक्टेशन के लिए Apple Speech का उपयोग करता है। Voice Wake ऑन-डिवाइस रहता है।"
-    },
-    {
-      "id": "native.apple.7cdb5777300d5eaa",
-      "source": "OpenCrustacean needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
-      "translated": "OpenCrustacean को एजेंट कार्रवाइयों के लिए Terminal और अन्य ऐप्स को नियंत्रित करने हेतु Automation (AppleScript) अनुमति चाहिए।"
-    },
-    {
-      "id": "native.apple.5d737102b44d920f",
-      "source": "OpenCrustacean can access Reminders when requested by the agent for the apple-reminders skill.",
-      "translated": "apple-reminders skill के लिए एजेंट द्वारा अनुरोध किए जाने पर OpenCrustacean Reminders तक पहुँच सकता है।"
     }
   ]
 }

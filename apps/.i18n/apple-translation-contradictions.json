@@ -262,7 +262,8 @@
       "source": "Active",
       "translations": [
         "Attiva",
-        "Attive"
+        "Attive",
+        "Attivo"
       ]
     },
     {
@@ -298,6 +299,14 @@
       ]
     },
     {
+      "locale": "uk",
+      "source": "Active",
+      "translations": [
+        "Активно",
+        "Активні"
+      ]
+    },
+    {
       "locale": "zh-CN",
       "source": "Active",
       "translations": [
@@ -309,6 +318,7 @@
       "locale": "zh-TW",
       "source": "Active",
       "translations": [
+        "使用中",
         "啟用中",
         "進行中"
       ]
@@ -772,6 +782,110 @@
     },
     {
       "locale": "ar",
+      "source": "Archived",
+      "translations": [
+        "مؤرشف",
+        "مؤرشفة"
+      ]
+    },
+    {
+      "locale": "es",
+      "source": "Archived",
+      "translations": [
+        "Archivada",
+        "Archivadas"
+      ]
+    },
+    {
+      "locale": "fr",
+      "source": "Archived",
+      "translations": [
+        "Archivé",
+        "Archivée"
+      ]
+    },
+    {
+      "locale": "it",
+      "source": "Archived",
+      "translations": [
+        "Archiviata",
+        "Archiviato"
+      ]
+    },
+    {
+      "locale": "pl",
+      "source": "Archived",
+      "translations": [
+        "Zarchiwizowana",
+        "Zarchiwizowane"
+      ]
+    },
+    {
+      "locale": "th",
+      "source": "Archived",
+      "translations": [
+        "เก็บถาวรแล้ว",
+        "เก็บเข้าคลังแล้ว"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Archived",
+      "translations": [
+        "Arşivlendi",
+        "Arşivlenmiş"
+      ]
+    },
+    {
+      "locale": "fr",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "Demande à OpenCrustacean",
+        "Interrogation d’OpenCrustacean"
+      ]
+    },
+    {
+      "locale": "id",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "Bertanya kepada OpenCrustacean",
+        "Meminta OpenCrustacean"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "OpenCrustacean に問い合わせ中",
+        "OpenCrustaceanに問い合わせ中"
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "OpenCrustacean에 문의 중",
+        "OpenCrustacean에 요청 중"
+      ]
+    },
+    {
+      "locale": "pl",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "Pytanie OpenCrustacean",
+        "Pytanie do OpenCrustacean"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Asking OpenCrustacean",
+      "translations": [
+        "OpenCrustacean'a soruluyor",
+        "OpenCrustacean’a soruluyor"
+      ]
+    },
+    {
+      "locale": "ar",
       "source": "Attachment",
       "translations": [
         "Attachment",
@@ -939,6 +1053,46 @@
       ]
     },
     {
+      "locale": "ar",
+      "source": "Attention",
+      "translations": [
+        "تنبيه",
+        "يتطلب الانتباه"
+      ]
+    },
+    {
+      "locale": "de",
+      "source": "Attention",
+      "translations": [
+        "Achtung",
+        "Aufmerksamkeit erforderlich"
+      ]
+    },
+    {
+      "locale": "id",
+      "source": "Attention",
+      "translations": [
+        "Perhatian",
+        "Perlu perhatian"
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "Attention",
+      "translations": [
+        "주의",
+        "주의 필요"
+      ]
+    },
+    {
+      "locale": "pl",
+      "source": "Attention",
+      "translations": [
+        "Uwaga",
+        "Wymaga uwagi"
+      ]
+    },
+    {
       "locale": "ru",
       "source": "Attention",
       "translations": [
@@ -947,11 +1101,27 @@
       ]
     },
     {
+      "locale": "sv",
+      "source": "Attention",
+      "translations": [
+        "Kräver uppmärksamhet",
+        "Åtgärd krävs"
+      ]
+    },
+    {
       "locale": "th",
       "source": "Attention",
       "translations": [
         "ต้องดำเนินการ",
         "ต้องตรวจสอบ"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Attention",
+      "translations": [
+        "Потребує уваги",
+        "Увага"
       ]
     },
     {
@@ -1622,6 +1792,14 @@
       ]
     },
     {
+      "locale": "nl",
+      "source": "Connecting",
+      "translations": [
+        "Verbinden",
+        "Verbinding maken"
+      ]
+    },
+    {
       "locale": "zh-TW",
       "source": "Connecting",
       "translations": [
@@ -1748,6 +1926,38 @@
       "translations": [
         "Devam",
         "Devam et"
+      ]
+    },
+    {
+      "locale": "fa",
+      "source": "Copy Session Key",
+      "translations": [
+        "کپی کلید جلسه",
+        "کپی کلید نشست"
+      ]
+    },
+    {
+      "locale": "nl",
+      "source": "Copy Session Key",
+      "translations": [
+        "Kopieer sessiesleutel",
+        "Sessiesleutel kopiëren"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "Copy Session Key",
+      "translations": [
+        "Скопировать ключ сеанса",
+        "Скопировать ключ сессии"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Copy Session Key",
+      "translations": [
+        "Копіювати ключ сеансу",
+        "Копіювати ключ сесії"
       ]
     },
     {
@@ -2062,6 +2272,14 @@
       "translations": [
         "預設 agent",
         "預設代理程式"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Delete",
+      "translations": [
+        "मिटाएँ",
+        "हटाएँ"
       ]
     },
     {
@@ -2410,6 +2628,86 @@
       ]
     },
     {
+      "locale": "ar",
+      "source": "Dismiss",
+      "translations": [
+        "إغلاق",
+        "تجاهل"
+      ]
+    },
+    {
+      "locale": "de",
+      "source": "Dismiss",
+      "translations": [
+        "Schließen",
+        "Verwerfen"
+      ]
+    },
+    {
+      "locale": "fa",
+      "source": "Dismiss",
+      "translations": [
+        "بستن",
+        "رد کردن"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Dismiss",
+      "translations": [
+        "却下",
+        "閉じる"
+      ]
+    },
+    {
+      "locale": "pt-BR",
+      "source": "Dismiss",
+      "translations": [
+        "Dispensar",
+        "Ignorar"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "Dismiss",
+      "translations": [
+        "Закрыть",
+        "Отклонить"
+      ]
+    },
+    {
+      "locale": "sv",
+      "source": "Dismiss",
+      "translations": [
+        "Avfärda",
+        "Avvisa"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Dismiss",
+      "translations": [
+        "Відхилити",
+        "Закрити"
+      ]
+    },
+    {
+      "locale": "vi",
+      "source": "Dismiss",
+      "translations": [
+        "Bỏ qua",
+        "Đóng"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "source": "Dismiss",
+      "translations": [
+        "关闭",
+        "忽略"
+      ]
+    },
+    {
       "locale": "de",
       "source": "Docs",
       "translations": [
@@ -2423,6 +2721,14 @@
       "translations": [
         "اسناد",
         "مستندات"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Docs",
+      "translations": [
+        "डॉक्स",
+        "दस्तावेज़"
       ]
     },
     {
@@ -2818,6 +3124,94 @@
       "translations": [
         "Mở rộng",
         "Đã mở rộng"
+      ]
+    },
+    {
+      "locale": "fa",
+      "source": "Export Transcript",
+      "translations": [
+        "خروجی گرفتن از رونوشت",
+        "خروجی گرفتن رونوشت"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Export Transcript",
+      "translations": [
+        "ट्रांसक्रिप्ट निर्यात करें",
+        "प्रतिलेख निर्यात करें"
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "Export Transcript",
+      "translations": [
+        "기록 내보내기",
+        "대화 기록 내보내기"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "Export Transcript",
+      "translations": [
+        "Экспорт транскрипта",
+        "Экспортировать стенограмму"
+      ]
+    },
+    {
+      "locale": "sv",
+      "source": "Export Transcript",
+      "translations": [
+        "Exportera transkript",
+        "Exportera transkription"
+      ]
+    },
+    {
+      "locale": "th",
+      "source": "Export Transcript",
+      "translations": [
+        "ส่งออกบันทึกการสนทนา",
+        "ส่งออกสำเนาบทสนทนา"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Export Transcript",
+      "translations": [
+        "Dökümü Dışa Aktar",
+        "Dökümü dışa aktar"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Export Transcript",
+      "translations": [
+        "Експортувати стенограму",
+        "Експортувати транскрипт"
+      ]
+    },
+    {
+      "locale": "vi",
+      "source": "Export Transcript",
+      "translations": [
+        "Xuất Bản ghi",
+        "Xuất bản ghi cuộc trò chuyện"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "source": "Export Transcript",
+      "translations": [
+        "导出对话记录",
+        "导出转录"
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "source": "Export Transcript",
+      "translations": [
+        "匯出對話紀錄",
+        "匯出逐字稿"
       ]
     },
     {
@@ -3585,6 +3979,7 @@
       "source": "Gateway settings",
       "translations": [
         "Paramètres Gateway",
+        "Paramètres de Gateway",
         "Paramètres du Gateway"
       ]
     },
@@ -6151,6 +6546,14 @@
       ]
     },
     {
+      "locale": "ar",
+      "source": "Online",
+      "translations": [
+        "متصل",
+        "متصل بالإنترنت"
+      ]
+    },
+    {
       "locale": "pt-BR",
       "source": "Online",
       "translations": [
@@ -6320,10 +6723,98 @@
     },
     {
       "locale": "ar",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "لا يستطيع OpenCrustacean تحديد إذن الموقع الحالي في iOS.",
+        "يتعذّر على OpenCrustacean تحديد إذن الموقع الحالي في iOS."
+      ]
+    },
+    {
+      "locale": "fr",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean ne peut pas déterminer l'autorisation de localisation iOS actuelle.",
+        "OpenCrustacean ne peut pas déterminer l’autorisation de localisation iOS actuelle."
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean वर्तमान iOS लोकेशन अनुमति निर्धारित नहीं कर सकता।",
+        "OpenCrustacean वर्तमान iOS स्थान अनुमति निर्धारित नहीं कर सकता।"
+      ]
+    },
+    {
+      "locale": "it",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean non può determinare l’autorizzazione alla posizione iOS attuale.",
+        "OpenCrustacean non riesce a determinare l'attuale autorizzazione alla posizione di iOS."
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean は現在の iOS 位置情報の権限を確認できません。",
+        "OpenCrustacean は現在の iOS 位置情報許可を判別できません。"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean не может определить текущее разрешение iOS на доступ к местоположению.",
+        "OpenCrustacean не удается определить текущее разрешение iOS на доступ к геопозиции."
+      ]
+    },
+    {
+      "locale": "th",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งของ iOS ในปัจจุบันได้",
+        "OpenCrustacean ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งปัจจุบันของ iOS ได้"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean geçerli iOS konum iznini belirleyemiyor.",
+        "OpenCrustacean mevcut iOS konum iznini belirleyemiyor."
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
+      "translations": [
+        "OpenCrustacean не може визначити поточний дозвіл iOS на геолокацію.",
+        "OpenCrustacean не може визначити поточний дозвіл iOS на доступ до геолокації."
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "OpenCrustacean unavailable",
+      "translations": [
+        "OpenCrustacean를 사용할 수 없습니다",
+        "OpenCrustacean을 사용할 수 없습니다"
+      ]
+    },
+    {
+      "locale": "ar",
       "source": "Opens Settings / Gateway",
       "translations": [
         "يفتح Settings / Gateway",
         "يفتح الإعدادات / Gateway"
+      ]
+    },
+    {
+      "locale": "fa",
+      "source": "Opens Settings / Gateway",
+      "translations": [
+        "Settings / Gateway را باز می‌کند",
+        "تنظیمات / Gateway را باز می‌کند"
       ]
     },
     {
@@ -6365,6 +6856,7 @@
       "source": "Opens Settings / Gateway",
       "translations": [
         "Открывает Settings / Gateway",
+        "Открывает «Настройки / Gateway»",
         "Открывает Настройки / Gateway"
       ]
     },
@@ -6380,6 +6872,7 @@
       "locale": "tr",
       "source": "Opens Settings / Gateway",
       "translations": [
+        "Ayarlar / Gateway bölümünü açar",
         "Ayarlar / Gateway'i açar",
         "Ayarlar / Gateway’i açar"
       ]
@@ -6432,6 +6925,110 @@
       "translations": [
         "概覽",
         "總覽"
+      ]
+    },
+    {
+      "locale": "ar",
+      "source": "Pairing",
+      "translations": [
+        "الإقران",
+        "جارٍ الاقتران"
+      ]
+    },
+    {
+      "locale": "es",
+      "source": "Pairing",
+      "translations": [
+        "Emparejamiento",
+        "Enlace"
+      ]
+    },
+    {
+      "locale": "fa",
+      "source": "Pairing",
+      "translations": [
+        "جفت‌سازی",
+        "در حال جفت‌سازی"
+      ]
+    },
+    {
+      "locale": "id",
+      "source": "Pairing",
+      "translations": [
+        "Pemasangan",
+        "Penyandingan"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Pairing",
+      "translations": [
+        "ペアリング",
+        "ペアリング中"
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "Pairing",
+      "translations": [
+        "페어링",
+        "페어링 중"
+      ]
+    },
+    {
+      "locale": "pt-BR",
+      "source": "Pairing",
+      "translations": [
+        "Emparelhando",
+        "Pareamento"
+      ]
+    },
+    {
+      "locale": "sv",
+      "source": "Pairing",
+      "translations": [
+        "Parkopplar",
+        "Parkoppling"
+      ]
+    },
+    {
+      "locale": "th",
+      "source": "Pairing",
+      "translations": [
+        "การจับคู่",
+        "กำลังจับคู่"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Pairing",
+      "translations": [
+        "Eşleştiriliyor",
+        "Eşleştirme"
+      ]
+    },
+    {
+      "locale": "vi",
+      "source": "Pairing",
+      "translations": [
+        "Ghép nối",
+        "Đang ghép đôi"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "source": "Pairing",
+      "translations": [
+        "正在配对",
+        "配对"
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "source": "Pairing",
+      "translations": [
+        "配對",
+        "配對中"
       ]
     },
     {
@@ -6557,6 +7154,22 @@
       ]
     },
     {
+      "locale": "de",
+      "source": "Pin",
+      "translations": [
+        "Anheften",
+        "Anpinnen"
+      ]
+    },
+    {
+      "locale": "nl",
+      "source": "Pin",
+      "translations": [
+        "Vastmaken",
+        "Vastzetten"
+      ]
+    },
+    {
       "locale": "ar",
       "source": "Pinned",
       "translations": [
@@ -6569,6 +7182,7 @@
       "source": "Pinned",
       "translations": [
         "Fijada",
+        "Fijadas",
         "Fijado"
       ]
     },
@@ -6585,6 +7199,8 @@
       "source": "Pinned",
       "translations": [
         "Fissata",
+        "Fissati",
+        "Fissato",
         "In evidenza"
       ]
     },
@@ -6609,6 +7225,7 @@
       "source": "Pinned",
       "translations": [
         "Fixada",
+        "Fixado",
         "Fixados"
       ]
     },
@@ -6618,6 +7235,14 @@
       "translations": [
         "Закреплено",
         "Закреплённые"
+      ]
+    },
+    {
+      "locale": "sv",
+      "source": "Pinned",
+      "translations": [
+        "Fäst",
+        "Fästa"
       ]
     },
     {
@@ -6989,11 +7614,36 @@
       ]
     },
     {
+      "locale": "hi",
+      "source": "Recent",
+      "translations": [
+        "हाल के",
+        "हाल ही के",
+        "हालिया"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Recent",
+      "translations": [
+        "Son",
+        "Son Kullanılanlar"
+      ]
+    },
+    {
       "locale": "uk",
       "source": "Recent",
       "translations": [
         "Нещодавні",
         "Останні"
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "source": "Recent",
+      "translations": [
+        "最近",
+        "最近使用"
       ]
     },
     {
@@ -7098,6 +7748,7 @@
       "source": "Refresh",
       "translations": [
         "بازآوری",
+        "بازخوانی",
         "تازه‌سازی"
       ]
     },
@@ -7273,8 +7924,17 @@
       "locale": "id",
       "source": "Rename",
       "translations": [
+        "Ganti Nama",
         "Ubah Nama",
         "Ubah nama"
+      ]
+    },
+    {
+      "locale": "ko",
+      "source": "Rename",
+      "translations": [
+        "이름 바꾸기",
+        "이름 변경"
       ]
     },
     {
@@ -7509,6 +8169,7 @@
       "translations": [
         "Retry",
         "पुनः प्रयास करें",
+        "फिर से कोशिश करें",
         "फिर से प्रयास करें"
       ]
     },
@@ -8069,6 +8730,54 @@
       ]
     },
     {
+      "locale": "es",
+      "source": "Scope",
+      "translations": [
+        "Alcance",
+        "Ámbito"
+      ]
+    },
+    {
+      "locale": "fr",
+      "source": "Scope",
+      "translations": [
+        "Portée",
+        "Périmètre"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Scope",
+      "translations": [
+        "दायरा",
+        "स्कोप"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Scope",
+      "translations": [
+        "スコープ",
+        "範囲"
+      ]
+    },
+    {
+      "locale": "nl",
+      "source": "Scope",
+      "translations": [
+        "Bereik",
+        "Scope"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Scope",
+      "translations": [
+        "Область",
+        "Обсяг"
+      ]
+    },
+    {
       "locale": "fa",
       "source": "Search ClawHub",
       "translations": [
@@ -8478,6 +9187,70 @@
       ]
     },
     {
+      "locale": "ar",
+      "source": "Speaking…",
+      "translations": [
+        "جارٍ التحدث…",
+        "يتحدث…"
+      ]
+    },
+    {
+      "locale": "fr",
+      "source": "Speaking…",
+      "translations": [
+        "En train de parler…",
+        "Lecture…"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Speaking…",
+      "translations": [
+        "बोल रहा है…",
+        "बोला जा रहा है…"
+      ]
+    },
+    {
+      "locale": "it",
+      "source": "Speaking…",
+      "translations": [
+        "In riproduzione…",
+        "Riproduzione vocale…"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Speaking…",
+      "translations": [
+        "発話中…",
+        "読み上げ中…"
+      ]
+    },
+    {
+      "locale": "nl",
+      "source": "Speaking…",
+      "translations": [
+        "Aan het spreken…",
+        "Spreekt…"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "Speaking…",
+      "translations": [
+        "Воспроизведение речи…",
+        "Говорит…"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Speaking…",
+      "translations": [
+        "Говорить…",
+        "Озвучення…"
+      ]
+    },
+    {
       "locale": "zh-TW",
       "source": "Speaking…",
       "translations": [
@@ -8491,6 +9264,54 @@
       "translations": [
         "वाक् पहचान",
         "स्पीच रिकग्निशन"
+      ]
+    },
+    {
+      "locale": "de",
+      "source": "Start",
+      "translations": [
+        "Start",
+        "Starten"
+      ]
+    },
+    {
+      "locale": "pl",
+      "source": "Start",
+      "translations": [
+        "Rozpocznij",
+        "Uruchom"
+      ]
+    },
+    {
+      "locale": "ru",
+      "source": "Start",
+      "translations": [
+        "Запустить",
+        "Начать"
+      ]
+    },
+    {
+      "locale": "uk",
+      "source": "Start",
+      "translations": [
+        "Запустити",
+        "Почати"
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "source": "Start",
+      "translations": [
+        "启动",
+        "开始"
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "source": "Start",
+      "translations": [
+        "啟動",
+        "開始"
       ]
     },
     {
@@ -8718,12 +9539,21 @@
       ]
     },
     {
+      "locale": "ar",
+      "source": "Thinking",
+      "translations": [
+        "التفكير",
+        "يفكر"
+      ]
+    },
+    {
       "locale": "de",
       "source": "Thinking",
       "translations": [
         "Denkmodus",
         "Denkprozess",
-        "Denkt nach"
+        "Denkt nach",
+        "Nachdenken"
       ]
     },
     {
@@ -8780,6 +9610,7 @@
       "source": "Thinking",
       "translations": [
         "사고",
+        "사고 중",
         "생각 중"
       ]
     },
@@ -8787,6 +9618,7 @@
       "locale": "nl",
       "source": "Thinking",
       "translations": [
+        "Aan het nadenken",
         "Denken",
         "Denkmodus",
         "Redeneren"
@@ -8845,7 +9677,8 @@
       "source": "Thinking",
       "translations": [
         "Мислення",
-        "Міркування"
+        "Міркування",
+        "Обмірковування"
       ]
     },
     {
@@ -8861,6 +9694,7 @@
       "source": "Thinking",
       "translations": [
         "思考",
+        "思考中",
         "正在思考"
       ]
     },
@@ -9218,6 +10052,22 @@
       ]
     },
     {
+      "locale": "de",
+      "source": "Unpin",
+      "translations": [
+        "Loslösen",
+        "Lösen"
+      ]
+    },
+    {
+      "locale": "es",
+      "source": "Unpin",
+      "translations": [
+        "Dejar de fijar",
+        "Desfijar"
+      ]
+    },
+    {
       "locale": "fr",
       "source": "Unpin",
       "translations": [
@@ -9247,6 +10097,30 @@
       "translations": [
         "Rimuovi",
         "Rimuovi fissaggio"
+      ]
+    },
+    {
+      "locale": "tr",
+      "source": "Unpin",
+      "translations": [
+        "Sabitlemeyi Kaldır",
+        "Sabitlemeyi kaldır"
+      ]
+    },
+    {
+      "locale": "hi",
+      "source": "Updating OpenCrustacean",
+      "translations": [
+        "OpenCrustacean अपडेट किया जा रहा है",
+        "OpenCrustacean को अपडेट किया जा रहा है"
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "source": "Updating OpenCrustacean",
+      "translations": [
+        "OpenCrustacean を更新中",
+        "OpenCrustaceanを更新中"
       ]
     },
     {
