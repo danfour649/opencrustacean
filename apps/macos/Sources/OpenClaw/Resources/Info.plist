@@ -44,27 +44,27 @@
     <integer>2</integer>
 
     <key>NSUserNotificationUsageDescription</key>
-    <string>OpenClaw needs notification permission to show alerts for agent actions.</string>
+    <string>OpenCrustacean needs notification permission to show alerts for agent actions.</string>
     <key>NSScreenCaptureDescription</key>
-    <string>OpenClaw captures the screen when the agent needs screenshots for context.</string>
+    <string>OpenCrustacean captures the screen when the agent needs screenshots for context.</string>
     <key>NSCameraUsageDescription</key>
-    <string>OpenClaw can capture photos or short video clips when requested by the agent.</string>
+    <string>OpenCrustacean can capture photos or short video clips when requested by the agent.</string>
 	<key>NSLocationUsageDescription</key>
-	<string>OpenClaw can share your location when requested by the agent.</string>
+	<string>OpenCrustacean can share your location when requested by the agent.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>OpenClaw can share your location when requested by the agent.</string>
+	<string>OpenCrustacean can share your location when requested by the agent.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>OpenClaw can share your location when requested by the agent.</string>
+	<string>OpenCrustacean can share your location when requested by the agent.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>OpenClaw uses the local network to connect to your remote OpenClaw gateway over LAN, Tailnet, or SSH.</string>
+	<string>OpenCrustacean uses the local network to connect to your remote OpenCrustacean gateway over LAN, Tailnet, or SSH.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>OpenClaw uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.</string>
+    <string>OpenCrustacean uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.</string>
     <key>NSSpeechRecognitionUsageDescription</key>
-    <string>OpenClaw uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.</string>
+    <string>OpenCrustacean uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.</string>
     <key>NSAppleEventsUsageDescription</key>
-    <string>OpenClaw needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.</string>
+    <string>OpenCrustacean needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.</string>
     <key>NSRemindersUsageDescription</key>
-    <string>OpenClaw can access Reminders when requested by the agent for the apple-reminders skill.</string>
+    <string>OpenCrustacean can access Reminders when requested by the agent for the apple-reminders skill.</string>
 
     <key>NSAppTransportSecurity</key>
     <dict>

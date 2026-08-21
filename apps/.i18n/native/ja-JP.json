@@ -26912,6 +26912,51 @@
       "id": "native.apple.e97067187c9a359d",
       "source": "\\(preview)…",
       "translated": "\\(preview)…"
+    },
+    {
+      "id": "native.apple.30cbdb8fd31bfe48",
+      "source": "OpenCrustacean needs notification permission to show alerts for agent actions.",
+      "translated": "OpenCrustaceanがエージェントのアクションに関するアラートを表示するには、通知の許可が必要です。"
+    },
+    {
+      "id": "native.apple.1a95aa98c8baceac",
+      "source": "OpenCrustacean captures the screen when the agent needs screenshots for context.",
+      "translated": "OpenCrustaceanは、エージェントがコンテキスト用のスクリーンショットを必要とする場合に画面をキャプチャします。"
+    },
+    {
+      "id": "native.apple.85232d88eaa44e8a",
+      "source": "OpenCrustacean can capture photos or short video clips when requested by the agent.",
+      "translated": "OpenCrustaceanは、エージェントから要求された場合に写真または短いビデオクリップをキャプチャできます。"
+    },
+    {
+      "id": "native.apple.5f3917f8d95f8c8e",
+      "source": "OpenCrustacean can share your location when requested by the agent.",
+      "translated": "OpenCrustaceanは、エージェントから要求された場合に位置情報を共有できます。"
+    },
+    {
+      "id": "native.apple.8f948e278545b936",
+      "source": "OpenCrustacean uses the local network to connect to your remote OpenCrustacean gateway over LAN, Tailnet, or SSH.",
+      "translated": "OpenCrustaceanは、LAN、Tailnet、またはSSH経由でリモートOpenCrustacean Gatewayに接続するためにローカルネットワークを使用します。"
+    },
+    {
+      "id": "native.apple.2947ee67f8feb179",
+      "source": "OpenCrustacean uses the microphone for Voice Wake, push-to-talk, Talk Mode, Quick Chat dictation, and agent audio capture.",
+      "translated": "OpenCrustaceanはVoice Wake、プッシュトゥトーク、Talk Mode、Quick Chatのディクテーション、エージェントの音声キャプチャにマイクを使用します。"
+    },
+    {
+      "id": "native.apple.8102355f4aba512b",
+      "source": "OpenCrustacean uses Apple Speech for Voice Wake, push-to-talk, Talk Mode, and Quick Chat dictation. Voice Wake stays on-device.",
+      "translated": "OpenCrustaceanはVoice Wake、プッシュトゥトーク、Talk Mode、Quick ChatのディクテーションにApple Speechを使用します。Voice Wakeはデバイス上で処理されます。"
+    },
+    {
+      "id": "native.apple.7cdb5777300d5eaa",
+      "source": "OpenCrustacean needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
+      "translated": "OpenCrustaceanがエージェントのアクションのためにTerminalやその他のアプリを操作するには、Automation（AppleScript）の許可が必要です。"
+    },
+    {
+      "id": "native.apple.5d737102b44d920f",
+      "source": "OpenCrustacean can access Reminders when requested by the agent for the apple-reminders skill.",
+      "translated": "OpenCrustaceanは、apple-reminders skillのためにエージェントから要求された場合にRemindersへアクセスできます。"
     }
   ]
 }

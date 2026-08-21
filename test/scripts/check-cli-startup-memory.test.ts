@@ -86,7 +86,7 @@ describe("check-cli-startup-memory", () => {
     expect(testing.cases).toContainEqual(
       expect.objectContaining({
         id: "pluginsList",
-        args: ["openclaw.mjs", "plugins", "list", "--json"],
+        args: ["opencrustacean.mjs", "plugins", "list", "--json"],
       }),
     );
   });
