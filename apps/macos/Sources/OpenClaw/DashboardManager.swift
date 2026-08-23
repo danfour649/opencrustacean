@@ -658,7 +658,7 @@ final class DashboardManager {
                 auth: auth,
                 tlsParams: endpoint.tls?.params,
                 mode: mode,
-                displayName: "OpenClaw")
+                displayName: "OpenCrustacean")
         case let .profile(profileID):
             let endpoint = try await self.profileEndpoint(profileID: profileID)
             let url = try GatewayEndpointStore.dashboardURL(

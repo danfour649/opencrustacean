@@ -1,6 +1,6 @@
 import XCTest
 
-/// Drives the real share-sheet path: Photos -> share -> OpenClaw compose card.
+/// Drives the real share-sheet path: Photos -> share -> OpenCrustacean compose card.
 /// Runs against the booted simulator's bundled sample photos and asserts the
 /// compose card's control states without needing a paired gateway (send is
 /// expected to surface the not-connected failure inline).
@@ -39,11 +39,11 @@ final class ShareExtensionUITests: XCTestCase {
         shareButton.tap()
 
         // Target the share-sheet app cell explicitly; label-only matching can hit
-        // other OpenClaw builds installed on the same simulator.
+        // other OpenCrustacean builds installed on the same simulator.
         let openClawOption = photos.cells.matching(identifier: "shareCell")
-            .matching(NSPredicate(format: "label BEGINSWITH 'OpenClaw'"))
+            .matching(NSPredicate(format: "label BEGINSWITH 'OpenCrustacean'"))
             .firstMatch
-        XCTAssertTrue(openClawOption.waitForExistence(timeout: 10), "OpenClaw missing from share sheet")
+        XCTAssertTrue(openClawOption.waitForExistence(timeout: 10), "OpenCrustacean missing from share sheet")
         openClawOption.tap()
 
         let draft = photos.textViews["share-compose.draft"]

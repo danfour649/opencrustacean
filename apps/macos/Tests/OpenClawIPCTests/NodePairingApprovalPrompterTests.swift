@@ -128,7 +128,7 @@ struct PairingCardPresentationTests {
         #expect(PairingCardPresentation.deviceSymbol(for: card) == "macbook")
         #expect(PairingCardPresentation.identityLine(for: card) == "ID 19cec1c3...9dccdc7 · 192.168.1.42")
         #expect(PairingCardPresentation.versionTooltip(for: card) == "App 2026.6.11 · Core 2026.6.10")
-        #expect(PairingCardPresentation.headerSummary(for: [card]) == "A node wants to connect to OpenClaw.")
+        #expect(PairingCardPresentation.headerSummary(for: [card]) == "A node wants to connect to OpenCrustacean.")
     }
 
     @Test func `device symbols map hardware families`() {
@@ -213,12 +213,12 @@ struct PairingCardPresentationTests {
         ])
         #expect(PairingCardPresentation.accessRows(for: card).map(\.text) == [
             "Admin access",
-            "Read OpenClaw data",
+            "Read OpenCrustacean data",
             "Send messages and make changes",
             "Manage approvals",
             "Pair and repair devices",
         ])
-        #expect(PairingCardPresentation.title(for: card) == "OpenClaw Mac app")
+        #expect(PairingCardPresentation.title(for: card) == "OpenCrustacean Mac app")
         #expect(PairingCardPresentation.subtitle(for: card) == "Mac (Intel) · Operator")
     }
 

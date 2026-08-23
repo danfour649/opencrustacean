@@ -8,7 +8,7 @@ public enum OpenClawNodeStorage {
                 NSLocalizedDescriptionKey: "Application Support directory unavailable",
             ])
         }
-        return base.appendingPathComponent("OpenClaw", isDirectory: true)
+        return base.appendingPathComponent("OpenCrustacean", isDirectory: true)
     }
 
     public static func canvasRoot(sessionKey: String) throws -> URL {
@@ -25,7 +25,7 @@ public enum OpenClawNodeStorage {
                 NSLocalizedDescriptionKey: "Caches directory unavailable",
             ])
         }
-        return base.appendingPathComponent("OpenClaw", isDirectory: true)
+        return base.appendingPathComponent("OpenCrustacean", isDirectory: true)
     }
 
     public static func canvasSnapshotsRoot(sessionKey: String) throws -> URL {

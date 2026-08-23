@@ -548,7 +548,7 @@ struct GatewayChannelConnectTests {
                     permissions: [:],
                     clientId: "openclaw-macos",
                     clientMode: "ui",
-                    clientDisplayName: "OpenClaw macOS Debug CLI"))
+                    clientDisplayName: "OpenCrustacean macOS Debug CLI"))
 
             try await channel.connect()
 

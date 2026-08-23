@@ -401,7 +401,7 @@ struct HostedPushRelayDisclosureSheet: View {
                     Image(systemName: "network")
                         .font(OpenClawType.title2SemiBold)
                         .foregroundStyle(OpenClawBrand.accentForeground)
-                    Text("Enable OpenClaw Hosted Push Relay?")
+                    Text("Enable OpenCrustacean Hosted Push Relay?")
                         .font(OpenClawType.title3SemiBold)
                     Text(self.message)
                         .font(OpenClawType.body)

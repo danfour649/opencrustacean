@@ -582,7 +582,7 @@ private fun ChatOutboxAction(
 fun ChatStreamingAssistantBubble(text: String) {
   ChatBubbleContainer(
     style = bubbleStyle("assistant").copy(borderColor = mobileAccent),
-    roleLabel = "OpenClaw · Live",
+    roleLabel = "OpenCrustacean · Live",
   ) {
     ChatMarkdown(text = text, textColor = mobileText, isStreaming = true)
   }
@@ -620,7 +620,7 @@ private fun roleLabel(role: String): String =
   when (role) {
     "user" -> nativeString("You")
     "system" -> nativeString("System")
-    else -> nativeString("OpenClaw")
+    else -> nativeString("OpenCrustacean")
   }
 
 @Composable

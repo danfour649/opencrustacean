@@ -25,7 +25,7 @@ enum MacGatewayProfileError: LocalizedError, Equatable {
         case .profileNotFound:
             "That Gateway profile no longer exists."
         case let .unsupportedRegistryVersion(version):
-            "Gateway profiles were written by a newer OpenClaw version (schema \(version))."
+            "Gateway profiles were written by a newer OpenCrustacean version (schema \(version))."
         case let .keychain(status):
             "Could not save Gateway settings in Keychain (\(status))."
         }

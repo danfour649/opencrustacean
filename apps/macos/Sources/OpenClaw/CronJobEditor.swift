@@ -12,7 +12,7 @@ struct CronJobEditor: View {
 
     let labelColumnWidth: CGFloat = 160
     static let introText =
-        "Create a schedule that wakes OpenClaw via the Gateway. "
+        "Create a schedule that wakes OpenCrustacean via the Gateway. "
             + "Use an isolated session for agent turns so your main chat stays clean."
     static let sessionTargetNote =
         "Main jobs post a system event into the current main session. "
@@ -323,7 +323,7 @@ struct CronJobEditor: View {
             Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 14, verticalSpacing: 10) {
                 GridRow {
                     self.gridLabel("Message")
-                    TextField("What should OpenClaw do?", text: self.$agentMessage, axis: .vertical)
+                    TextField("What should OpenCrustacean do?", text: self.$agentMessage, axis: .vertical)
                         .textFieldStyle(.roundedBorder)
                         .lineLimit(3...7)
                         .frame(maxWidth: .infinity)

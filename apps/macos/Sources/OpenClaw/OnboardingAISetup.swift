@@ -23,11 +23,11 @@ final class OnboardingAISetupModel {
         didSet {
             // Close-guard: quitting mid-test is confirmable, not silent.
             OnboardingController.shared.busyReason = if self.phase == .testing {
-                "OpenClaw is testing your AI connection."
+                "OpenCrustacean is testing your AI connection."
             } else if self.activeAuthOption != nil {
                 self.isPreparingModel
-                    ? "OpenClaw is preparing a local model."
-                    : "OpenClaw is completing provider sign-in."
+                    ? "OpenCrustacean is preparing a local model."
+                    : "OpenCrustacean is completing provider sign-in."
             } else {
                 nil
             }
@@ -49,8 +49,8 @@ final class OnboardingAISetupModel {
         didSet {
             if self.activeAuthOption != nil {
                 OnboardingController.shared.busyReason = self.isPreparingModel
-                    ? "OpenClaw is preparing a local model."
-                    : "OpenClaw is completing provider sign-in."
+                    ? "OpenCrustacean is preparing a local model."
+                    : "OpenCrustacean is completing provider sign-in."
             } else if self.phase != .testing {
                 OnboardingController.shared.busyReason = nil
             }
@@ -107,7 +107,7 @@ final class OnboardingAISetupModel {
     }
 
     /// Once setup starts changing inference, its successful result belongs to
-    /// OpenClaw rather than the existing-Gateway onboarding bypass.
+    /// OpenCrustacean rather than the existing-Gateway onboarding bypass.
     var ownsInferenceTransition: Bool {
         (self.phase == .detecting && !self.configuredGatewayProbeUnavailable) ||
             self.phase == .testing || self.manualTesting || self.authBusy || self.connected ||
@@ -360,7 +360,7 @@ final class OnboardingAISetupModel {
             else {
                 self.phase = .ready
                 self.detectError = Self.transportFailure(
-                    "Secure storage is unavailable, so OpenClaw cannot verify which Gateway completed AI setup.")
+                    "Secure storage is unavailable, so OpenCrustacean cannot verify which Gateway completed AI setup.")
                 return .notConnected
             }
             guard activationOwner.routeFingerprint == currentFingerprint else {
@@ -881,7 +881,7 @@ extension OnboardingAISetupModel {
             ifCurrentServerLease: lease)
         else {
             self.statuses[kind] = .failed(Self.transportFailure(
-                "Secure storage is unavailable, so OpenClaw cannot safely resume this AI setup."))
+                "Secure storage is unavailable, so OpenCrustacean cannot safely resume this AI setup."))
             self.phase = .ready
             return
         }
@@ -1462,7 +1462,7 @@ extension OnboardingAISetupModel {
             ifCurrentServerLease: lease)
         else {
             self.manualError = Self.transportFailure(
-                "Secure storage is unavailable, so OpenClaw cannot safely resume this AI setup.")
+                "Secure storage is unavailable, so OpenCrustacean cannot safely resume this AI setup.")
             return
         }
         guard self.isCurrentAttempt(context), !Task.isCancelled else { return }
@@ -1625,8 +1625,8 @@ private enum OnboardingAISetupError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .providerCatalogUnavailable:
-            "The Gateway is running an older OpenClaw version that doesn’t provide the " +
-                "supported provider list. Update OpenClaw on the gateway, then try again."
+            "The Gateway is running an older OpenCrustacean version that doesn’t provide the " +
+                "supported provider list. Update OpenCrustacean on the gateway, then try again."
         }
     }
 }

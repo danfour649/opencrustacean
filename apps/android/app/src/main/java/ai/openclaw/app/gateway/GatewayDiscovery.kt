@@ -83,7 +83,7 @@ internal fun gatewayDiscoveryStatusText(
 }
 
 /**
- * Watches local DNS-SD and optional wide-area DNS-SD for reachable OpenClaw gateways.
+ * Watches local DNS-SD and optional wide-area DNS-SD for reachable OpenCrustacean gateways.
  */
 class GatewayDiscovery(
   context: Context,
@@ -94,7 +94,7 @@ class GatewayDiscovery(
   private val dns = createDnsResolver(context)
   private val serviceType = "_openclaw-gw._tcp."
   private val wideAreaDomain = System.getenv("OPENCLAW_WIDE_AREA_DOMAIN")
-  private val logTag = "OpenClaw/GatewayDiscovery"
+  private val logTag = "OpenCrustacean/GatewayDiscovery"
 
   private val localById = ConcurrentHashMap<String, GatewayEndpoint>()
   private val unicastById = ConcurrentHashMap<String, GatewayEndpoint>()

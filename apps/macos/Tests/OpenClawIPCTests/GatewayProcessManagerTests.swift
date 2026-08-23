@@ -81,10 +81,10 @@ struct GatewayProcessManagerTests {
 
             let manager = GatewayProcessManager.shared
             async let first: String? = manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             async let second: String? = manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             _ = await (first, second)
 
@@ -117,7 +117,7 @@ struct GatewayProcessManagerTests {
             let manager = GatewayProcessManager.shared
             let first = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: firstPort)
             }
             for _ in 0..<100 {
@@ -130,7 +130,7 @@ struct GatewayProcessManagerTests {
 
             let second = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: secondPort)
             }
             #expect(await first.value == nil)
@@ -153,7 +153,7 @@ struct GatewayProcessManagerTests {
             let stalePort = 19094
             let current = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: newestPort)
             }
             for _ in 0..<100 {
@@ -164,7 +164,7 @@ struct GatewayProcessManagerTests {
             }
             let stale = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: stalePort)
             }
             for _ in 0..<100 {
@@ -176,7 +176,7 @@ struct GatewayProcessManagerTests {
             #expect(manager._testPendingLaunchAgentPort() == stalePort)
             let newest = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: newestPort)
             }
             #expect(await current.value == nil)
@@ -230,7 +230,7 @@ struct GatewayProcessManagerTests {
             let manager = GatewayProcessManager.shared
             let first = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeededInstalled(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: firstPort)
             }
             for _ in 0..<1000 {
@@ -246,7 +246,7 @@ struct GatewayProcessManagerTests {
 
             let second = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeededInstalled(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: secondPort)
             }
 
@@ -282,7 +282,7 @@ struct GatewayProcessManagerTests {
             manager.setTestingDesiredActive(true)
             let first = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: firstPort)
             }
             for _ in 0..<100 {
@@ -293,7 +293,7 @@ struct GatewayProcessManagerTests {
             }
             let second = Task { @MainActor in
                 await manager._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: secondPort)
             }
             for _ in 0..<100 {
@@ -361,7 +361,7 @@ struct GatewayProcessManagerTests {
 
             manager._testBeginGatewayStartGeneration()
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -562,7 +562,7 @@ struct GatewayProcessManagerTests {
                 GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
                 _ = await GatewayProcessManager.shared._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: port)
 
                 let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -599,7 +599,7 @@ struct GatewayProcessManagerTests {
 
             let manager = GatewayProcessManager.shared
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             var calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
             #expect(calls.filter { $0.first == "install" }.isEmpty)
@@ -609,7 +609,7 @@ struct GatewayProcessManagerTests {
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -648,7 +648,7 @@ struct GatewayProcessManagerTests {
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -808,7 +808,7 @@ struct GatewayProcessManagerTests {
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -853,7 +853,7 @@ struct GatewayProcessManagerTests {
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -887,7 +887,7 @@ struct GatewayProcessManagerTests {
             await PortGuardian.shared.setTestingDescriptor(listener, forPort: port)
 
             _ = await GatewayProcessManager.shared._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -930,7 +930,7 @@ struct GatewayProcessManagerTests {
             await PortGuardian.shared.setTestingDescriptor(listener, forPort: port)
 
             _ = await GatewayProcessManager.shared._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
 
             let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -986,7 +986,7 @@ struct GatewayProcessManagerTests {
                 GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
 
                 _ = await GatewayProcessManager.shared._testEnableLaunchAgentIfNeeded(
-                    bundlePath: "/Applications/OpenClaw.app",
+                    bundlePath: "/Applications/OpenCrustacean.app",
                     port: port)
 
                 let calls = GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
@@ -1085,7 +1085,7 @@ struct GatewayProcessManagerTests {
             }
 
             #expect(await manager._testEnableLaunchAgentIfNeededInstalled(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port))
             let descriptor = PortGuardian.Descriptor(
                 pid: 4242,
@@ -1276,7 +1276,7 @@ struct GatewayProcessManagerTests {
 
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             #expect(GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
                 .filter { $0.first == "install" }.isEmpty)
@@ -1751,7 +1751,7 @@ struct GatewayProcessManagerTests {
             await PortGuardian.shared.setTestingDescriptor(listener, forPort: port)
 
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             #expect(GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
                 .filter { $0.first == "install" }.isEmpty)
@@ -1761,7 +1761,7 @@ struct GatewayProcessManagerTests {
 
             GatewayLaunchAgentManager.clearTestingDaemonCommandCalls()
             _ = await manager._testEnableLaunchAgentIfNeeded(
-                bundlePath: "/Applications/OpenClaw.app",
+                bundlePath: "/Applications/OpenCrustacean.app",
                 port: port)
             #expect(GatewayLaunchAgentManager.testingDaemonCommandCallsSnapshot()
                 .filter { $0.first == "install" }.count == 1)

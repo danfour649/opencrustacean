@@ -124,7 +124,7 @@ final class DashboardWindowController: NSWindowController, WKNavigationDelegate,
         updateBridgeEnabled: Bool = true,
         tlsParams: GatewayTLSParams? = nil,
         gatewaySnapshot: DashboardGatewaySnapshot? = nil,
-        windowTitle: String = "OpenClaw",
+        windowTitle: String = "OpenCrustacean",
         windowAutosaveName: String = DashboardWindowLayout.windowFrameAutosaveName,
         requestBrowserProfileImportOffer:
         @escaping @MainActor (@escaping @MainActor () -> Bool) async -> Bool = { shouldApply in
@@ -342,7 +342,7 @@ final class DashboardWindowController: NSWindowController, WKNavigationDelegate,
 
     private static func makeJavaScriptConfirmAlert(message: String, host: String?) -> NSAlert {
         let alert = NSAlert()
-        alert.messageText = "OpenClaw Dashboard"
+        alert.messageText = "OpenCrustacean Dashboard"
         if let host, !host.isEmpty {
             alert.informativeText = "\(host) is asking:\n\n\(message)"
         } else {

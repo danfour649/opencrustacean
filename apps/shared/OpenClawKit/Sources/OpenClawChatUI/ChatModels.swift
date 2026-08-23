@@ -442,8 +442,8 @@ public struct OpenClawChatMessage: Codable, Hashable, Identifiable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let decodedRole = try container.decode(String.self, forKey: .role)
         let decodedTimestamp = try container.decodeIfPresent(Double.self, forKey: .timestamp)
-        let decodedOpenClaw = try container.decodeIfPresent(OpenClawMetadata.self, forKey: .openClaw)
-        let decodedIdempotencyKey = try decodedOpenClaw?.idempotencyKey ??
+        let decodedOpenCrustacean = try container.decodeIfPresent(OpenClawMetadata.self, forKey: .openClaw)
+        let decodedIdempotencyKey = try decodedOpenCrustacean?.idempotencyKey ??
             container.decodeIfPresent(String.self, forKey: .idempotencyKey)
         let decodedToolCallId =
             try container.decodeIfPresent(String.self, forKey: .toolCallId) ??
@@ -459,7 +459,7 @@ public struct OpenClawChatMessage: Codable, Hashable, Identifiable, Sendable {
             container.decodeIfPresent(Bool.self, forKey: .is_error)
 
         self.role = decodedRole
-        self.transcriptMessageID = decodedOpenClaw?.id
+        self.transcriptMessageID = decodedOpenCrustacean?.id
         self.timestamp = decodedTimestamp
         self.idempotencyKey = decodedIdempotencyKey
         self.toolCallId = decodedToolCallId
@@ -519,7 +519,7 @@ public struct OpenClawChatMessage: Codable, Hashable, Identifiable, Sendable {
                     content: nil)
             }
         self.content = decodedContent + audioAttachments
-        self.isTruncated = decodedOpenClaw?.truncated == true || decodedContent.contains { content in
+        self.isTruncated = decodedOpenCrustacean?.truncated == true || decodedContent.contains { content in
             content.text?.contains(Self.transcriptTruncationMarker) == true
         }
     }

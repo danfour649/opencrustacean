@@ -6,7 +6,7 @@ enum SystemAgentAvailability {
     }
 }
 
-/// Settings pane hosting the OpenClaw setup/repair chat.
+/// Settings pane hosting the OpenCrustacean setup/repair chat.
 ///
 /// The parent settings view exposes this pane only after inference is configured.
 struct SystemAgentSettings: View {
@@ -19,7 +19,7 @@ struct SystemAgentSettings: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             SettingsPageHeader(
-                title: "OpenClaw",
+                title: "OpenCrustacean",
                 subtitle: """
                 Your AI-powered setup helper. It can check status, fix config, switch models, and connect channels.
                 """)

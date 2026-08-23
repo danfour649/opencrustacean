@@ -70,7 +70,7 @@ enum LaunchAgentPlist {
         let usesDirectWrapper = programArguments.count >= 2 &&
             programArguments[0] == wrapperPath &&
             programArguments[1] == filePath
-        // Read only the canonical file when the LaunchAgent uses OpenClaw's generated wrapper.
+        // Read only the canonical file when the LaunchAgent uses OpenCrustacean's generated wrapper.
         // This keeps arbitrary ProgramArguments paths from becoming app-readable secret sources.
         guard usesShellWrapper || usesDirectWrapper,
               FileManager.default.fileExists(atPath: wrapperPath),

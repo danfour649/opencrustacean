@@ -7,12 +7,12 @@ struct DashboardGatewayMenuTests {
         let primary = Self.entry(id: "primary", name: "Mac Studio", isPrimary: true, health: .ok)
         let profile = Self.entry(id: "profile:travel", name: "Travel", canPromote: true)
         let cases: [(AppState.ConnectionMode, [DashboardGatewayEntry], String)] = [
-            (.unconfigured, [primary], "OpenClaw Not Configured"),
-            (.unconfigured, [primary, profile], "OpenClaw Not Configured — Mac Studio"),
-            (.local, [primary], "OpenClaw Active"),
-            (.local, [primary, profile], "OpenClaw Active — Mac Studio"),
-            (.remote, [primary], "Remote OpenClaw Active"),
-            (.remote, [primary, profile], "Remote OpenClaw Active — Mac Studio"),
+            (.unconfigured, [primary], "OpenCrustacean Not Configured"),
+            (.unconfigured, [primary, profile], "OpenCrustacean Not Configured — Mac Studio"),
+            (.local, [primary], "OpenCrustacean Active"),
+            (.local, [primary, profile], "OpenCrustacean Active — Mac Studio"),
+            (.remote, [primary], "Remote OpenCrustacean Active"),
+            (.remote, [primary, profile], "Remote OpenCrustacean Active — Mac Studio"),
         ]
 
         for (mode, entries, expected) in cases {

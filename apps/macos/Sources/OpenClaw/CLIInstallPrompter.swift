@@ -75,7 +75,7 @@ final class CLIInstallPrompter {
         {
             guard confirmStable else { return target }
             let alert = NSAlert()
-            alert.messageText = "Install OpenClaw CLI?"
+            alert.messageText = "Install OpenCrustacean CLI?"
             alert.informativeText = "The Mac node needs the matching CLI runtime."
             alert.addButton(withTitle: "Install CLI")
             alert.addButton(withTitle: "Not Now")
@@ -101,9 +101,9 @@ final class CLIInstallPrompter {
     private func chooseChannel(suggested: CLIInstaller.Channel) -> CLIInstaller.Channel? {
         let channels = [suggested] + CLIInstaller.Channel.allCases.filter { $0 != suggested }
         let alert = NSAlert()
-        alert.messageText = "Choose OpenClaw CLI channel"
+        alert.messageText = "Choose OpenCrustacean CLI channel"
         alert.informativeText =
-            "This is an unreleased OpenClaw build. " +
+            "This is an unreleased OpenCrustacean build. " +
             "Local mode can use Stable, Beta, or Dev from Git main."
         for channel in channels {
             alert.addButton(withTitle: channel.label)
@@ -151,9 +151,9 @@ final class CLIInstallPrompter {
             }
             let activation: CLIInstaller.LocalGatewayActivation?
             if usesLocalGateway {
-                await status.set("Starting OpenClaw Gateway…")
+                await status.set("Starting OpenCrustacean Gateway…")
                 if !showCompletionAlert {
-                    self.logger.info("managed CLI repair: Starting OpenClaw Gateway…")
+                    self.logger.info("managed CLI repair: Starting OpenCrustacean Gateway…")
                 }
                 activation = await CLIInstaller.activateLocalGateway()
             } else {
@@ -172,13 +172,13 @@ final class CLIInstallPrompter {
             }
             let message = switch activation {
             case .ready:
-                "OpenClaw Gateway is ready."
+                "OpenCrustacean Gateway is ready."
             case .deferred:
-                "OpenClaw is installed. The Gateway will start when This Mac is active and resumed."
+                "OpenCrustacean is installed. The Gateway will start when This Mac is active and resumed."
             case .failed:
-                "OpenClaw was installed, but the Gateway did not start. Open Settings to retry."
+                "OpenCrustacean was installed, but the Gateway did not start. Open Settings to retry."
             case nil:
-                "OpenClaw CLI is ready for the Mac node."
+                "OpenCrustacean CLI is ready for the Mac node."
             }
             await status.set(message)
             if !showCompletionAlert {

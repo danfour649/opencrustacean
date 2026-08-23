@@ -317,15 +317,15 @@ private func waitForActiveGateway(stableID: String, appModel: NodeAppModel) asyn
         let appModel = NodeAppModel()
         let withoutApprovalScope = appModel._test_makeOperatorConnectOptions(
             clientId: "openclaw-ios",
-            displayName: "OpenClaw iOS",
+            displayName: "OpenCrustacean iOS",
             includeApprovalScope: false)
         let withApprovalScope = appModel._test_makeOperatorConnectOptions(
             clientId: "openclaw-ios",
-            displayName: "OpenClaw iOS",
+            displayName: "OpenCrustacean iOS",
             includeApprovalScope: true)
         let withAdminScope = appModel._test_makeOperatorConnectOptions(
             clientId: "openclaw-ios",
-            displayName: "OpenClaw iOS",
+            displayName: "OpenCrustacean iOS",
             includeAdminScope: true,
             includeApprovalScope: false)
 
@@ -351,7 +351,7 @@ private func waitForActiveGateway(stableID: String, appModel: NodeAppModel) asyn
         let appModel = NodeAppModel()
         let options = appModel._test_makeOperatorConnectOptions(
             clientId: "openclaw-ios",
-            displayName: "OpenClaw iOS",
+            displayName: "OpenCrustacean iOS",
             includeApprovalScope: false,
             forceExplicitScopes: true)
 

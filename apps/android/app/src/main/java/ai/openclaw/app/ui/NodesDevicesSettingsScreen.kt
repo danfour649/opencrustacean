@@ -486,7 +486,7 @@ private fun GatewayNodesDevicesSummary.isEmpty(): Boolean = nodes.isEmpty() && p
 
 private fun nodeSubtitle(node: GatewayNodeSummary): String {
   val kind = node.deviceFamily ?: nativeString("Node host")
-  val version = node.version?.let { "OpenClaw $it" }
+  val version = node.version?.let { "OpenCrustacean $it" }
   val status = if (node.paired) nativeString("Paired") else nativeString("Unpaired")
   val approval = nodeApprovalSubtitle(node.approvalState)
   val commands =

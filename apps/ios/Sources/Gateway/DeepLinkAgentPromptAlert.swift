@@ -14,7 +14,7 @@ struct DeepLinkAgentPromptAlert: ViewModifier {
     func body(content: Content) -> some View {
         content.alert(item: self.promptBinding) { prompt in
             Alert(
-                title: Text("Run OpenClaw agent?")
+                title: Text("Run OpenCrustacean agent?")
                     .font(OpenClawType.headline),
                 message: Text(verbatim: String(
                     format: String(localized: """

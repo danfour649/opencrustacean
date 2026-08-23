@@ -2729,7 +2729,7 @@ final class NodeAppModel {
         if notificationsAllowed {
             let addResult = await NotificationOperationRunner.run(timeoutSeconds: 2.0) { [notificationCenter] in
                 let content = UNMutableNotificationContent()
-                content.title = "OpenClaw"
+                content.title = "OpenCrustacean"
                 content.body = text
                 content.sound = .default
                 content.userInfo = ["messageId": messageId]
@@ -3430,7 +3430,7 @@ extension NodeAppModel {
         let status = await watchMessagingService.status()
         guard status.supported, status.paired, status.appInstalled else {
             throw NSError(domain: "WatchDirectSetup", code: 3, userInfo: [
-                NSLocalizedDescriptionKey: "Pair an Apple Watch and install the OpenClaw watch app first.",
+                NSLocalizedDescriptionKey: "Pair an Apple Watch and install the OpenCrustacean watch app first.",
             ])
         }
 
@@ -4413,7 +4413,7 @@ extension NodeAppModel {
             kind: .unknown,
             owner: .iphone,
             title: "Credential save failed",
-            message: "OpenClaw disconnected because it could not securely save the new gateway credential.",
+            message: "OpenCrustacean disconnected because it could not securely save the new gateway credential.",
             retryable: true,
             pauseReconnect: true,
             technicalDetails: technicalDetails))
@@ -5445,7 +5445,7 @@ extension NodeAppModel {
         self.recordShareEvent("Share self-test running…")
 
         let payload = SharedContentPayload(
-            title: "OpenClaw Share Self-Test",
+            title: "OpenCrustacean Share Self-Test",
             url: URL(string: "https://openclaw.ai/share-self-test"),
             text: "Validate iOS share->deep-link->gateway forwarding.")
         guard let deepLink = ShareToAgentDeepLink.buildURL(
@@ -9273,7 +9273,7 @@ extension NodeAppModel {
         else {
             self.execApprovalNotificationLogger.error(
                 "Exec approval action failed id=\(approvalID, privacy: .public): operator not connected")
-            return .failed(message: "OpenClaw couldn't connect to the gateway operator session.")
+            return .failed(message: "OpenCrustacean couldn't connect to the gateway operator session.")
         }
 
         let rpcFamily = await self.execApprovalRPCFamily(route: context.route)
@@ -9592,9 +9592,9 @@ extension NodeAppModel {
             // Legacy get removes committed rows, so not-found cannot distinguish success from
             // expiry. Keep every surface frozen until an explicit terminal event/reconnect.
             return .uncertain(
-                message: "Decision status is unknown. Actions remain locked until OpenClaw reconnects.")
+                message: "Decision status is unknown. Actions remain locked until OpenCrustacean reconnects.")
         case .failed:
-            return .uncertain(message: "Decision status is unknown. Actions remain locked until OpenClaw reconnects.")
+            return .uncertain(message: "Decision status is unknown. Actions remain locked until OpenCrustacean reconnects.")
         }
     }
 

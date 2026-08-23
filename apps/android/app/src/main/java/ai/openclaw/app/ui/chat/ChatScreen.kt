@@ -1107,7 +1107,7 @@ private fun ChatHeader(
     ) {
       OpenClawMascot(modifier = Modifier.size(25.dp))
       Text(
-        text = nativeString("OpenClaw"),
+        text = nativeString("OpenCrustacean"),
         style = ClawTheme.type.title.copy(fontSize = 17.sp, lineHeight = 21.sp),
         color = ClawTheme.colors.text,
         modifier = Modifier.weight(1f),
@@ -1625,7 +1625,7 @@ internal val starterPrompts =
       mark = "1",
       title = nativeText("Catch me up"),
       subtitle = nativeText("Summarize recent threads and next steps."),
-      message = nativeText("Catch me up on my recent OpenClaw threads and suggest next steps."),
+      message = nativeText("Catch me up on my recent OpenCrustacean threads and suggest next steps."),
     ),
     StarterPrompt(
       mark = "2",
@@ -1636,7 +1636,7 @@ internal val starterPrompts =
     StarterPrompt(
       mark = "3",
       title = nativeText("Use this phone"),
-      subtitle = nativeText("Ask OpenClaw to use Android capabilities."),
+      subtitle = nativeText("Ask OpenCrustacean to use Android capabilities."),
       message = nativeText("What can you help me do from this phone right now?"),
     ),
   )
@@ -1721,10 +1721,10 @@ private fun ChatBubble(
           Text(
             text =
               when {
-                live -> nativeString("OpenClaw · Live")
+                live -> nativeString("OpenCrustacean · Live")
                 isUser -> nativeString("You")
                 normalizedRole == "system" -> nativeString("System")
-                else -> nativeString("OpenClaw")
+                else -> nativeString("OpenCrustacean")
               },
             style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
             color = ClawTheme.colors.text,
@@ -1897,7 +1897,7 @@ private fun ToolBubble(toolCalls: List<ChatPendingToolCall>) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
       ClawStatusPill(text = nativeString("Tools running"), status = ClawStatus.Warning)
       toolCalls.take(4).forEach { tool ->
-        ClawListItem(title = tool.name, subtitle = nativeString("OpenClaw is working"))
+        ClawListItem(title = tool.name, subtitle = nativeString("OpenCrustacean is working"))
       }
       if (toolCalls.size > 4) {
         Text(text = nativeString("+\${toolCalls.size - 4} more", toolCalls.size - 4), style = ClawTheme.type.caption, color = ClawTheme.colors.textSubtle)
@@ -2683,7 +2683,7 @@ private fun ChatInputPill(
             decorationBox = { innerTextField ->
               Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                 if (value.isEmpty()) {
-                  Text(text = nativeString("Message OpenClaw"), style = ClawTheme.type.body, color = ClawTheme.colors.textSubtle)
+                  Text(text = nativeString("Message OpenCrustacean"), style = ClawTheme.type.body, color = ClawTheme.colors.textSubtle)
                 }
                 innerTextField()
               }

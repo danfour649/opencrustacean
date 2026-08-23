@@ -61,7 +61,7 @@ class CommandPaletteLogicTest {
       CommandItem(
         action = CommandAction.Voice,
         title = verbatimText("Démarrer la voix"),
-        subtitle = verbatimText("Parler avec OpenClaw"),
+        subtitle = verbatimText("Parler avec OpenCrustacean"),
         icon = Icons.Outlined.ChatBubbleOutline,
         onClick = { calls += CommandAction.Voice },
       )

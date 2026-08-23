@@ -175,7 +175,7 @@ import Testing
         #expect(cmd.first == "/bin/sh")
         #expect(cmd.last?.contains("openclaw CLI not found") == true)
         #expect(cmd.last?.contains("Install the CLI") == true)
-        #expect(cmd.last?.contains("run pnpm build in an OpenClaw source checkout") == true)
+        #expect(cmd.last?.contains("run pnpm build in an OpenCrustacean source checkout") == true)
     }
 
     @Test func `preferred paths start with project node bins`() throws {
@@ -406,8 +406,8 @@ import Testing
         defaults.set(AppState.ConnectionMode.remote.rawValue, forKey: connectionModeKey)
         defaults.set("stale-gateway-alias", forKey: remoteTargetKey)
         let tmp = try makeTempDirForTests()
-        let localOpenClaw = tmp.appendingPathComponent("node_modules/.bin/openclaw")
-        try makeExecutableForTests(at: localOpenClaw)
+        let localOpenCrustacean = tmp.appendingPathComponent("node_modules/.bin/openclaw")
+        try makeExecutableForTests(at: localOpenCrustacean)
 
         let command = await CommandResolver.openclawCommand(
             subcommand: "status",
@@ -421,12 +421,12 @@ import Testing
                     ],
                 ],
             ],
-            searchPaths: [localOpenClaw.deletingLastPathComponent().path],
+            searchPaths: [localOpenCrustacean.deletingLastPathComponent().path],
             projectRoot: tmp)
 
         #expect(command.first == "/bin/sh")
         #expect(command.last?.contains("Remote SSH gateway target is missing or invalid.") == true)
-        #expect(!command.contains(localOpenClaw.path))
+        #expect(!command.contains(localOpenCrustacean.path))
     }
 
     @Test func `direct remote route uses local CLI despite stale SSH defaults`() async throws {
@@ -434,8 +434,8 @@ import Testing
         defaults.set(AppState.ConnectionMode.remote.rawValue, forKey: connectionModeKey)
         defaults.set("stale-gateway-alias", forKey: remoteTargetKey)
         let tmp = try makeTempDirForTests()
-        let localOpenClaw = tmp.appendingPathComponent("node_modules/.bin/openclaw")
-        try makeExecutableForTests(at: localOpenClaw)
+        let localOpenCrustacean = tmp.appendingPathComponent("node_modules/.bin/openclaw")
+        try makeExecutableForTests(at: localOpenCrustacean)
 
         let command = await CommandResolver.openclawCommand(
             subcommand: "status",
@@ -449,10 +449,10 @@ import Testing
                     ],
                 ],
             ],
-            searchPaths: [localOpenClaw.deletingLastPathComponent().path],
+            searchPaths: [localOpenCrustacean.deletingLastPathComponent().path],
             projectRoot: tmp)
 
-        #expect(command == [localOpenClaw.path, "status"])
+        #expect(command == [localOpenCrustacean.path, "status"])
     }
 
     @Test func `invalid SSH host key policy fails closed`() {

@@ -97,7 +97,7 @@ func runConfigureRemote(_ args: [String]) {
               --token <token>     Remote gateway token.
               --password <pw>     Remote gateway password.
               --identity <path>   SSH identity file.
-              --project-root <p>  Remote OpenClaw checkout for CLI commands.
+              --project-root <p>  Remote OpenCrustacean checkout for CLI commands.
               --cli-path <path>   Remote openclaw executable or entrypoint.
               --json              Emit JSON.
               -h, --help          Show help.
@@ -448,7 +448,7 @@ private func printConfigureRemoteOutput(_ output: ConfigureRemoteOutput, json: B
         }
         return
     }
-    print("OpenClaw macOS Remote Config")
+    print("OpenCrustacean macOS Remote Config")
     print("Status: \(output.status)")
     print("Config: \(output.configPath)")
     print("Mode: \(output.mode)")

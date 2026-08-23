@@ -96,7 +96,7 @@ private class AndroidDeviceAppSource(
   @SuppressLint("QueryPermissionsNeeded")
   private fun visibleInstalledApplications(packageManager: PackageManager): List<ApplicationInfo> {
     // Android package visibility intentionally bounds this result to packages the app can see.
-    // OpenClaw should not request QUERY_ALL_PACKAGES for this optional device-context surface.
+    // OpenCrustacean should not request QUERY_ALL_PACKAGES for this optional device-context surface.
     return packageManager.getInstalledApplications(PackageManager.MATCH_ALL)
   }
 }

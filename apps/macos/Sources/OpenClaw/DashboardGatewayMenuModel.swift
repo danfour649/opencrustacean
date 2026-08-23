@@ -37,20 +37,20 @@ enum DashboardGatewayMenuModel {
         else {
             return switch mode {
             case .unconfigured:
-                String(localized: "OpenClaw Not Configured")
+                String(localized: "OpenCrustacean Not Configured")
             case .remote:
-                String(localized: "Remote OpenClaw Active")
+                String(localized: "Remote OpenCrustacean Active")
             case .local:
-                String(localized: "OpenClaw Active")
+                String(localized: "OpenCrustacean Active")
             }
         }
         return switch mode {
         case .unconfigured:
-            String(localized: "OpenClaw Not Configured — \(primaryName)")
+            String(localized: "OpenCrustacean Not Configured — \(primaryName)")
         case .remote:
-            String(localized: "Remote OpenClaw Active — \(primaryName)")
+            String(localized: "Remote OpenCrustacean Active — \(primaryName)")
         case .local:
-            String(localized: "OpenClaw Active — \(primaryName)")
+            String(localized: "OpenCrustacean Active — \(primaryName)")
         }
     }
 }

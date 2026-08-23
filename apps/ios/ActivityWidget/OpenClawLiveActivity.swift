@@ -52,7 +52,7 @@ struct OpenClawLiveActivity: Widget {
         HStack(spacing: 10) {
             self.agentAvatar(context: context, state: state)
             VStack(alignment: .leading, spacing: 2) {
-                Text("OpenClaw")
+                Text("OpenCrustacean")
                     .font(OpenClawActivityType.subheadBold)
                     .lineLimit(1)
                 self.statusText(state: state)

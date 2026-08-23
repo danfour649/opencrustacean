@@ -289,7 +289,7 @@ public final class OpenClawNativeStateSQLite: @unchecked Sendable {
                 try self.validateSharedDatabaseMetadata(userVersion: userVersion)
                 guard try self.schemaObjectExists(type: "table", name: descriptor.name) else {
                     throw OpenClawNativeStateError(
-                        "Versioned OpenClaw state database is missing \(descriptor.name)")
+                        "Versioned OpenCrustacean state database is missing \(descriptor.name)")
                 }
             }
             try self.validateCanonicalTable(table)
@@ -409,7 +409,7 @@ public final class OpenClawNativeStateSQLite: @unchecked Sendable {
         }
         guard objects.isSubset(of: allowedObjects) else {
             throw OpenClawNativeStateError(
-                "Schema version zero database contains objects not owned by a native OpenClaw store")
+                "Schema version zero database contains objects not owned by a native OpenCrustacean store")
         }
 
         // A known name is not enough: every present native table must be complete and exact
@@ -425,7 +425,7 @@ public final class OpenClawNativeStateSQLite: @unchecked Sendable {
 
     private func validateSharedDatabaseMetadata(userVersion: Int64) throws {
         guard try self.schemaObjectExists(type: "table", name: "schema_meta") else {
-            throw OpenClawNativeStateError("Versioned OpenClaw state database is missing schema_meta")
+            throw OpenClawNativeStateError("Versioned OpenCrustacean state database is missing schema_meta")
         }
         let statement = try self.prepare(
             "SELECT role, schema_version FROM schema_meta WHERE meta_key = 'primary' LIMIT 1")
@@ -436,7 +436,7 @@ public final class OpenClawNativeStateSQLite: @unchecked Sendable {
               try statement.step() == .done
         else {
             throw OpenClawNativeStateError(
-                "OpenClaw state database schema metadata does not match its global schema version")
+                "OpenCrustacean state database schema metadata does not match its global schema version")
         }
     }
 

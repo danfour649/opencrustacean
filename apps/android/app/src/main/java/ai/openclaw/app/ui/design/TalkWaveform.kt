@@ -27,7 +27,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 
 /**
- * Universal OpenClaw talk animation: Compose port of the shared Siri-style
+ * Universal OpenCrustacean talk animation: Compose port of the shared Siri-style
  * waveform in `apps/shared/OpenClawKit/Sources/OpenClawChatUI/TalkWaveformView.swift`.
  * Every constant mirrors the Swift original; change them there first.
  */

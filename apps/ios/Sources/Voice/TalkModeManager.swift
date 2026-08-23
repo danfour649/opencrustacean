@@ -4067,7 +4067,7 @@ extension TalkModeManager {
         switch status {
         case "Listening", "Listening (Realtime)":
             .listening
-        case "Thinking", "Thinking…", "Asking OpenClaw", "Still asking OpenClaw", "Updating OpenClaw":
+        case "Thinking", "Thinking…", "Asking OpenCrustacean", "Still asking OpenCrustacean", "Updating OpenCrustacean":
             .thinking
         case "Speaking", "Speaking…":
             .speaking
@@ -4081,15 +4081,15 @@ extension TalkModeManager {
     private static func watchPresentation(forRealtimeStatus status: String) -> TalkWatchPresentation {
         switch status {
         case "Listening", "Listening (Realtime)", "Thinking", "Thinking…", "Speaking", "Speaking…",
-             "Asking OpenClaw", "Still asking OpenClaw", "Updating OpenClaw", "Connecting",
+             "Asking OpenCrustacean", "Still asking OpenCrustacean", "Updating OpenCrustacean", "Connecting",
              "Connecting realtime…", "Waiting for realtime…", "Ready", "Reconnecting", "Reconnecting…":
             .phase
         case "Realtime failed before connecting":
             .localized("Realtime failed before connecting")
         case "Realtime disconnected":
             .localized("Realtime disconnected")
-        case "OpenClaw unavailable":
-            .localized("OpenClaw unavailable")
+        case "OpenCrustacean unavailable":
+            .localized("OpenCrustacean unavailable")
         case "Confirmation needed":
             .localized("Confirmation needed")
         default:
@@ -4107,12 +4107,12 @@ extension TalkModeManager {
             String(localized: "Thinking")
         case "Thinking…":
             String(localized: "Thinking…")
-        case "Asking OpenClaw":
-            String(localized: "Asking OpenClaw")
-        case "Still asking OpenClaw":
-            String(localized: "Still asking OpenClaw")
-        case "Updating OpenClaw":
-            String(localized: "Updating OpenClaw")
+        case "Asking OpenCrustacean":
+            String(localized: "Asking OpenCrustacean")
+        case "Still asking OpenCrustacean":
+            String(localized: "Still asking OpenCrustacean")
+        case "Updating OpenCrustacean":
+            String(localized: "Updating OpenCrustacean")
         case "Speaking":
             String(localized: "Speaking")
         case "Speaking…":
@@ -4133,8 +4133,8 @@ extension TalkModeManager {
             String(localized: "Realtime failed before connecting")
         case "Realtime disconnected":
             String(localized: "Realtime disconnected")
-        case "OpenClaw unavailable":
-            String(localized: "OpenClaw unavailable")
+        case "OpenCrustacean unavailable":
+            String(localized: "OpenCrustacean unavailable")
         case "Confirmation needed":
             String(localized: "Confirmation needed")
         default:

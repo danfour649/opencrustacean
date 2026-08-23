@@ -159,7 +159,7 @@ private fun copyChatMessage(
   text: String,
 ) {
   val clipboard = context.getSystemService(ClipboardManager::class.java)
-  clipboard.setPrimaryClip(ClipData.newPlainText("OpenClaw chat message", text))
+  clipboard.setPrimaryClip(ClipData.newPlainText("OpenCrustacean chat message", text))
   Toast.makeText(context, nativeString("Message copied"), Toast.LENGTH_SHORT).show()
 }
 

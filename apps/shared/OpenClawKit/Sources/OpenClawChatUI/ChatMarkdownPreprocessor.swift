@@ -2,7 +2,7 @@ import Foundation
 import Markdown
 
 enum ChatMarkdownPreprocessor {
-    /// Provenance marker appended to every OpenClaw-injected inbound context header.
+    /// Provenance marker appended to every OpenCrustacean-injected inbound context header.
     /// Keep byte-identical with `src/auto-reply/reply/inbound-context-marker.ts` INBOUND_CONTEXT_MARKER.
     private static let inboundContextMarker = "\u{27E6}openclaw:ctx\u{27E7}"
 

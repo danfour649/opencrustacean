@@ -973,8 +973,8 @@ private struct MacChatSurface: View {
     private static let emptyAssistantPrompts: [OpenClawChatView.StarterPrompt] = [
         .init(
             id: "check-status",
-            title: String(localized: "Check OpenClaw status"),
-            prompt: String(localized: "Summarize the current OpenClaw status and tell me what needs attention.")),
+            title: String(localized: "Check OpenCrustacean status"),
+            prompt: String(localized: "Summarize the current OpenCrustacean status and tell me what needs attention.")),
         .init(
             id: "show-capabilities",
             title: String(localized: "What can you do?"),
@@ -1038,7 +1038,7 @@ final class WebChatSwiftUIWindowController: NSObject, NSWindowDelegate {
         presentation: WebChatPresentation,
         connection: GatewayConnection = .shared,
         gatewayID: String? = nil,
-        windowTitle: String = "OpenClaw Chat",
+        windowTitle: String = "OpenCrustacean Chat",
         windowAutosaveName: String = WebChatSwiftUILayout.windowFrameAutosaveName)
     {
         // Connection-mode changes tear chat windows down via resetTunnels(),
@@ -1070,7 +1070,7 @@ final class WebChatSwiftUIWindowController: NSObject, NSWindowDelegate {
         connection: GatewayConnection = .shared,
         cachedRoutingIdentity: OpenClawChatSessionRoutingIdentity?,
         store: OpenClawChatSQLiteTranscriptCache?,
-        windowTitle: String = "OpenClaw Chat",
+        windowTitle: String = "OpenCrustacean Chat",
         windowAutosaveName: String = WebChatSwiftUILayout.windowFrameAutosaveName)
     {
         let explicitAgentID = WebChatRoute.normalizedAgentID(agentID)
@@ -1104,7 +1104,7 @@ final class WebChatSwiftUIWindowController: NSObject, NSWindowDelegate {
         initialSessionRoutingContract: String? = nil,
         transcriptCache: (any OpenClawChatTranscriptCache)? = nil,
         outbox: (any OpenClawChatCommandOutbox)? = nil,
-        windowTitle: String = "OpenClaw Chat",
+        windowTitle: String = "OpenCrustacean Chat",
         windowAutosaveName: String = WebChatSwiftUILayout.windowFrameAutosaveName)
     {
         self.sessionKey = sessionKey

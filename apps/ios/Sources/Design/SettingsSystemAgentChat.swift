@@ -164,7 +164,7 @@ final class IOSSystemAgentChatModel {
         if !hasMessage {
             result["question"] = [
                 "id": "help",
-                "header": "OpenClaw",
+                "header": "OpenCrustacean",
                 "question": String(localized: "What should we look at first?"),
                 "options": [
                     [
@@ -217,7 +217,7 @@ final class IOSSystemAgentChatModel {
         self.input = ""
         self.expectsSensitiveReply = false
         self.pendingHandoff = nil
-        self.errorMessage = String(localized: "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        self.errorMessage = String(localized: "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
     }
 
     @discardableResult
@@ -454,7 +454,7 @@ final class IOSSystemAgentChatModel {
             if error is CancellationError || routeChangedBeforeDispatch {
                 self.started = false
                 self.routeLease = nil
-                self.errorMessage = String(localized: "The Gateway connection changed. Restart OpenClaw to reconnect.")
+                self.errorMessage = String(localized: "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
                 return
             }
             self.errorMessage = error.localizedDescription
@@ -498,7 +498,7 @@ struct SettingsSystemAgentChatScreen: View {
             }
         }
         .background(Color(uiColor: .systemGroupedBackground))
-        .navigationTitle("OpenClaw")
+        .navigationTitle("OpenCrustacean")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             self.isScreenActive = true
@@ -559,7 +559,7 @@ struct SettingsSystemAgentChatScreen: View {
                             HStack(spacing: 8) {
                                 ProgressView()
                                     .controlSize(.small)
-                                Text("OpenClaw is working…")
+                                Text("OpenCrustacean is working…")
                                     .font(OpenClawType.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -628,13 +628,13 @@ struct SettingsSystemAgentChatScreen: View {
     private var accessGateDetail: String {
         switch self.model.accessState {
         case .disconnected:
-            String(localized: "Connect this iPhone to a Gateway before opening the OpenClaw settings assistant.")
+            String(localized: "Connect this iPhone to a Gateway before opening the OpenCrustacean settings assistant.")
         case .missingAdminScope:
             String(localized: "Reconnect with operator.admin access to review and change Gateway settings.")
         case .checkingSystemAgentMethod:
-            String(localized: "Checking whether this Gateway supports the OpenClaw settings assistant.")
+            String(localized: "Checking whether this Gateway supports the OpenCrustacean settings assistant.")
         case .missingSystemAgentMethod:
-            String(localized: "Update this Gateway to use the OpenClaw settings assistant.")
+            String(localized: "Update this Gateway to use the OpenCrustacean settings assistant.")
         case .ready:
             ""
         }
@@ -663,7 +663,7 @@ struct SettingsSystemAgentChatScreen: View {
 
     private var handoffRow: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("OpenClaw is ready to continue in your ordinary chat.")
+            Text("OpenCrustacean is ready to continue in your ordinary chat.")
                 .font(OpenClawType.subhead)
                 .foregroundStyle(.secondary)
             Button {
@@ -704,7 +704,7 @@ struct SettingsSystemAgentChatScreen: View {
                     }
                 } else {
                     TextField(text: self.$model.input, axis: .vertical) {
-                        Text("Reply to OpenClaw…")
+                        Text("Reply to OpenCrustacean…")
                             .font(OpenClawType.body)
                     }
                     .font(OpenClawType.body)

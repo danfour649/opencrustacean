@@ -4,7 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 
-/** Reuses the existing app task when a system surface brings OpenClaw forward. */
+/** Reuses the existing app task when a system surface brings OpenCrustacean forward. */
 internal fun mainActivityPendingIntent(
   context: Context,
   requestCode: Int,

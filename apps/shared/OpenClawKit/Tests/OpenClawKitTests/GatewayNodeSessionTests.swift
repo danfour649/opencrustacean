@@ -3078,7 +3078,7 @@ struct GatewayNodeSessionTests {
             permissions: [:],
             clientId: "openclaw-ios",
             clientMode: "node",
-            clientDisplayName: "OpenClaw Share",
+            clientDisplayName: "OpenCrustacean Share",
             deviceIdentityProfile: .shareExtension,
             includeDeviceIdentity: true)
 
@@ -3193,7 +3193,7 @@ struct GatewayNodeSessionTests {
             #expect(problem?.kind == .protocolMismatch)
             #expect(problem?.owner == .iphone)
             #expect(problem?
-                .message == "This app is older than the gateway. Update OpenClaw on this device, then retry.")
+                .message == "This app is older than the gateway. Update OpenCrustacean on this device, then retry.")
             #expect(problem?.pauseReconnect == true)
             #expect(problem?.retryable == false)
         } catch {

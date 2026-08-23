@@ -30,7 +30,7 @@ struct PermissionsSettings: View {
                     SettingsCardToggleRow(
                         title: "Active computer detection",
                         subtitle: """
-                        Share this Mac's idle duration so OpenClaw can identify the Mac you used most recently \
+                        Share this Mac's idle duration so OpenCrustacean can identify the Mac you used most recently \
                         and route node alerts. Never sends keys, pointer positions, app names, or window titles. \
                         Requires Accessibility.
                         """,
@@ -72,7 +72,7 @@ struct PermissionsSettings: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(complete ? "All access granted" : "\(granted) of \(total) permissions granted")
                     .font(.headline)
-                Text("OpenClaw only asks for macOS capabilities when a feature needs them.")
+                Text("OpenCrustacean only asks for macOS capabilities when a feature needs them.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

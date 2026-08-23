@@ -87,8 +87,8 @@ extension OnboardingView {
         installingCLI = true
         cliInstallPhase = .startingService
         OnboardingController.shared.setWindowCloseEnabled(false)
-        OnboardingController.shared.busyReason = "OpenClaw is starting the Gateway service."
-        cliStatus = "Starting OpenClaw Gateway…"
+        OnboardingController.shared.busyReason = "OpenCrustacean is starting the Gateway service."
+        cliStatus = "Starting OpenCrustacean Gateway…"
         Task { @MainActor in await self.finishExistingCLIActivation() }
     }
 
@@ -117,13 +117,13 @@ extension OnboardingView {
         switch result {
         case .ready:
             cliInstalled = true
-            cliStatus = "OpenClaw Gateway is ready."
+            cliStatus = "OpenCrustacean Gateway is ready."
         case .deferred:
             cliInstalled = false
-            cliStatus = "OpenClaw is paused. Resume it, then retry setup to start the Gateway."
+            cliStatus = "OpenCrustacean is paused. Resume it, then retry setup to start the Gateway."
         case .failed:
             cliInstalled = false
-            cliStatus = "OpenClaw is installed, but the Gateway did not start. Retry setup."
+            cliStatus = "OpenCrustacean is installed, but the Gateway did not start. Retry setup."
         }
     }
 
@@ -132,7 +132,7 @@ extension OnboardingView {
         installingCLI = true
         OnboardingController.shared.setWindowCloseEnabled(false)
         // Cmd-W bypasses the disabled close button; the delegate asks first.
-        OnboardingController.shared.busyReason = "OpenClaw is installing the Gateway service."
+        OnboardingController.shared.busyReason = "OpenCrustacean is installing the Gateway service."
         Task { @MainActor in await self.runCLIInstall() }
     }
 
@@ -165,21 +165,21 @@ extension OnboardingView {
         cliExecutableReady = true
         cliInstallLocation = CLIInstaller.managedExecutableLocation()
         if !Self.shouldActivateLocalGateway(afterCLIInstallFor: self.state.connectionMode) {
-            cliStatus = "OpenClaw CLI is ready for the Mac node."
+            cliStatus = "OpenCrustacean CLI is ready for the Mac node."
             cliInstalled = true
             return
         }
-        cliStatus = "Starting OpenClaw Gateway…"
+        cliStatus = "Starting OpenCrustacean Gateway…"
         // The step checklist shows one spinner at a time: install first,
         // then the service start.
         self.cliInstallPhase = .startingService
         switch await CLIInstaller.activateLocalGateway() {
         case .ready:
-            cliStatus = "OpenClaw Gateway is ready."
+            cliStatus = "OpenCrustacean Gateway is ready."
         case .deferred:
-            cliStatus = "OpenClaw is installed. The Gateway will start when This Mac is active and resumed."
+            cliStatus = "OpenCrustacean is installed. The Gateway will start when This Mac is active and resumed."
         case .failed:
-            cliStatus = "OpenClaw was installed, but the Gateway did not start. Retry setup."
+            cliStatus = "OpenCrustacean was installed, but the Gateway did not start. Retry setup."
             return
         }
         cliInstalled = true

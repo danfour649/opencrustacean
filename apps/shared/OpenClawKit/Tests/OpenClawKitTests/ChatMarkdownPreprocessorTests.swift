@@ -3,7 +3,7 @@ import Testing
 
 @Suite("ChatMarkdownPreprocessor")
 struct ChatMarkdownPreprocessorTests {
-    // Provenance marker OpenClaw appends to every injected inbound-context header.
+    // Provenance marker OpenCrustacean appends to every injected inbound-context header.
     // Detection keys on this suffix, not label text. Keep byte-identical with
     // ChatMarkdownPreprocessor.inboundContextMarker / inbound-context-marker.ts.
     static let ctx = "\u{27E6}openclaw:ctx\u{27E7}"

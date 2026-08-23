@@ -1264,7 +1264,7 @@ struct OnboardingAISetupTests {
             setupOwnsInferenceTransition: false))
     }
 
-    @Test func `fresh inference transition owns the OpenClaw handoff`() {
+    @Test func `fresh inference transition owns the OpenCrustacean handoff`() {
         #expect(!OnboardingView.shouldOpenConfiguredGatewayDashboard(
             onboardingVisible: true,
             expectedMode: .local,
@@ -1273,7 +1273,7 @@ struct OnboardingAISetupTests {
             setupOwnsInferenceTransition: true))
     }
 
-    @Test func `pending OpenClaw handoff cannot be mistaken for an existing install`() {
+    @Test func `pending OpenCrustacean handoff cannot be mistaken for an existing install`() {
         #expect(!OnboardingView.shouldOpenConfiguredGatewayDashboard(
             onboardingVisible: true,
             expectedMode: .local,
@@ -1542,7 +1542,7 @@ struct OnboardingAISetupTests {
         #expect(requests.methods == ["openclaw.setup.verify", "openclaw.setup.verify"])
     }
 
-    @Test func `pending OpenClaw marker is app local and clearable`() throws {
+    @Test func `pending OpenCrustacean marker is app local and clearable`() throws {
         let suiteName = "OnboardingSystemAgentResumeStoreTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }

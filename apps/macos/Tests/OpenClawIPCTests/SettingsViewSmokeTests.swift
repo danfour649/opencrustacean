@@ -225,7 +225,7 @@ struct SettingsViewSmokeTests {
         _ = view.body
     }
 
-    @Test func `OpenClaw settings require configured inference`() {
+    @Test func `OpenCrustacean settings require configured inference`() {
         #expect(!SystemAgentAvailability.shouldShow(configuredModel: nil))
         #expect(!SystemAgentAvailability.shouldShow(configuredModel: "   "))
         #expect(SystemAgentAvailability.shouldShow(configuredModel: "openai/gpt-5.5"))
@@ -270,7 +270,7 @@ struct SettingsViewSmokeTests {
             result: .confirmed(nil)) == .loaded(nil))
     }
 
-    @Test func `OpenClaw preserves same route and resets for gateway changes`() {
+    @Test func `OpenCrustacean preserves same route and resets for gateway changes`() {
         let stateDir = URL(fileURLWithPath: "/Users/tester/.openclaw")
         let directA = MacChatTranscriptCache.gatewayID(
             mode: .remote,

@@ -6,7 +6,7 @@ import Testing
 
 struct PortGuardianRecordStoreTests {
     @Test
-    func `storage marker distinguishes older OpenClaw writers from aligned copies`() {
+    func `storage marker distinguishes older OpenCrustacean writers from aligned copies`() {
         #expect(!PortGuardian.usesLegacyPortGuardianStorage(
             bundleIdentifier: "com.example.unrelated",
             storageVersion: nil))
@@ -30,7 +30,7 @@ struct PortGuardianRecordStoreTests {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-        let infoURL = macOSRoot.appendingPathComponent("Sources/OpenClaw/Resources/Info.plist")
+        let infoURL = macOSRoot.appendingPathComponent("Sources/OpenCrustacean/Resources/Info.plist")
         let data = try Data(contentsOf: infoURL)
         let values = try #require(
             PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any])

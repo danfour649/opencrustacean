@@ -47,7 +47,7 @@ final class OnboardingSystemAgentChatState {
     }
 }
 
-/// Onboarding talks to OpenClaw over the gateway `openclaw.chat` RPC.
+/// Onboarding talks to OpenCrustacean over the gateway `openclaw.chat` RPC.
 /// The conversation is available after structured setup establishes working
 /// inference, so the model-backed helper can answer reliably.
 @MainActor
@@ -78,7 +78,7 @@ final class SystemAgentOnboardingChatModel {
     private(set) var dismissedQuestionMessageIDs: Set<UUID> = []
     private(set) var retiredQuestionMessageIDs: Set<UUID> = []
     var input = ""
-    /// Set when OpenClaw hands off to the normal agent ("talk to agent").
+    /// Set when OpenCrustacean hands off to the normal agent ("talk to agent").
     var onAgentHandoff: ((SystemAgentDraft?) -> Void)?
     /// Called after every assistant reply (setup may have applied config).
     var onReplyReceived: (() -> Void)?
@@ -87,7 +87,7 @@ final class SystemAgentOnboardingChatModel {
     private let sessionPrefix: String
     private let gateway: GatewayConnection
     /// "onboarding" seeds the first-run setup proposal; nil gets the
-    /// status/repair greeting (used by Settings → OpenClaw).
+    /// status/repair greeting (used by Settings → OpenCrustacean).
     private let welcomeVariant: String?
     private var started = false
     private var requestGeneration: UInt64? = 0
@@ -123,7 +123,7 @@ final class SystemAgentOnboardingChatModel {
         await self.requestReply(message: nil, generation: generation)
         if Task.isCancelled, self.requestGeneration == generation {
             self.started = false
-            self.errorMessage = "OpenClaw was interrupted. Restart to try again."
+            self.errorMessage = "OpenCrustacean was interrupted. Restart to try again."
         }
     }
 
@@ -286,8 +286,8 @@ final class SystemAgentOnboardingChatModel {
             if error is CancellationError || Task.isCancelled {
                 self.started = false
                 self.errorMessage = Task.isCancelled
-                    ? "OpenClaw was interrupted. Restart to try again."
-                    : "The Gateway connection changed. Restart OpenClaw to reconnect."
+                    ? "OpenCrustacean was interrupted. Restart to try again."
+                    : "The Gateway connection changed. Restart OpenCrustacean to reconnect."
                 return
             }
             self.errorMessage = error.localizedDescription
@@ -329,7 +329,7 @@ struct SystemAgentOnboardingChatView: View {
                             HStack(spacing: 8) {
                                 ProgressView()
                                     .controlSize(.small)
-                                Text("OpenClaw is working…")
+                                Text("OpenCrustacean is working…")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -368,7 +368,7 @@ struct SystemAgentOnboardingChatView: View {
                         SecureField("Enter secret…", text: self.$model.input)
                     } else {
                         TextField(
-                            "Reply to OpenClaw… (yes sets everything up)",
+                            "Reply to OpenCrustacean… (yes sets everything up)",
                             text: self.$model.input)
                     }
                 }

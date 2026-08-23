@@ -4,7 +4,7 @@ private enum TalkWaveformClock {
     static let born = Date()
 }
 
-/// Universal OpenClaw talk animation: an iOS 9-style Siri waveform shared by the
+/// Universal OpenCrustacean talk animation: an iOS 9-style Siri waveform shared by the
 /// iOS, watchOS, and macOS apps; the Android app ports the same math in Compose
 /// (`TalkWaveform.kt`). Math adapted from noahchalifour/swiftui-siri-waveform-view
 /// (MIT), as packaged by alfianlosari/SiriWaveView; redrawn with Canvas +

@@ -145,7 +145,7 @@ struct WebChatSwiftUISmokeTests {
             sessionKey: "main",
             presentation: .window,
             transport: TestTransport(),
-            windowTitle: "Studio — OpenClaw")
+            windowTitle: "Studio — OpenCrustacean")
         let window = try #require(controller._testWindow)
         let capabilities = try #require(controller._testChatCapabilities)
 
@@ -155,9 +155,9 @@ struct WebChatSwiftUISmokeTests {
         #expect(window.toolbarStyle == .unified)
         #expect(window.titlebarSeparatorStyle == .none)
         #expect(window.isMovableByWindowBackground)
-        #expect(window.title == "Studio — OpenClaw")
+        #expect(window.title == "Studio — OpenCrustacean")
         window.title = "main"
-        #expect(window.title == "Studio — OpenClaw")
+        #expect(window.title == "Studio — OpenCrustacean")
         #expect(controller._testSceneBridgingOptions?.contains(.toolbars) == true)
         #expect(controller._testSceneBridgingOptions?.contains(.title) == false)
         #expect(capabilities.hasTalkControl)

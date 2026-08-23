@@ -91,7 +91,7 @@ internal fun CommandPalette(
   val quickActions =
     listOf(
       CommandItem(CommandAction.Chat, nativeText("Open Chat"), nativeText("Start or continue a conversation"), Icons.Outlined.ChatBubbleOutline, onOpenChat),
-      CommandItem(CommandAction.Voice, nativeText("Start Voice"), nativeText("Talk or dictate with OpenClaw"), Icons.Outlined.MicNone, onOpenVoice),
+      CommandItem(CommandAction.Voice, nativeText("Start Voice"), nativeText("Talk or dictate with OpenCrustacean"), Icons.Outlined.MicNone, onOpenVoice),
       CommandItem(CommandAction.Sessions, nativeText("Browse Threads"), nativeText("Find previous conversations"), Icons.Outlined.AccessTime, onOpenSessions),
       CommandItem(CommandAction.Providers, nativeText("Providers & Models"), verbatimText(providerCommandSubtitle(isConnected, providers, models)), Icons.Outlined.Inventory2, onOpenProviders),
       CommandItem(CommandAction.Settings, nativeText("Settings"), nativeText("Gateway, voice, notifications, privacy"), Icons.Outlined.Settings, onOpenSettings),
@@ -132,7 +132,7 @@ internal fun CommandPalette(
           ClawTextField(
             value = query,
             onValueChange = { query = it },
-            placeholder = nativeString("Search OpenClaw"),
+            placeholder = nativeString("Search OpenCrustacean"),
             modifier = Modifier.focusRequester(searchFocusRequester),
           )
         }
@@ -174,7 +174,7 @@ internal fun CommandPalette(
                     key = session.key,
                     ownerAgentId = session.ownerAgentId,
                     title = commandSessionTitle(session.displayName),
-                    subtitle = if (pendingRunCount > 0) nativeString("Assistant working") else nativeString("OpenClaw thread"),
+                    subtitle = if (pendingRunCount > 0) nativeString("Assistant working") else nativeString("OpenCrustacean thread"),
                     metadata = session.updatedAtMs?.let(::commandRelativeTime) ?: nativeString("now"),
                   )
                 },

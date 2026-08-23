@@ -2812,7 +2812,7 @@ class NodeRuntime private constructor(
 
   private fun applyScreenshotFixture() {
     check(BuildConfig.DEBUG) { "Android screenshot fixtures require a debug build" }
-    _serverName.value = "OpenClaw Gateway"
+    _serverName.value = "OpenCrustacean Gateway"
     _remoteAddress.value = "Mac Studio on local network"
     _gatewayVersion.value = BuildConfig.VERSION_NAME
     updateGatewayDefaultAgentId("main")
@@ -8095,7 +8095,7 @@ class NodeRuntime private constructor(
         HomeCanvasPayload(
           gatewayState = "connecting",
           eyebrow = nativeString("Reconnecting"),
-          title = nativeString("OpenClaw is syncing back up"),
+          title = nativeString("OpenCrustacean is syncing back up"),
           subtitle =
             nativeString("The gateway session is coming back online. Agent shortcuts should settle automatically in a moment."),
           gatewayLabel = gatewayLabel,
@@ -8109,7 +8109,7 @@ class NodeRuntime private constructor(
       HomeCanvasGatewayState.Error, HomeCanvasGatewayState.Offline ->
         HomeCanvasPayload(
           gatewayState = if (state == HomeCanvasGatewayState.Error) "error" else "offline",
-          eyebrow = nativeString("Welcome to OpenClaw"),
+          eyebrow = nativeString("Welcome to OpenCrustacean"),
           title = nativeString("Your phone stays quiet until it is needed"),
           subtitle =
             nativeString("Pair this device to your gateway to wake it only for real work, keep a live agent overview handy, and avoid battery-draining background loops."),

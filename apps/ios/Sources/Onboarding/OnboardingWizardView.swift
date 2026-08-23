@@ -570,7 +570,7 @@ struct OnboardingWizardView: View {
                     .font(OpenClawType.footnote)
                     .foregroundStyle(.secondary)
             } else {
-                Text("OpenClaw is checking gateway and node access.")
+                Text("OpenCrustacean is checking gateway and node access.")
                     .font(OpenClawType.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -606,9 +606,9 @@ struct OnboardingWizardView: View {
                     format: String(localized: """
                     Approve this device on the gateway.
                     1) `%1$@`
-                    2) `/pair approve` in your OpenClaw chat
+                    2) `/pair approve` in your OpenCrustacean chat
                     %2$@
-                    OpenClaw will also retry automatically when you return to this app.
+                    OpenCrustacean will also retry automatically when you return to this app.
                     """),
                     commandLine,
                     requestLine))

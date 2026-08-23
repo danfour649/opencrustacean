@@ -903,7 +903,7 @@ struct ChatMarkdownBlockSegmenterTests {
 
     @Test @MainActor func `native list items reject compressed multiline heights`() {
         let samples = [
-            "The issue is not posted by an official OpenClaw organization account or a separate assistant account, so the complete author identity guidance must remain visible to the reader.",
+            "The issue is not posted by an official OpenCrustacean organization account or a separate assistant account, so the complete author identity guidance must remain visible to the reader.",
             "공개 이슈의 작성자에는 선택한 계정 이름이 표시되므로 회사 계정보다 개인 GitHub 계정을 사용하고 비밀번호를 공유하지 않아도 된다는 전체 안내가 화면에 보여야 합니다.",
         ]
 

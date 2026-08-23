@@ -496,7 +496,7 @@ internal fun TalkSessionScreen(
           Text(
             text =
               if (speaking) {
-                nativeString("OpenClaw speaking")
+                nativeString("OpenCrustacean speaking")
               } else if (listening) {
                 nativeString("Realtime voice")
               } else {
@@ -579,12 +579,12 @@ private fun TalkTranscript(
   LazyColumn(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
     if (entries.isEmpty()) {
       item {
-        TalkTranscriptCard(label = nativeString("OpenClaw"), text = nativeString("Listening for your next turn."), muted = true)
+        TalkTranscriptCard(label = nativeString("OpenCrustacean"), text = nativeString("Listening for your next turn."), muted = true)
       }
     } else {
       items(entries.takeLast(6), key = { it.id }) { entry ->
         TalkTranscriptCard(
-          label = if (entry.role == VoiceConversationRole.User) nativeString("You") else nativeString("OpenClaw"),
+          label = if (entry.role == VoiceConversationRole.User) nativeString("You") else nativeString("OpenCrustacean"),
           text =
             if (entry.isStreaming && entry.text.isBlank()) {
               nativeString("Listening response...")
@@ -669,7 +669,7 @@ private fun VoiceHeader(
     ) {
       OpenClawMascot(modifier = Modifier.size(25.dp))
       Text(
-        text = nativeString("OpenClaw"),
+        text = nativeString("OpenCrustacean"),
         style = ClawTheme.type.title.copy(fontSize = 17.sp, lineHeight = 21.sp),
         color = ClawTheme.colors.text,
         modifier = Modifier.weight(1f),
@@ -738,7 +738,7 @@ private fun VoiceHero(
         text =
           when {
             voiceAttentionStatus != null -> voiceAttentionStatus
-            talkModeSpeaking -> nativeString("OpenClaw is replying")
+            talkModeSpeaking -> nativeString("OpenCrustacean is replying")
             talkModeListening -> nativeString("Listening")
             talkModeEnabled -> nativeString("Talk is live")
             micEnabled -> nativeString("Dictation is listening")
@@ -1082,7 +1082,7 @@ private fun VoiceTurnCard(entry: VoiceConversationEntry) {
     ) {
       Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Text(
-          text = if (isUser) nativeString("You") else nativeString("OpenClaw"),
+          text = if (isUser) nativeString("You") else nativeString("OpenCrustacean"),
           style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
           color = ClawTheme.colors.textSubtle,
         )
@@ -1107,7 +1107,7 @@ private fun VoiceThinkingCard() {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
       ClawStatusPill(text = nativeString("Sending"), status = ClawStatus.Warning)
       Text(
-        text = nativeString("OpenClaw is preparing a response."),
+        text = nativeString("OpenCrustacean is preparing a response."),
         modifier = Modifier.weight(1f),
         style = ClawTheme.type.body,
         color = ClawTheme.colors.textMuted,
@@ -1125,7 +1125,7 @@ private fun VoicePermissionPanel(onRequestPermission: () -> Unit) {
       ClawStatusPill(text = nativeString("Permission needed"), status = ClawStatus.Warning)
       Text(text = nativeString("Microphone access is needed."), style = ClawTheme.type.section, color = ClawTheme.colors.text)
       Text(
-        text = nativeString("OpenClaw only listens when you start Talk or Dictation."),
+        text = nativeString("OpenCrustacean only listens when you start Talk or Dictation."),
         style = ClawTheme.type.body,
         color = ClawTheme.colors.textMuted,
       )
@@ -1197,7 +1197,7 @@ internal fun voiceStatusLabel(
 ): String =
   when {
     voiceAttentionStatus != null -> voiceAttentionStatus
-    voiceCaptureMode == VoiceCaptureMode.TalkMode && talkModeSpeaking -> nativeString("OpenClaw is speaking")
+    voiceCaptureMode == VoiceCaptureMode.TalkMode && talkModeSpeaking -> nativeString("OpenCrustacean is speaking")
     voiceCaptureMode == VoiceCaptureMode.TalkMode && talkModeListening -> nativeString("Listening")
     voiceCaptureMode == VoiceCaptureMode.TalkMode -> nativeString("Talk is live")
     micIsSending -> nativeString("Sending dictation")

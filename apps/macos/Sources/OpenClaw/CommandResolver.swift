@@ -304,7 +304,7 @@ enum CommandResolver {
         switch runtimeResult {
         case .success:
             let missingEntry = """
-            openclaw CLI not found. Install the CLI, or run pnpm build in an OpenClaw source checkout.
+            openclaw CLI not found. Install the CLI, or run pnpm build in an OpenCrustacean source checkout.
             """
             return self.errorCommand(with: missingEntry)
         case let .failure(error):

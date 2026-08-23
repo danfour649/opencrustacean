@@ -281,12 +281,12 @@ enum ApplicationRelocator {
             } catch {
                 self.logger.error("Could not install app: \(error.localizedDescription, privacy: .public)")
                 showFailure(
-                    "OpenClaw couldn’t be installed in Applications. Move it there manually, then open that copy.")
+                    "OpenCrustacean couldn’t be installed in Applications. Move it there manually, then open that copy.")
                 return .continueLaunch(startUpdater: false)
             }
         case .cannotInstall:
             let message =
-                "OpenClaw is running from a temporary location. " +
+                "OpenCrustacean is running from a temporary location. " +
                 "Move it to Applications manually to enable updates and launch at login."
             showFailure(message)
             return .continueLaunch(startUpdater: false)
@@ -987,11 +987,11 @@ extension ApplicationRelocator {
     private static func confirmInstall(replacing: Bool) -> Bool {
         let alert = NSAlert()
         alert.messageText = replacing
-            ? "Replace the older OpenClaw in Applications?"
-            : "Install OpenClaw in Applications?"
+            ? "Replace the older OpenCrustacean in Applications?"
+            : "Install OpenCrustacean in Applications?"
         alert.informativeText = replacing
-            ? "This copy is newer than the installed app. OpenClaw will replace it and reopen from Applications."
-            : "OpenClaw will copy itself to Applications and reopen there so updates and launch at login stay reliable."
+            ? "This copy is newer than the installed app. OpenCrustacean will replace it and reopen from Applications."
+            : "OpenCrustacean will copy itself to Applications and reopen there so updates and launch at login stay reliable."
         alert.alertStyle = .informational
         alert.addButton(withTitle: replacing ? "Replace and Relaunch" : "Install and Relaunch")
         let cancel = alert.addButton(withTitle: "Not Now")
@@ -1019,7 +1019,7 @@ extension ApplicationRelocator {
         } catch {
             self.logger.error("Could not schedule relaunch: \(error.localizedDescription, privacy: .public)")
             self.showFailure(
-                "OpenClaw is installed in Applications, but couldn’t reopen automatically. Open it there manually.")
+                "OpenCrustacean is installed in Applications, but couldn’t reopen automatically. Open it there manually.")
             return .continueLaunch(startUpdater: false)
         }
     }
@@ -1152,7 +1152,7 @@ extension ApplicationRelocator {
             self.logger.critical(
                 """
                 \(reason, privacy: .public); stopped app replacement monitoring after \(attempt) attempts. \
-                Quit and reopen OpenClaw to load the installed replacement.
+                Quit and reopen OpenCrustacean to load the installed replacement.
                 """)
         case .terminateForSupervisor:
             guard let supervisor, self.startSupervisorRestorationWatcher(supervisor) else {
@@ -1348,7 +1348,7 @@ extension ApplicationRelocator {
 
     private static func showFailure(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "Move OpenClaw to Applications"
+        alert.messageText = "Move OpenCrustacean to Applications"
         alert.informativeText = message
         alert.alertStyle = .warning
         alert.addButton(withTitle: "OK")

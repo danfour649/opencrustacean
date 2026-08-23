@@ -8,7 +8,7 @@ enum NodeDisplayName {
         "iPhone Node",
         "iPad",
         "iPad Node",
-        "OpenClaw Mac App",
+        "OpenCrustacean Mac App",
     ]
 
     static func isGeneric(_ name: String) -> Bool {
@@ -20,7 +20,7 @@ enum NodeDisplayName {
         isIOSAppOnMac: Bool = ProcessInfo.processInfo.isiOSAppOnMac) -> String
     {
         if isIOSAppOnMac {
-            return "OpenClaw Mac App"
+            return "OpenCrustacean Mac App"
         }
         return switch interfaceIdiom {
         case .phone:

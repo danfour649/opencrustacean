@@ -53,7 +53,7 @@ struct InstancesSettings: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Connected Instances")
                     .font(.title3.weight(.semibold))
-                Text("Latest presence beacons from OpenClaw nodes. Updated periodically.")
+                Text("Latest presence beacons from OpenCrustacean nodes. Updated periodically.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

@@ -154,7 +154,7 @@ final class WebChatManager {
             sessionKey: transport.sessionKey,
             presentation: .window,
             transport: transport,
-            windowTitle: "OpenClaw Swarm Fixture",
+            windowTitle: "OpenCrustacean Swarm Fixture",
             windowAutosaveName: "OpenClawSwarmFixture")
         controller.onClosed = { [weak self, weak controller] in
             guard let self, let controller, self.windowController === controller else { return }
@@ -227,7 +227,7 @@ final class WebChatManager {
             presentation: .window,
             connection: connection,
             gatewayID: profile.id,
-            windowTitle: "\(profile.name) — OpenClaw",
+            windowTitle: "\(profile.name) — OpenCrustacean",
             windowAutosaveName: "OpenClawChatWindow-\(profile.id)")
         controller.onVisibilityChanged = { [weak self, weak controller] visible in
             guard let self, let controller else { return }

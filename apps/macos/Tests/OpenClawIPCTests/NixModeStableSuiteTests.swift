@@ -55,7 +55,7 @@ struct NixModeStableSuiteTests {
             bundleURLs: [URL(fileURLWithPath: "/tmp/OpenClawTests.xctest")]))
         #expect(!ProcessInfo.resolveIsRunningTests(
             environment: [:],
-            processName: "OpenClaw",
+            processName: "OpenCrustacean",
             arguments: [],
             bundleURLs: []))
     }

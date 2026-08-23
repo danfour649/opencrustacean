@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(
-  name = "OpenClaw Design System",
+  name = "OpenCrustacean Design System",
   showBackground = true,
   backgroundColor = 0xFF030303,
 )
