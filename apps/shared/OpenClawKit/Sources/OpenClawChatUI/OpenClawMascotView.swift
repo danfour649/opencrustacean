@@ -6,7 +6,7 @@ public enum OpenClawMascotAccessory: Equatable, Sendable {
     case gradCap
 }
 
-/// Animated OpenClaw mascot. Redraws the canonical 120x120 vector from
+/// Animated OpenCrustacean mascot. Redraws the canonical 120x120 vector from
 /// `ui/public/favicon.svg` so individual parts (claws, antennae, eyes) can
 /// animate like the openclaw.ai hero mark; the bundled PNG asset cannot.
 /// Styling (palette, glow colors, float depth) follows the openclaw.ai hero

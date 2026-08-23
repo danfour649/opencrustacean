@@ -178,7 +178,7 @@ struct IOSSystemAgentChatTests {
         await Self.start(model)
 
         #expect(model.messages.isEmpty)
-        #expect(model.errorMessage == "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        #expect(model.errorMessage == "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
     }
 
     @Test func `sensitive answer stays redacted locally and is sent verbatim`() async throws {
@@ -244,7 +244,7 @@ struct IOSSystemAgentChatTests {
         await Self.start(model)
 
         #expect(model.errorMessage != nil)
-        #expect(model.errorMessage != "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        #expect(model.errorMessage != "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
     }
 
     @Test func `pre-dispatch route change asks for restart`() async {
@@ -262,7 +262,7 @@ struct IOSSystemAgentChatTests {
 
         await Self.start(model)
 
-        #expect(model.errorMessage == "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        #expect(model.errorMessage == "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
     }
 
     @Test func `leaving settings clears input without canceling an in-flight turn`() async {
@@ -424,15 +424,15 @@ struct IOSSystemAgentChatTests {
         #expect(!source.contains("SecureField(\"Enter secret"))
     }
 
-    @Test func `settings route launch argument opens OpenClaw directly`() {
-        let arguments = ["OpenClaw", "--openclaw-settings-route", "openclaw"]
+    @Test func `settings route launch argument opens OpenCrustacean directly`() {
+        let arguments = ["OpenCrustacean", "--openclaw-settings-route", "openclaw"]
 
         #expect(RootTabs.requestedInitialSettingsRoute(arguments: arguments) == .systemAgent)
         #expect(RootTabs.initialDestination(arguments: arguments) == .settings)
     }
 
     @Test func `settings route is visible and handoff uses root chat navigation`() throws {
-        #expect(SettingsProTab().title(for: .systemAgent) == "OpenClaw")
+        #expect(SettingsProTab().title(for: .systemAgent) == "OpenCrustacean")
 
         let iosRoot = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -510,7 +510,7 @@ struct IOSSystemAgentChatTests {
             "question": [
                 "id": "connection",
                 "header": "Connection",
-                "question": "How should OpenClaw connect?",
+                "question": "How should OpenCrustacean connect?",
                 "options": [
                     [
                         "label": "Use Tailscale",

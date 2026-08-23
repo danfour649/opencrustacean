@@ -612,7 +612,7 @@ private fun OverviewScreen(
           item {
             ClawEmptyState(
               title = nativeString("No recent threads"),
-              body = nativeString("Start a chat and your active OpenClaw conversations will appear here."),
+              body = nativeString("Start a chat and your active OpenCrustacean conversations will appear here."),
               action = { ClawPrimaryButton(text = nativeString("Start Chat"), onClick = { onSelectTab(Tab.Chat) }) },
             )
           }
@@ -659,7 +659,7 @@ private fun OverviewHeader(
   ) {
     OpenClawMascot(modifier = Modifier.size(25.dp))
     Text(
-      text = nativeString("OpenClaw"),
+      text = nativeString("OpenCrustacean"),
       style = ClawTheme.type.title.copy(fontSize = 17.sp, lineHeight = 21.sp),
       color = ClawTheme.colors.text,
       modifier = Modifier.weight(1f),
@@ -1188,7 +1188,7 @@ internal fun overviewAgentName(
   defaultAgentId: String?,
 ): String {
   val agent = overviewAgent(agents = agents, defaultAgentId = defaultAgentId)
-  return agent?.name?.takeIf { it.isNotBlank() } ?: agent?.id?.takeIf { it.isNotBlank() } ?: nativeString("OpenClaw")
+  return agent?.name?.takeIf { it.isNotBlank() } ?: agent?.id?.takeIf { it.isNotBlank() } ?: nativeString("OpenCrustacean")
 }
 
 internal fun overviewAgentBadgeText(
@@ -1202,7 +1202,7 @@ internal fun overviewAgentBadgeText(
     ?.takeIf { it.isNotEmpty() }
     ?.let { return it }
   if (agent == null) return "OC"
-  val source = agent.name?.takeIf { it.isNotBlank() } ?: agent.id.takeIf { it.isNotBlank() } ?: nativeString("OpenClaw")
+  val source = agent.name?.takeIf { it.isNotBlank() } ?: agent.id.takeIf { it.isNotBlank() } ?: nativeString("OpenCrustacean")
   return agentInitials(source)
 }
 
@@ -1292,7 +1292,7 @@ internal fun sessionSourceLabel(
     } else {
       normalized
     }
-  if (!scopedKey.contains(':') && !scopedKey.contains('#')) return nativeString("OpenClaw")
+  if (!scopedKey.contains(':') && !scopedKey.contains('#')) return nativeString("OpenCrustacean")
   val source = scopedKey.substringBefore(':').substringBefore('#').lowercase()
   val channelLabel =
     channelsSummary.channels
@@ -1301,7 +1301,7 @@ internal fun sessionSourceLabel(
       }?.label
       ?.takeIf { it.isNotBlank() }
   if (channelLabel != null) return channelLabel
-  return nativeString(sessionSourceLabels[source] ?: "OpenClaw")
+  return nativeString(sessionSourceLabels[source] ?: "OpenCrustacean")
 }
 
 internal data class HomeAttentionRow(
@@ -1655,7 +1655,7 @@ private fun SettingsShellScreen(
       }
 
       item {
-        ProfilePanel(displayName = displayName.ifBlank { "OpenClaw" }, onClick = { onRouteChange(SettingsRoute.Profile) })
+        ProfilePanel(displayName = displayName.ifBlank { "OpenCrustacean" }, onClick = { onRouteChange(SettingsRoute.Profile) })
       }
 
       val settingsRows =
@@ -1671,7 +1671,7 @@ private fun SettingsShellScreen(
           SettingsRow(nativeText("Channels"), verbatimText(channelsSummaryText(channelsSummary)), Icons.Default.Notifications, status = channelsStatus(channelsSummary), route = SettingsRoute.Channels),
           SettingsRow(nativeText("Agents"), if (agents.isEmpty()) nativeText("Load from gateway") else nativeText("\${agents.size} available", agents.size), Icons.Default.Person, status = agents.isNotEmpty(), route = SettingsRoute.Agents),
           SettingsRow(
-            nativeText("OpenClaw"),
+            nativeText("OpenCrustacean"),
             nativeText("Setup, status, and repair"),
             Icons.Default.Bolt,
             status =
@@ -1765,7 +1765,7 @@ private fun SettingsShellScreen(
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.spacedBy(3.dp),
         ) {
-          Text(text = nativeString("OpenClaw \${BuildConfig.VERSION_NAME} (\${BuildConfig.VERSION_CODE})", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp), color = ClawTheme.colors.textMuted)
+          Text(text = nativeString("OpenCrustacean \${BuildConfig.VERSION_NAME} (\${BuildConfig.VERSION_CODE})", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp), color = ClawTheme.colors.textMuted)
           Row(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
               text = if (isConnected) nativeString("All systems operational") else nativeString("Gateway not connected"),
@@ -2025,7 +2025,7 @@ private fun ProfilePanel(
       }
       Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(text = displayName, style = ClawTheme.type.section, color = ClawTheme.colors.text, maxLines = 1)
-        Text(text = nativeString("OpenClaw mobile"), style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp), color = ClawTheme.colors.textMuted, maxLines = 1)
+        Text(text = nativeString("OpenCrustacean mobile"), style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp), color = ClawTheme.colors.textMuted, maxLines = 1)
       }
       Icon(
         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

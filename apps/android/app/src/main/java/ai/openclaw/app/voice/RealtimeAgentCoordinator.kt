@@ -402,7 +402,7 @@ internal class RealtimeAgentCoordinator(
           put(
             "message",
             JsonPrimitive(
-              "Tell the person briefly that you are checking, then wait for the final OpenClaw result before answering with the actual result.",
+              "Tell the person briefly that you are checking, then wait for the final OpenCrustacean result before answering with the actual result.",
             ),
           )
         },

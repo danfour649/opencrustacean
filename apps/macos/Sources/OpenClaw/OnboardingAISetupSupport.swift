@@ -168,8 +168,8 @@ extension OnboardingAISetupModel {
     /// Transport/protocol failures deserve plain language, not RPC codes.
     static func friendlyTransportError(_ raw: String) -> String {
         if raw.localizedCaseInsensitiveContains("unknown method") {
-            return "The Gateway is running an older OpenClaw version that doesn’t support " +
-                "app-guided setup. Update OpenClaw on the gateway, then try again."
+            return "The Gateway is running an older OpenCrustacean version that doesn’t support " +
+                "app-guided setup. Update OpenCrustacean on the gateway, then try again."
         }
         return raw.isEmpty
             ? "The Gateway setup request failed."

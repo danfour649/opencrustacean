@@ -463,7 +463,7 @@ struct DeviceIdentityStoreTests {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: tempDir) }
-        let sourceRoot = tempDir.appendingPathComponent("Application Support/OpenClaw", isDirectory: true)
+        let sourceRoot = tempDir.appendingPathComponent("Application Support/OpenCrustacean", isDirectory: true)
         let source = try Self.writeLegacyIdentity(
             stateDirURL: sourceRoot,
             profile: .primary,

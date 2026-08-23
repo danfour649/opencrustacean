@@ -43,7 +43,7 @@ struct LocationSettingsPresentation: Equatable {
         case .authorizedWhenInUse, .authorizedAlways:
             return nil
         default:
-            return String(localized: "OpenClaw cannot determine the current iOS location permission.")
+            return String(localized: "OpenCrustacean cannot determine the current iOS location permission.")
         }
     }
 

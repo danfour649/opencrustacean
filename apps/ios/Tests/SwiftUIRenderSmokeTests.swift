@@ -102,7 +102,7 @@ struct SwiftUIRenderSmokeTests {
         }
     }
 
-    @Test @MainActor func `settings OpenClaw destination builds access gate across appearance and type size`() {
+    @Test @MainActor func `settings OpenCrustacean destination builds access gate across appearance and type size`() {
         var windows: [UIWindow] = []
         defer { windows.forEach { $0.isHidden = true } }
 
@@ -147,7 +147,7 @@ struct SwiftUIRenderSmokeTests {
     @Test @MainActor func `hosted push relay disclosure builds A view hierarchy`() {
         for typeSize in [DynamicTypeSize.large, .accessibility5] {
             let root = HostedPushRelayDisclosureSheet(
-                message: "Enabling this sends delivery data through OpenClaw's hosted push relay.",
+                message: "Enabling this sends delivery data through OpenCrustacean's hosted push relay.",
                 onContinue: {})
                 .environment(\.dynamicTypeSize, typeSize)
 
@@ -260,7 +260,7 @@ struct SwiftUIRenderSmokeTests {
                 markdownVariant: .standard,
                 userAccent: nil,
                 displayOptions: [],
-                assistantName: "OpenClaw",
+                assistantName: "OpenCrustacean",
                 assistantAvatarText: "OC",
                 assistantAvatarTint: nil,
                 showsAssistantAvatar: true,
@@ -300,7 +300,7 @@ struct SwiftUIRenderSmokeTests {
             markdownVariant: .standard,
             userAccent: nil,
             displayOptions: [],
-            assistantName: "OpenClaw",
+            assistantName: "OpenCrustacean",
             assistantAvatarText: "OC",
             assistantAvatarTint: nil,
             showsAssistantAvatar: true,
@@ -346,7 +346,7 @@ struct SwiftUIRenderSmokeTests {
             text: text,
             markdownVariant: .standard,
             showsReasoning: false,
-            assistantName: "OpenClaw",
+            assistantName: "OpenCrustacean",
             assistantAvatarText: "OC",
             assistantAvatarTint: nil,
             showsAssistantAvatar: true,
@@ -382,7 +382,7 @@ struct SwiftUIRenderSmokeTests {
                     markdownVariant: .standard,
                     userAccent: nil,
                     displayOptions: [.reasoning],
-                    assistantName: "OpenClaw",
+                    assistantName: "OpenCrustacean",
                     assistantAvatarText: "OC",
                     assistantAvatarTint: nil,
                     showsAssistantAvatar: true,
@@ -399,7 +399,7 @@ struct SwiftUIRenderSmokeTests {
                     text: text,
                     markdownVariant: .standard,
                     showsReasoning: true,
-                    assistantName: "OpenClaw",
+                    assistantName: "OpenCrustacean",
                     assistantAvatarText: "OC",
                     assistantAvatarTint: nil,
                     showsAssistantAvatar: true,
@@ -439,7 +439,7 @@ struct SwiftUIRenderSmokeTests {
                 markdownVariant: .standard,
                 userAccent: nil,
                 displayOptions: [],
-                assistantName: "OpenClaw",
+                assistantName: "OpenCrustacean",
                 assistantAvatarText: "OC",
                 assistantAvatarTint: nil,
                 showsAssistantAvatar: true,
@@ -508,7 +508,7 @@ struct SwiftUIRenderSmokeTests {
                 onScanQRCode: {},
                 onManualSetup: {})),
             AnyView(OnboardingSuccessStep(
-                gatewayName: "OpenClaw Gateway",
+                gatewayName: "OpenCrustacean Gateway",
                 gatewayAddress: "openclaw.local",
                 onGetStarted: {})),
             AnyView(NavigationStack {

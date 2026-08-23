@@ -87,7 +87,7 @@ data class SystemAgentChatState(
 private fun newSystemAgentSessionId(): String = "android-settings-openclaw-${UUID.randomUUID()}"
 
 /**
- * Keeps the settings-only OpenClaw conversation outside ordinary chat/session state.
+ * Keeps the settings-only OpenCrustacean conversation outside ordinary chat/session state.
  * Every request captures a physical Gateway lease, so it cannot retarget a replacement connection.
  */
 internal class SystemAgentChatController(
@@ -319,11 +319,11 @@ internal class SystemAgentChatController(
           val message =
             err.gatewayError.message
               .trim()
-              .ifEmpty { nativeString("OpenClaw request failed.") }
+              .ifEmpty { nativeString("OpenCrustacean request failed.") }
           commitRequestError(requestGeneration, lease, message)
         } catch (_: Throwable) {
           if (!isCurrent(requestGeneration)) return@launch
-          commitRequestError(requestGeneration, lease, nativeString("OpenClaw request failed."))
+          commitRequestError(requestGeneration, lease, nativeString("OpenCrustacean request failed."))
         }
       }
   }
@@ -450,4 +450,4 @@ private fun SystemAgentGatewayAccess.toChatAccess(): SystemAgentChatAccess =
     else -> SystemAgentChatAccess.Ready
   }
 
-private fun routeChangedMessage(): String = nativeString("The Gateway connection changed. Restart OpenClaw to reconnect.")
+private fun routeChangedMessage(): String = nativeString("The Gateway connection changed. Restart OpenCrustacean to reconnect.")

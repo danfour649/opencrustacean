@@ -93,7 +93,7 @@ struct OpenClawDocsScreen: View {
             VStack(spacing: 0) {
                 self.docsLinkRow(
                     title: "Docs Home",
-                    detail: "Browse the current OpenClaw reference.",
+                    detail: "Browse the current OpenCrustacean reference.",
                     icon: "book",
                     url: self.docsURL)
                 Divider().padding(.leading, 58)

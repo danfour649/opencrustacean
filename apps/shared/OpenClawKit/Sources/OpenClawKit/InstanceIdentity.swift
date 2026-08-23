@@ -103,7 +103,7 @@ public enum InstanceIdentity {
     public static let displayName: String = {
         #if os(iOS)
         if ProcessInfo.processInfo.isiOSAppOnMac {
-            return "OpenClaw Mac App"
+            return "OpenCrustacean Mac App"
         }
         let name = Self.readMainActor {
             UIDevice.current.name.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -45,7 +45,7 @@ internal class WearReplyNotifier(
     val requestCode = NOTIFICATION_ID
     val replyAction = createReplyAction(sessionKey, notificationTag, inbound.sourceNodeId)
     val openPendingIntent = createOpenAppIntent(requestCode)
-    val agent = Person.Builder().setName("OpenClaw").build()
+    val agent = Person.Builder().setName("OpenCrustacean").build()
     val notification =
       NotificationCompat
         .Builder(context, CHANNEL_ID)

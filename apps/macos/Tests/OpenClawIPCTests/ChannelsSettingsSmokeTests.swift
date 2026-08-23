@@ -3,7 +3,7 @@ import SwiftUI
 import Testing
 @testable import OpenClaw
 
-private typealias SnapshotAnyCodable = OpenClaw.AnyCodable
+private typealias SnapshotAnyCodable = OpenCrustacean.AnyCodable
 
 private let channelOrder = ["whatsapp", "telegram", "signal", "imessage"]
 private let channelLabels = [

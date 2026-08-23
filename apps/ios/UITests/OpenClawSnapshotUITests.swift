@@ -135,7 +135,7 @@ final class OpenClawSnapshotUITests: XCTestCase {
         let moreAgents = try XCTUnwrap(self.app?.buttons["More Agents"])
         XCTAssertTrue(moreAgents.waitForExistence(timeout: 5))
         let gatewayFooter = try XCTUnwrap(self.app?.buttons.matching(
-            NSPredicate(format: "label CONTAINS %@", "OpenClaw Gateway")).firstMatch)
+            NSPredicate(format: "label CONTAINS %@", "OpenCrustacean Gateway")).firstMatch)
         XCTAssertTrue(gatewayFooter.exists)
         moreAgents.tap()
 
@@ -635,7 +635,7 @@ final class OpenClawSnapshotUITests: XCTestCase {
         self.attachScreenshot(named: "chat-empty-starters")
 
         starter.tap()
-        let sentText = "Summarize the current OpenClaw status and tell me what needs attention."
+        let sentText = "Summarize the current OpenCrustacean status and tell me what needs attention."
         let sentRows = self.app?.staticTexts.matching(NSPredicate(format: "label == %@", sentText))
         XCTAssertTrue(sentRows?.firstMatch.waitForExistence(timeout: 5) == true)
         XCTAssertEqual(sentRows?.count, 1)
@@ -660,12 +660,12 @@ final class OpenClawSnapshotUITests: XCTestCase {
             ])
 
         XCTAssertTrue(self.app?.staticTexts["Woran möchtest du arbeiten?"].waitForExistence(timeout: 8) == true)
-        let starter = try XCTUnwrap(self.app?.buttons["OpenClaw-Status prüfen"])
+        let starter = try XCTUnwrap(self.app?.buttons["OpenCrustacean-Status prüfen"])
         XCTAssertTrue(starter.exists)
         starter.tap()
         XCTAssertTrue(
             self.app?.staticTexts[
-                "Fasse den aktuellen OpenClaw-Status zusammen und sage mir, was Aufmerksamkeit erfordert.",
+                "Fasse den aktuellen OpenCrustacean-Status zusammen und sage mir, was Aufmerksamkeit erfordert.",
             ].waitForExistence(timeout: 5) == true)
         self.attachScreenshot(named: "chat-empty-starters-german")
     }
@@ -1015,7 +1015,7 @@ extension OpenClawSnapshotUITests {
         let readiness = app.descendants(matching: .any)[Self.appReadinessAccessibilityIdentifier]
         XCTAssertTrue(
             readiness.waitForExistence(timeout: 8),
-            "OpenClaw root readiness marker did not appear")
+            "OpenCrustacean root readiness marker did not appear")
         self.waitForValue("ready:\(target.initialDestination)", of: readiness, timeout: 8)
     }
 
@@ -1055,7 +1055,7 @@ extension OpenClawSnapshotUITests {
 
     private func waitForReleaseScreenshotTarget(_ target: ScreenshotTarget) {
         guard let app = self.app else {
-            XCTFail("OpenClaw is not running for screenshot target \(target.name)")
+            XCTFail("OpenCrustacean is not running for screenshot target \(target.name)")
             return
         }
         let readiness = app.descendants(matching: .any)[Self.appReadinessAccessibilityIdentifier]
@@ -1081,7 +1081,7 @@ extension OpenClawSnapshotUITests {
         app.terminate()
         XCTAssertTrue(
             app.wait(for: .notRunning, timeout: 5),
-            "OpenClaw did not terminate before the next launch",
+            "OpenCrustacean did not terminate before the next launch",
             file: file,
             line: line)
         self.app = nil

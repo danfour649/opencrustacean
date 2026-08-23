@@ -26,7 +26,7 @@ class AssistantLaunchTest {
   fun parsesAppActionPrompt() {
     val parsed =
       parseAssistantLaunchIntent(
-        Intent(actionAskOpenClaw).putExtra(extraAssistantPrompt, "  summarize my unread texts  "),
+        Intent(actionAskOpenCrustacean).putExtra(extraAssistantPrompt, "  summarize my unread texts  "),
       )
 
     requireNotNull(parsed)

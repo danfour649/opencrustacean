@@ -199,7 +199,7 @@ private func transientVerificationErrorResponse(id: String) -> Data {
 @Suite(.serialized)
 @MainActor
 struct OnboardingSystemAgentChatTests {
-    @Test func `onboarding wires OpenClaw agent handoff`() {
+    @Test func `onboarding wires OpenCrustacean agent handoff`() {
         let state = AppState(preview: true)
         state.connectionMode = .local
         let view = OnboardingView(state: state)
@@ -209,7 +209,7 @@ struct OnboardingSystemAgentChatTests {
         #expect(view.systemAgentState.chat.onAgentHandoff != nil)
     }
 
-    @Test func `relaunch with pending inference resumes OpenClaw`() async throws {
+    @Test func `relaunch with pending inference resumes OpenCrustacean`() async throws {
         let suiteName = "OnboardingPendingInferenceResumeTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -485,7 +485,7 @@ struct OnboardingSystemAgentChatTests {
         ])
     }
 
-    @Test func `fresh inference presents and starts OpenClaw immediately`() async throws {
+    @Test func `fresh inference presents and starts OpenCrustacean immediately`() async throws {
         let session = GatewayTestWebSocketSession(taskFactory: {
             GatewayTestWebSocketTask(sendHook: { task, message, sendIndex in
                 guard sendIndex > 0,
@@ -740,7 +740,7 @@ struct OnboardingSystemAgentChatTests {
         #expect(session.snapshotMakeCount() == 1)
         #expect(session.latestTask()?.snapshotSendCount() == 2)
         #expect(chat.messages.map(\.text) == ["ready", "must stay on route a"])
-        #expect(chat.errorMessage == "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        #expect(chat.errorMessage == "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
         #expect(await recorder.snapshot() == [routeASessionID])
 
         let restartTask = try #require(chat.restartAfterError())
@@ -798,7 +798,7 @@ struct OnboardingSystemAgentChatTests {
         #expect(chat.messages.isEmpty)
         #expect(replyCount == 0)
         #expect(handoffCount == 0)
-        #expect(chat.errorMessage == "The Gateway connection changed. Restart OpenClaw to reconnect.")
+        #expect(chat.errorMessage == "The Gateway connection changed. Restart OpenCrustacean to reconnect.")
     }
 
     @Test func `cancelled initial request exposes restart and recovers`() async throws {
@@ -834,7 +834,7 @@ struct OnboardingSystemAgentChatTests {
         await requestGate.release()
         await startTask.value
 
-        #expect(chat.errorMessage == "OpenClaw was interrupted. Restart to try again.")
+        #expect(chat.errorMessage == "OpenCrustacean was interrupted. Restart to try again.")
         #expect(!chat.isSending)
         #expect(chat.messages.isEmpty)
 

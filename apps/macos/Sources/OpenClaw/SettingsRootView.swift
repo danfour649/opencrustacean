@@ -437,12 +437,12 @@ struct SettingsRootView: View {
 
     private func scheduleInferenceRefresh(clearPrevious: Bool, resetSystemAgent: Bool = false) {
         if resetSystemAgent {
-            // OpenClaw sessions are gateway-owned. Re-key the cached detail so a route
+            // OpenCrustacean sessions are gateway-owned. Re-key the cached detail so a route
             // change cannot send old conversation state to a new endpoint.
             self.systemAgentChatIdentity = UUID()
         }
         if clearPrevious {
-            // Preserve an active or pending OpenClaw request while config truth is revalidated.
+            // Preserve an active or pending OpenCrustacean request while config truth is revalidated.
             // A confirmed model restores it; a confirmed missing model leaves General selected.
             let requestedTab = self.deferredTab ?? self.selectedTab
             self.inferenceConfiguration = .loading
@@ -484,7 +484,7 @@ struct SettingsTabGroup: Identifiable {
             SettingsTabGroup(title: "Automation", tabs: [.channels, .skills, .cron, .execApprovals]),
             SettingsTabGroup(title: "Data", tabs: [.sessions, .instances]),
             SettingsTabGroup(title: "Advanced", tabs: [.config]),
-            SettingsTabGroup(title: "OpenClaw", tabs: [.about]),
+            SettingsTabGroup(title: "OpenCrustacean", tabs: [.about]),
         ]
 
         if showDebug {
@@ -512,7 +512,7 @@ enum SettingsTab: CaseIterable, Identifiable, Hashable {
         case .gateways: "Gateways"
         case .permissions: "Permissions"
         case .voiceWake: "Voice & Talk"
-        case .systemAgent: "OpenClaw"
+        case .systemAgent: "OpenCrustacean"
         case .channels: "Channels"
         case .skills: "Skills"
         case .cron: "Cron Jobs"

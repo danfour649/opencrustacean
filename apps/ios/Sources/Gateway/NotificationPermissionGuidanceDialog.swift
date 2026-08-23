@@ -53,9 +53,9 @@ private struct NotificationPermissionGuidanceCard: View {
                     .font(OpenClawType.headline)
                 Text(
                     """
-                    Exec approvals can only be reviewed while OpenClaw is open and connected.
+                    Exec approvals can only be reviewed while OpenCrustacean is open and connected.
 
-                    Enable Notifications to receive approval notifications while OpenClaw is not open.
+                    Enable Notifications to receive approval notifications while OpenCrustacean is not open.
                     """)
                     .font(OpenClawType.subhead)
                     .foregroundStyle(.secondary)

@@ -932,7 +932,7 @@ extension SettingsProTab {
     func title(for route: SettingsRoute) -> String {
         switch route {
         case .gateway: String(localized: "Gateway")
-        case .systemAgent: String(localized: "OpenClaw")
+        case .systemAgent: String(localized: "OpenCrustacean")
         case .appleWatch: String(localized: "Apple Watch")
         case .approvals: String(localized: "Approvals")
         case .permissions: String(localized: "Permissions")
@@ -955,9 +955,9 @@ extension SettingsProTab {
         do {
             let result = try await self.appModel.sendDirectWatchSetup()
             self.watchDirectSetupStatusText = result.deliveredImmediately
-                ? String(localized: "Setup sent. Open OpenClaw on the watch to connect.")
+                ? String(localized: "Setup sent. Open OpenCrustacean on the watch to connect.")
                 : String(
-                    localized: "Setup queued for the watch. Open OpenClaw before the code expires.")
+                    localized: "Setup queued for the watch. Open OpenCrustacean before the code expires.")
         } catch {
             self.watchDirectSetupStatusText = error.localizedDescription
         }
@@ -1054,7 +1054,7 @@ extension SettingsProTab {
         let lower = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if lower.contains("pairing required") {
             return String(
-                localized: "Pairing required. Run /pair approve in your OpenClaw chat, then connect again.")
+                localized: "Pairing required. Run /pair approve in your OpenCrustacean chat, then connect again.")
         }
         if lower.contains("device nonce required") || lower.contains("device nonce mismatch") {
             return String(localized: "Secure handshake failed. Check Tailscale, then connect again.")
@@ -1220,7 +1220,7 @@ extension SettingsProTab {
         }
         if self.notificationsNeedAttention {
             return String(
-                localized: "Foreground approvals still appear while OpenClaw is connected.")
+                localized: "Foreground approvals still appear while OpenCrustacean is connected.")
         }
         return self.gatewayConnected
             ? String(localized: "Gateway requests will appear here.")
@@ -1249,7 +1249,7 @@ extension SettingsProTab {
     }
 
     var gatewayServer: String {
-        self.appModel.gatewayServerName ?? "OpenClaw Gateway"
+        self.appModel.gatewayServerName ?? "OpenCrustacean Gateway"
     }
 
     var pendingApproval: NodeAppModel.ExecApprovalPrompt? {
@@ -1398,15 +1398,15 @@ extension SettingsProTab {
             } ?? "ios-push-relay.openclaw.ai"
             return String(
                 format: String(
-                    localized: "This build uses OpenClaw's hosted push relay at %@ for notification delivery data."),
+                    localized: "This build uses OpenCrustacean's hosted push relay at %@ for notification delivery data."),
                 host)
         }
         return String(
-            localized: "This build is not configured to use OpenClaw's hosted push relay.")
+            localized: "This build is not configured to use OpenCrustacean's hosted push relay.")
     }
 
     var notificationRelayDisclosureMessage: String {
         String(
-            localized: "Enabling this sends delivery data through OpenClaw's hosted push relay.")
+            localized: "Enabling this sends delivery data through OpenCrustacean's hosted push relay.")
     }
 }

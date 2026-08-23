@@ -20,7 +20,7 @@ final class PeekabooBridgeHostCoordinator {
         let fileManager = FileManager.default
         let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? fileManager.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support")
-        return Self.makeSocketPath(for: "OpenClaw", in: base)
+        return Self.makeSocketPath(for: "OpenCrustacean", in: base)
     }
 
     private static func makeSocketPath(for directoryName: String, in baseDirectory: URL) -> String {

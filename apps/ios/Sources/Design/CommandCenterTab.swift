@@ -12,7 +12,7 @@ struct CommandCenterTab: View {
     @State private var recentChatSessions: [OpenClawChatSessionEntry] = []
     var ownsNavigationStack: Bool = true
     var usesNativeNavigationChrome: Bool = false
-    var headerTitle: String = "OpenClaw"
+    var headerTitle: String = "OpenCrustacean"
     var headerSidebarAction: OpenClawSidebarHeaderAction?
     var dashboardModel: RootSidebarModel?
     var showsHeaderMark: Bool = true

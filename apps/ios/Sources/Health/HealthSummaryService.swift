@@ -36,7 +36,7 @@ enum HealthAuthorization {
         }
         try await HKHealthStore().requestAuthorization(toShare: [], read: self.readTypes)
         // HealthKit intentionally does not reveal read denial. This flag records only
-        // the user's explicit OpenClaw sharing choice, never inferred authorization.
+        // the user's explicit OpenCrustacean sharing choice, never inferred authorization.
         UserDefaults.standard.set(true, forKey: self.enabledKey)
     }
 
@@ -60,7 +60,7 @@ actor HealthSummaryService: HealthSummaryServicing {
         guard HealthAuthorization.isEnabled else {
             throw NSError(domain: "Health", code: 2, userInfo: [
                 NSLocalizedDescriptionKey:
-                    "HEALTH_ACCESS_DISABLED: enable Apple Health Summaries in OpenClaw Settings",
+                    "HEALTH_ACCESS_DISABLED: enable Apple Health Summaries in OpenCrustacean Settings",
             ])
         }
 

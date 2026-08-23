@@ -133,7 +133,7 @@ final class ShareViewController: UIViewController {
                 code: 10,
                 userInfo: [
                     NSLocalizedDescriptionKey: NSLocalizedString(
-                        "OpenClaw is not connected to a gateway yet.",
+                        "OpenCrustacean is not connected to a gateway yet.",
                         comment: "Share extension missing gateway error"),
                 ])
         }
@@ -161,7 +161,7 @@ final class ShareViewController: UIViewController {
                 permissions: [:],
                 clientId: clientId,
                 clientMode: "node",
-                clientDisplayName: "OpenClaw Share",
+                clientDisplayName: "OpenCrustacean Share",
                 deviceIdentityProfile: .shareExtension,
                 includeDeviceIdentity: true,
                 allowStoredDeviceAuth: config.gatewayStableID != nil,

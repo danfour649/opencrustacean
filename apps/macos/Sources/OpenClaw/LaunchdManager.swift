@@ -8,7 +8,7 @@ enum LaunchdManager {
         try? process.run()
     }
 
-    static func startOpenClaw() {
+    static func startOpenCrustacean() {
         let userTarget = "gui/\(getuid())/\(launchdLabel)"
         self.runLaunchctl(["kickstart", "-k", userTarget])
     }

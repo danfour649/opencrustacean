@@ -310,7 +310,7 @@ enum QuickChatFocusedTextCaptureService {
 
     private static func confirmAccessibilityRequest(appName: String) -> Bool {
         let alert = NSAlert()
-        alert.messageText = String(localized: "Allow OpenClaw to read text from \(appName)")
+        alert.messageText = String(localized: "Allow OpenCrustacean to read text from \(appName)")
         alert.informativeText = String(localized: "Attaching focused-window text uses macOS Accessibility access.")
         alert.addButton(withTitle: String(localized: "Grant Access"))
         alert.addButton(withTitle: String(localized: "Cancel"))

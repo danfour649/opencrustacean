@@ -647,8 +647,8 @@ final class RealtimeTalkRelaySession {
                 timeoutSeconds: 120)
             try await self.ensureCurrentLifecycle(lifecycleGeneration)
             let result: [String: Any] = completion.failed
-                ? ["error": "OpenClaw tool call failed"]
-                : ["text": completion.text ?? "OpenClaw finished with no text."]
+                ? ["error": "OpenCrustacean tool call failed"]
+                : ["text": completion.text ?? "OpenCrustacean finished with no text."]
             try await self.submitToolResult(
                 callId: callId,
                 result: result,

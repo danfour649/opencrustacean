@@ -211,22 +211,22 @@ struct RootTabsPresentationTests {
     }
 
     @Test func `app launch defaults to chat destination`() {
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw"]) == .chat)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab"]) == .chat)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "unknown"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "unknown"]) == .chat)
     }
 
     @Test func `app launch uses requested destination before chat fallback`() {
         #expect(RootTabs
-            .initialDestination(arguments: ["OpenClaw", "--openclaw-initial-destination", "overview"]) == .overview)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-destination", "chat"]) == .chat)
+            .initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-destination", "overview"]) == .overview)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-destination", "chat"]) == .chat)
         #expect(RootTabs
-            .initialDestination(arguments: ["OpenClaw", "--openclaw-initial-destination", "agents"]) == .agents)
+            .initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-destination", "agents"]) == .agents)
         #expect(RootTabs
-            .initialDestination(arguments: ["OpenClaw", "--openclaw-initial-destination", "gateway"]) == .gateway)
+            .initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-destination", "gateway"]) == .gateway)
         #expect(
             RootTabs.initialDestination(arguments: [
-                "OpenClaw",
+                "OpenCrustacean",
                 "--openclaw-initial-tab",
                 "unknown",
                 "--openclaw-initial-destination",
@@ -235,13 +235,13 @@ struct RootTabsPresentationTests {
     }
 
     @Test func `legacy initial tab aliases map directly to sidebar destinations`() {
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "control"]) == .overview)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "overview"]) == .overview)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "chat"]) == .chat)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "talk"]) == .chat)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "voice"]) == .chat)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "agents"]) == .agents)
-        #expect(RootTabs.initialDestination(arguments: ["OpenClaw", "--openclaw-initial-tab", "settings"]) == .settings)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "control"]) == .overview)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "overview"]) == .overview)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "chat"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "talk"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "voice"]) == .chat)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "agents"]) == .agents)
+        #expect(RootTabs.initialDestination(arguments: ["OpenCrustacean", "--openclaw-initial-tab", "settings"]) == .settings)
     }
 
     @Test func `skill workshop mutations require admin scope`() {
@@ -395,8 +395,8 @@ struct RootTabsPresentationTests {
         #expect(!routed.showsAgentBadge)
         #expect(!routed.ownsNavigationStack)
         #expect(routed.openSettings != nil)
-        #expect(ChatProTab.defaultHeaderTitle(showsAgentBadge: true, agentDisplayName: "OpenClaw") == "OpenClaw")
-        #expect(ChatProTab.defaultHeaderTitle(showsAgentBadge: false, agentDisplayName: "OpenClaw") == "Chat")
+        #expect(ChatProTab.defaultHeaderTitle(showsAgentBadge: true, agentDisplayName: "OpenCrustacean") == "OpenCrustacean")
+        #expect(ChatProTab.defaultHeaderTitle(showsAgentBadge: false, agentDisplayName: "OpenCrustacean") == "Chat")
     }
 
     @Test func `chat transport identity distinguishes unresolved and resolved agents`() {
@@ -544,19 +544,19 @@ struct RootTabsPresentationTests {
     @Test func `initial sidebar visibility parses launch argument`() {
         #expect(
             RootTabs.requestedInitialSidebarVisibility(arguments: [
-                "OpenClaw",
+                "OpenCrustacean",
                 "--openclaw-sidebar-visibility",
                 "hidden",
             ]) == false)
         #expect(
             RootTabs.requestedInitialSidebarVisibility(arguments: [
-                "OpenClaw",
+                "OpenCrustacean",
                 "--openclaw-sidebar-visibility",
                 "visible",
             ]) == true)
         #expect(
             RootTabs.requestedInitialSidebarVisibility(arguments: [
-                "OpenClaw",
+                "OpenCrustacean",
                 "--openclaw-sidebar-visibility",
                 "unknown",
             ]) == nil)

@@ -92,7 +92,7 @@ internal fun appLanguageRowSubtitle(
 ): String {
   val languageTag = language.languageTag
   if (languageTag != null) {
-    return nativeString("OpenClaw translations · \$languageTag", languageTag)
+    return nativeString("OpenCrustacean translations · \$languageTag", languageTag)
   }
   return nativeString("Follow Android · \$systemLanguageTag", systemLanguageTag)
 }

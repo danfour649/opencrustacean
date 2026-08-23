@@ -125,7 +125,7 @@ final class ScreenWebViewCoordinator: NSObject {
 
 // MARK: - Navigation Delegate
 
-/// Handles navigation policy to intercept OpenClaw deep links from canvas.
+/// Handles navigation policy to intercept OpenCrustacean deep links from canvas.
 @MainActor
 private final class ScreenNavigationDelegate: NSObject, WKNavigationDelegate {
     weak var controller: ScreenController?

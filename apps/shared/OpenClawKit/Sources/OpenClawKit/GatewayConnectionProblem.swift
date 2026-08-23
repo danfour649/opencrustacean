@@ -732,10 +732,10 @@ extension GatewayConnectionProblemMapper {
                 kind: .tlsCertificateUnavailable,
                 owner: .network,
                 title: "Gateway certificate unavailable",
-                message: "OpenClaw could not read the gateway certificate for \(failure.host).",
+                message: "OpenCrustacean could not read the gateway certificate for \(failure.host).",
                 actionLabel: "Retry",
                 messagePresentation: .localizedFormat(
-                    "OpenClaw could not read the gateway certificate for %@.",
+                    "OpenCrustacean could not read the gateway certificate for %@.",
                     [failure.host]),
                 actionCommand: nil,
                 docsURL: URL(string: "https://docs.openclaw.ai/gateway/troubleshooting"),
@@ -762,11 +762,11 @@ extension GatewayConnectionProblemMapper {
                 kind: .tlsCertificateUnavailable,
                 owner: .unknown,
                 title: "Gateway certificate unavailable",
-                message: "OpenClaw could not securely save the TLS certificate pin for \(failure.host).",
+                message: "OpenCrustacean could not securely save the TLS certificate pin for \(failure.host).",
                 actionLabel: "Retry",
                 titlePresentation: .localized("Gateway certificate unavailable"),
                 messagePresentation: .localizedFormat(
-                    "OpenClaw could not securely save the TLS certificate pin for %@.",
+                    "OpenCrustacean could not securely save the TLS certificate pin for %@.",
                     [failure.host]),
                 actionLabelPresentation: .localized("Retry"),
                 actionCommand: nil,
@@ -834,7 +834,7 @@ extension GatewayConnectionProblemMapper {
                     kind: .reachabilityFailed,
                     owner: .network,
                     title: "Gateway is not reachable",
-                    message: "OpenClaw could not reach the gateway over the current network.",
+                    message: "OpenCrustacean could not reach the gateway over the current network.",
                     actionLabel: "Check network",
                     actionCommand: nil,
                     docsURL: URL(string: "https://docs.openclaw.ai/gateway/troubleshooting"),
@@ -891,7 +891,7 @@ extension GatewayConnectionProblemMapper {
                 kind: .reachabilityFailed,
                 owner: .network,
                 title: "Gateway is not reachable",
-                message: "OpenClaw could not reach the gateway over the current network.",
+                message: "OpenCrustacean could not reach the gateway over the current network.",
                 actionLabel: "Check network",
                 actionCommand: nil,
                 docsURL: URL(string: "https://docs.openclaw.ai/gateway/troubleshooting"),
@@ -1005,7 +1005,7 @@ extension GatewayConnectionProblemMapper {
         {
             title = authError.titleOverride ?? "App update required"
             message = authError.userMessageOverride
-                ?? "This app is older than the gateway. Update OpenClaw on this device, then retry."
+                ?? "This app is older than the gateway. Update OpenCrustacean on this device, then retry."
             owner = .iphone
             actionLabel = authError.actionLabel ?? "Update app"
             actionCommand = authError.actionCommand
@@ -1015,16 +1015,16 @@ extension GatewayConnectionProblemMapper {
         {
             title = authError.titleOverride ?? "Gateway update required"
             message = authError.userMessageOverride
-                ?? "The gateway is older than this app. Update OpenClaw on the gateway host, then retry."
+                ?? "The gateway is older than this app. Update OpenCrustacean on the gateway host, then retry."
             owner = .gateway
             actionLabel = authError.actionLabel ?? "Copy update command"
             actionCommand = authError.actionCommand ?? "openclaw update"
         } else {
-            title = authError.titleOverride ?? "OpenClaw update required"
+            title = authError.titleOverride ?? "OpenCrustacean update required"
             message = authError.userMessageOverride
-                ?? "The app and gateway use incompatible protocol versions. Update OpenClaw on both, then retry."
+                ?? "The app and gateway use incompatible protocol versions. Update OpenCrustacean on both, then retry."
             owner = .both
-            actionLabel = authError.actionLabel ?? "Update OpenClaw"
+            actionLabel = authError.actionLabel ?? "Update OpenCrustacean"
             actionCommand = authError.actionCommand
         }
         return self.problem(

@@ -138,7 +138,7 @@ internal object AndroidScreenshotFixture {
           "question",
           buildJsonObject {
             put("id", JsonPrimitive("help"))
-            put("header", JsonPrimitive("OpenClaw"))
+            put("header", JsonPrimitive("OpenCrustacean"))
             put("question", JsonPrimitive("What should we look at first?"))
             put(
               "options",
@@ -402,7 +402,7 @@ internal object AndroidScreenshotFixture {
           add(
             buildJsonObject {
               put("name", JsonPrimitive("status"))
-              put("description", JsonPrimitive("Show current OpenClaw status"))
+              put("description", JsonPrimitive("Show current OpenCrustacean status"))
               put("acceptsArgs", JsonPrimitive(false))
             },
           )

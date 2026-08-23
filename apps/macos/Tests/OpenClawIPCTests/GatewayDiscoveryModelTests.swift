@@ -34,7 +34,7 @@ struct GatewayDiscoveryModelTests {
         #expect(GatewayDiscoveryModel.isLocalGateway(
             lanHost: nil,
             tailnetDns: nil,
-            displayName: "Peter's Mac Studio (OpenClaw)",
+            displayName: "Peter's Mac Studio (OpenCrustacean)",
             serviceName: nil,
             local: local))
     }
@@ -71,13 +71,13 @@ struct GatewayDiscoveryModelTests {
             lanHost: nil,
             tailnetDns: nil,
             displayName: nil,
-            serviceName: "steipetacstudio (OpenClaw)",
+            serviceName: "steipetacstudio (OpenCrustacean)",
             local: local))
         #expect(GatewayDiscoveryModel.isLocalGateway(
             lanHost: nil,
             tailnetDns: nil,
             displayName: nil,
-            serviceName: "steipete (OpenClaw)",
+            serviceName: "steipete (OpenCrustacean)",
             local: local))
     }
 

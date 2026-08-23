@@ -5,7 +5,7 @@ extension OnboardingView {
         VStack(spacing: 12) {
             Text("Bring your memories along")
                 .font(.largeTitle.weight(.semibold))
-            Text("OpenClaw can bring useful context from AI tools you already use into your new assistant.")
+            Text("OpenCrustacean can bring useful context from AI tools you already use into your new assistant.")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -181,7 +181,7 @@ extension OnboardingView {
                 Label("Your memories are ready", systemImage: "checkmark.circle.fill")
                     .font(.headline)
                     .foregroundStyle(.green)
-                Text("Imported \(imported) \(self.memoryLabel(imported)) into OpenClaw.")
+                Text("Imported \(imported) \(self.memoryLabel(imported)) into OpenCrustacean.")
                     .font(.body)
                 ForEach(results) { result in
                     HStack {

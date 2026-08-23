@@ -428,7 +428,7 @@ extension OpenClawClientDatabases {
     private static func openStateDatabase(at url: URL) throws -> DatabaseQueue {
         let queue = try DatabaseQueue(
             path: url.path,
-            configuration: self.configuration(label: "OpenClaw.client-state"))
+            configuration: self.configuration(label: "OpenCrustacean.client-state"))
         var migrator = DatabaseMigrator()
         migrator.registerMigration("client-state-v1") { db in
             try db.execute(sql: """
@@ -569,7 +569,7 @@ extension OpenClawClientDatabases {
         do {
             let queue = try DatabaseQueue(
                 path: url.path,
-                configuration: self.configuration(label: "OpenClaw.gateway-cache"))
+                configuration: self.configuration(label: "OpenCrustacean.gateway-cache"))
             try self.prepareCacheSchema(queue)
             return queue
         } catch {
@@ -578,7 +578,7 @@ extension OpenClawClientDatabases {
             self.removeDatabaseFiles(at: url)
             let queue = try DatabaseQueue(
                 path: url.path,
-                configuration: self.configuration(label: "OpenClaw.gateway-cache"))
+                configuration: self.configuration(label: "OpenCrustacean.gateway-cache"))
             try self.prepareCacheSchema(queue)
             return queue
         }
@@ -740,7 +740,7 @@ extension OpenClawClientDatabases {
 
     private static func readLegacySnapshot(at url: URL) throws -> LegacySnapshot? {
         var configuration = Configuration()
-        configuration.label = "OpenClaw.legacy-chat-import"
+        configuration.label = "OpenCrustacean.legacy-chat-import"
         configuration.readonly = true
         configuration.busyMode = .timeout(5)
         let queue = try DatabaseQueue(path: url.path, configuration: configuration)

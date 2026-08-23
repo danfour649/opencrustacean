@@ -36,11 +36,11 @@ struct CLIInstallerTests {
         let command = CLIInstaller.installScriptCommand(
             target: .exact("2026.7.3-beta.1"),
             prefix: "/Users/Test User/.openclaw",
-            scriptPath: "/Applications/OpenClaw.app/Contents/Resources/install-cli.sh")
+            scriptPath: "/Applications/OpenCrustacean.app/Contents/Resources/install-cli.sh")
 
         #expect(command == [
             "/bin/bash",
-            "/Applications/OpenClaw.app/Contents/Resources/install-cli.sh",
+            "/Applications/OpenCrustacean.app/Contents/Resources/install-cli.sh",
             "--json",
             "--no-onboard",
             "--prefix",
@@ -55,7 +55,7 @@ struct CLIInstallerTests {
         let command = CLIInstaller.installScriptCommand(
             target: .channel(.dev),
             prefix: "/Users/Test User/.openclaw",
-            scriptPath: "/Applications/OpenClaw.app/Contents/Resources/install-cli.sh")
+            scriptPath: "/Applications/OpenCrustacean.app/Contents/Resources/install-cli.sh")
 
         #expect(command.suffix(6) == [
             "--version",
@@ -187,11 +187,11 @@ struct CLIInstallerTests {
 
         #expect(CLIInstaller.classifyVersion(
             location: location,
-            output: "OpenClaw 2026.7.3\n",
+            output: "OpenCrustacean 2026.7.3\n",
             expectedVersion: "2026.7.3") == .ready(location: location, version: "2026.7.3"))
         #expect(CLIInstaller.classifyVersion(
             location: location,
-            output: "OpenClaw\n",
+            output: "OpenCrustacean\n",
             expectedVersion: "2026.7.3") == .unusable(location: location))
         #expect(CLIInstaller.classifyVersion(
             location: location,
@@ -236,7 +236,7 @@ struct CLIInstallerTests {
         defer { try? FileManager().removeItem(at: root) }
         try FileManager().createDirectory(at: root, withIntermediateDirectories: true)
         let executable = root.appendingPathComponent("openclaw")
-        try "#!/bin/sh\necho 'OpenClaw 2026.7.3'\n".write(
+        try "#!/bin/sh\necho 'OpenCrustacean 2026.7.3'\n".write(
             to: executable,
             atomically: true,
             encoding: .utf8)
@@ -254,7 +254,7 @@ struct CLIInstallerTests {
         try FileManager().createDirectory(at: root, withIntermediateDirectories: true)
         let executable = root.appendingPathComponent("openclaw")
         let node = root.appendingPathComponent("node")
-        try "#!/bin/sh\necho 'OpenClaw 2026.7.3'\n".write(
+        try "#!/bin/sh\necho 'OpenCrustacean 2026.7.3'\n".write(
             to: executable,
             atomically: true,
             encoding: .utf8)

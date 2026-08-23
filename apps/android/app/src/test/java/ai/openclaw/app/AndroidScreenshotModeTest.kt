@@ -69,7 +69,7 @@ class AndroidScreenshotModeTest {
   fun openClawSceneTargetsSystemAgentSettings() {
     val scene = AndroidScreenshotScene.fromRawValue("openclaw")
 
-    assertEquals(AndroidScreenshotScene.OpenClaw, scene)
+    assertEquals(AndroidScreenshotScene.OpenCrustacean, scene)
     assertEquals(HomeDestination.Settings, scene.homeDestination)
     assertEquals(SettingsRoute.SystemAgent, scene.settingsRoute)
   }

@@ -65,7 +65,7 @@ enum LaunchAgentManager {
           <string>ai.openclaw.mac</string>
           <key>ProgramArguments</key>
           <array>
-            <string>\(bundlePath)/Contents/MacOS/OpenClaw</string>
+            <string>\(bundlePath)/Contents/MacOS/OpenCrustacean</string>
           </array>
           <key>WorkingDirectory</key>
           <string>\(FileManager().homeDirectoryForCurrentUser.path)</string>

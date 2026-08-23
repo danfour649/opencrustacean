@@ -7,7 +7,7 @@ import androidx.core.content.IntentCompat
 import java.util.Locale
 
 /** Android Assistant entry point used by manifest-declared app actions. */
-const val actionAskOpenClaw = "ai.openclaw.app.action.ASK_OPENCLAW"
+const val actionAskOpenCrustacean = "ai.openclaw.app.action.ASK_OPENCLAW"
 
 /** Debug action that opens the Voice tab directly for Android E2E automation. */
 const val actionOpenVoiceE2e = "ai.openclaw.app.debug.OPEN_VOICE_E2E"
@@ -102,7 +102,7 @@ fun parseAssistantLaunchIntent(intent: Intent?): AssistantLaunchRequest? {
         autoSend = false,
       )
 
-    actionAskOpenClaw -> {
+    actionAskOpenCrustacean -> {
       val prompt = intent.getStringExtra(extraAssistantPrompt)?.trim()?.ifEmpty { null }
       AssistantLaunchRequest(
         source = "app_action",
@@ -161,7 +161,7 @@ private fun sharedAttachments(
       }.orEmpty()
 
   // Only provider-backed content URIs use the sender's temporary read grant. Rejecting file://
-  // prevents an external intent from turning OpenClaw into a reader for its own private files.
+  // prevents an external intent from turning OpenCrustacean into a reader for its own private files.
   val validUris =
     (streamUris + clipUris)
       .filter { uri -> uri.scheme.equals(ContentResolver.SCHEME_CONTENT, ignoreCase = true) }

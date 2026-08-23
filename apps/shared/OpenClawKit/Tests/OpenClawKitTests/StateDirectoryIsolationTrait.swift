@@ -27,7 +27,7 @@ private actor StateDirectoryTestGate {
 /// Serializes state-directory tests and pins `OPENCLAW_STATE_DIR` to a fresh
 /// per-test temp dir. Device identity/auth stores resolve that env var on every
 /// call; without the pin they fall back to the developer's real store
-/// (app group container or ~/Library/Application Support/OpenClaw), so real
+/// (app group container or ~/Library/Application Support/OpenCrustacean), so real
 /// device tokens leak into nil-token assertions on machines that ran the app.
 /// Tests needing a custom dir (for example an unwritable path) may still set
 /// the env var themselves and restore the previous value.

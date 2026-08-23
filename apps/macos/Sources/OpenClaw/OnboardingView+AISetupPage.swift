@@ -3,7 +3,7 @@ import SwiftUI
 extension OnboardingView {
     /// Structured AI setup: detect what's already on this machine, test the
     /// best option live, fall through automatically, offer an API-key form
-    /// when nothing works. OpenClaw becomes available only after inference
+    /// when nothing works. OpenCrustacean becomes available only after inference
     /// has completed a live round-trip.
     func aiSetupPage(contentHeight: CGFloat) -> some View {
         VStack(spacing: 12) {
@@ -36,7 +36,7 @@ extension OnboardingView {
         if aiSetup.connected {
             return "All good — your assistant has a working AI connection."
         }
-        return "OpenClaw needs an AI account to think. " +
+        return "OpenCrustacean needs an AI account to think. " +
             "It reuses what you already have — nothing new to sign up for if " +
             "Claude Code, Codex, or an API key is on this Mac."
     }

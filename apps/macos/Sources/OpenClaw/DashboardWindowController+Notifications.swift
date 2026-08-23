@@ -66,7 +66,7 @@ extension DashboardWindowController {
         case .sendTest:
             Task {
                 _ = await NotificationManager().send(
-                    title: "OpenClaw",
+                    title: "OpenCrustacean",
                     body: "Test notification",
                     sound: nil)
                 await self.publishNotificationsStatus()

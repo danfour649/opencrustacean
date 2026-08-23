@@ -4,26 +4,6 @@
  * creating a cycle with native-app-i18n's top-level CLI await, which chains
  * those generators after rewriting the inventory.
  */
-export const NATIVE_I18N_LOCALES = [
-  "zh-CN",
-  "zh-TW",
-  "pt-BR",
-  "de",
-  "es",
-  "ja-JP",
-  "ko",
-  "fr",
-  "hi",
-  "ar",
-  "it",
-  "tr",
-  "uk",
-  "id",
-  "pl",
-  "th",
-  "vi",
-  "nl",
-  "fa",
-  "ru",
-  "sv",
-] as const;
+// English-only fork: OpenCrustacean ships English strings only, so this list
+// is intentionally empty. See RENAME-CHECKLIST.md for the rationale.
+export const NATIVE_I18N_LOCALES = [] as const;

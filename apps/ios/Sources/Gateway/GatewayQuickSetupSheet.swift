@@ -272,9 +272,9 @@ private struct GatewayQuickSetupHeader: View {
 
     private var subtitle: LocalizedStringKey {
         if self.hasCandidate {
-            return "OpenClaw found a gateway on this network. Review it, then pair this iPhone as a secure node."
+            return "OpenCrustacean found a gateway on this network. Review it, then pair this iPhone as a secure node."
         }
-        return "OpenClaw is searching the local network and tailnet for a Gateway you can trust."
+        return "OpenCrustacean is searching the local network and tailnet for a Gateway you can trust."
     }
 }
 

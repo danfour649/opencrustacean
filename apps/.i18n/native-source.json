@@ -21,9 +21,9 @@
       "kind": "ui-call",
       "line": 95,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/AppLanguage.kt",
-      "source": "OpenClaw translations · $languageTag",
+      "source": "OpenCrustacean translations · $languageTag",
       "surface": "android",
-      "id": "native.android.c2a6e38ba0ac5d69"
+      "id": "native.android.05213d73897d60cd"
     },
     {
       "kind": "ui-call",
@@ -613,17 +613,25 @@
       "kind": "ui-call",
       "line": 135,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeForegroundService.kt",
-      "source": "OpenClaw Node · Talk",
+      "source": "OpenCrustacean Node · Talk",
       "surface": "android",
-      "id": "native.android.25ce6f89dd2fda90"
+      "id": "native.android.9b14c292938dc17d"
     },
     {
       "kind": "ui-call",
       "line": 136,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeForegroundService.kt",
-      "source": "OpenClaw Node · Connected",
+      "source": "OpenCrustacean Node · Connected",
       "surface": "android",
-      "id": "native.android.b48f7aeb7a884942"
+      "id": "native.android.f6a2966f85291d83"
+    },
+    {
+      "kind": "ui-call",
+      "line": 137,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeForegroundService.kt",
+      "source": "OpenClaw Node",
+      "surface": "android",
+      "id": "native.android.97365bea9725ae80"
     },
     {
       "kind": "ui-call",
@@ -637,9 +645,9 @@
       "kind": "ui-call",
       "line": 194,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeForegroundService.kt",
-      "source": "OpenClaw Node",
+      "source": "OpenCrustacean Node",
       "surface": "android",
-      "id": "native.android.97365bea9725ae80"
+      "id": "native.android.88c7133450ec1a60"
     },
     {
       "kind": "ui-call",
@@ -669,9 +677,9 @@
       "kind": "ui-call",
       "line": 233,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeForegroundService.kt",
-      "source": "OpenClaw node connection status",
+      "source": "OpenCrustacean node connection status",
       "surface": "android",
-      "id": "native.android.f4886ad80e8149cf"
+      "id": "native.android.6e48b5a022f311b9"
     },
     {
       "kind": "ui-call",
@@ -1517,9 +1525,9 @@
       "kind": "ui-call",
       "line": 8098,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeRuntime.kt",
-      "source": "OpenClaw is syncing back up",
+      "source": "OpenCrustacean is syncing back up",
       "surface": "android",
-      "id": "native.android.3b076d12026fd953"
+      "id": "native.android.c62b0a49f218a5d8"
     },
     {
       "kind": "ui-call",
@@ -1549,9 +1557,9 @@
       "kind": "ui-call",
       "line": 8112,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/NodeRuntime.kt",
-      "source": "Welcome to OpenClaw",
+      "source": "Welcome to OpenCrustacean",
       "surface": "android",
-      "id": "native.android.8e22550e0205b237"
+      "id": "native.android.9e8f08d23bddeabb"
     },
     {
       "kind": "ui-call",
@@ -1957,25 +1965,25 @@
       "kind": "ui-call",
       "line": 74,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/node/SystemHandler.kt",
-      "source": "OpenClaw Passive",
+      "source": "OpenCrustacean Passive",
       "surface": "android",
-      "id": "native.android.c9b3801fdf5499a9"
+      "id": "native.android.cc887e2362a07c07"
     },
     {
       "kind": "ui-call",
       "line": 79,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/node/SystemHandler.kt",
-      "source": "OpenClaw Time Sensitive",
+      "source": "OpenCrustacean Time Sensitive",
       "surface": "android",
-      "id": "native.android.e2a79a2c3ddba922"
+      "id": "native.android.973a3486912d86b8"
     },
     {
       "kind": "ui-call",
       "line": 82,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/node/SystemHandler.kt",
-      "source": "OpenClaw Active",
+      "source": "OpenCrustacean Active",
       "surface": "android",
-      "id": "native.android.a79d6ccab877c9ca"
+      "id": "native.android.0053913b1e4af0c2"
     },
     {
       "kind": "ui-call",
@@ -1995,7 +2003,7 @@
     },
     {
       "kind": "ui-call",
-      "line": 326,
+      "line": 322,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/systemagent/SystemAgentChatController.kt",
       "source": "OpenClaw request failed.",
       "surface": "android",
@@ -2003,11 +2011,19 @@
     },
     {
       "kind": "ui-call",
+      "line": 326,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/systemagent/SystemAgentChatController.kt",
+      "source": "OpenCrustacean request failed.",
+      "surface": "android",
+      "id": "native.android.b606bfb3ae4c40d1"
+    },
+    {
+      "kind": "ui-call",
       "line": 453,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/systemagent/SystemAgentChatController.kt",
-      "source": "The Gateway connection changed. Restart OpenClaw to reconnect.",
+      "source": "The Gateway connection changed. Restart OpenCrustacean to reconnect.",
       "surface": "android",
-      "id": "native.android.a71a93ec69cee4d9"
+      "id": "native.android.5892fbfec1910884"
     },
     {
       "kind": "conditional-branch",
@@ -2357,9 +2373,9 @@
       "kind": "ui-call",
       "line": 94,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/CommandPalette.kt",
-      "source": "Talk or dictate with OpenClaw",
+      "source": "Talk or dictate with OpenCrustacean",
       "surface": "android",
-      "id": "native.android.5ce94621017855b6"
+      "id": "native.android.d50e6c50478bc081"
     },
     {
       "kind": "ui-call",
@@ -2429,9 +2445,9 @@
       "kind": "ui-call",
       "line": 135,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/CommandPalette.kt",
-      "source": "Search OpenClaw",
+      "source": "Search OpenCrustacean",
       "surface": "android",
-      "id": "native.android.15721c9f1a4bbb89"
+      "id": "native.android.1db0469bb5246d36"
     },
     {
       "kind": "ui-call",
@@ -2493,9 +2509,9 @@
       "kind": "ui-call",
       "line": 177,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/CommandPalette.kt",
-      "source": "OpenClaw thread",
+      "source": "OpenCrustacean thread",
       "surface": "android",
-      "id": "native.android.9a839f6e3e05a744"
+      "id": "native.android.811eb4067782d308"
     },
     {
       "kind": "ui-call",
@@ -4421,9 +4437,9 @@
       "kind": "ui-call",
       "line": 275,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "That QR code is not an OpenClaw setup QR. Generate a fresh code with openclaw qr, then try again.",
+      "source": "That QR code is not an OpenCrustacean setup QR. Generate a fresh code with openclaw qr, then try again.",
       "surface": "android",
-      "id": "native.android.3c50060d3efc154d"
+      "id": "native.android.b17330abc75716a0"
     },
     {
       "kind": "ui-call",
@@ -4517,25 +4533,25 @@
       "kind": "ui-call",
       "line": 1087,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Welcome to OpenClaw",
+      "source": "Welcome to OpenCrustacean",
       "surface": "android",
-      "id": "native.android.c495432e17643430"
+      "id": "native.android.d50a284d2412b2a6"
     },
     {
       "kind": "ui-call",
       "line": 1088,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Turn this device into a secure OpenClaw node for chat, voice, camera, and device tools.",
+      "source": "Turn this device into a secure OpenCrustacean node for chat, voice, camera, and device tools.",
       "surface": "android",
-      "id": "native.android.50ff8eac48445327"
+      "id": "native.android.c0aacafd262db294"
     },
     {
       "kind": "ui-call",
       "line": 1120,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "OpenClaw logo",
+      "source": "OpenCrustacean logo",
       "surface": "android",
-      "id": "native.android.6fb50213c46094c8"
+      "id": "native.android.3b575fce1a43d9d7"
     },
     {
       "kind": "ui-call",
@@ -4557,9 +4573,9 @@
       "kind": "ui-call",
       "line": 1181,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Use OpenClaw from your phone",
+      "source": "Use OpenCrustacean from your phone",
       "surface": "android",
-      "id": "native.android.625b7a24614f4f21"
+      "id": "native.android.03d2ecf39cb5447d"
     },
     {
       "kind": "ui-call",
@@ -4573,9 +4589,9 @@
       "kind": "ui-call",
       "line": 1205,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "The connected OpenClaw agent can use device capabilities you enable. Continue only if you trust the Gateway and agent you connect to.",
+      "source": "The connected OpenCrustacean agent can use device capabilities you enable. Continue only if you trust the Gateway and agent you connect to.",
       "surface": "android",
-      "id": "native.android.782acb3787860c7e"
+      "id": "native.android.7f9ba5a61ddd9625"
     },
     {
       "kind": "ui-call",
@@ -4589,9 +4605,9 @@
       "kind": "ui-call",
       "line": 1251,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Scan a QR code or use the setup code from your OpenClaw Gateway.",
+      "source": "Scan a QR code or use the setup code from your OpenCrustacean Gateway.",
       "surface": "android",
-      "id": "native.android.e32df9497b746ecf"
+      "id": "native.android.acbbacfa0f36495f"
     },
     {
       "kind": "ui-call",
@@ -4637,9 +4653,9 @@
       "kind": "ui-call",
       "line": 1303,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Have a terminal open on the device running OpenClaw.",
+      "source": "Have a terminal open on the device running OpenCrustacean.",
       "surface": "android",
-      "id": "native.android.931a71e7a37bfe8c"
+      "id": "native.android.e911363ec86ec285"
     },
     {
       "kind": "ui-call",
@@ -5029,9 +5045,9 @@
       "kind": "ui-call",
       "line": 2228,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Gateway pairing is complete. Approve this phone as a node so OpenClaw can use the device capabilities you enable.",
+      "source": "Gateway pairing is complete. Approve this phone as a node so OpenCrustacean can use the device capabilities you enable.",
       "surface": "android",
-      "id": "native.android.19d18f23beaf40a1"
+      "id": "native.android.6ba189f7ee83d511"
     },
     {
       "kind": "ui-call",
@@ -5101,9 +5117,9 @@
       "kind": "ui-call",
       "line": 2460,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Only enable access you are comfortable letting OpenClaw use while this phone is connected. You can change these later in Android Settings.",
+      "source": "Only enable access you are comfortable letting OpenCrustacean use while this phone is connected. You can change these later in Android Settings.",
       "surface": "android",
-      "id": "native.android.f7f307a8c7f3e8b6"
+      "id": "native.android.a2264fb9307f32e5"
     },
     {
       "kind": "ui-call",
@@ -5173,9 +5189,9 @@
       "kind": "ui-call",
       "line": 2624,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Approval is in progress.\nOpenClaw will reconnect automatically.",
+      "source": "Approval is in progress.\nOpenCrustacean will reconnect automatically.",
       "surface": "android",
-      "id": "native.android.176b4f5d1c9f8ce2"
+      "id": "native.android.85a8fdb79f3e085d"
     },
     {
       "kind": "ui-call",
@@ -5189,9 +5205,9 @@
       "kind": "ui-call",
       "line": 2628,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "OpenClaw is checking gateway and node access.",
+      "source": "OpenCrustacean is checking gateway and node access.",
       "surface": "android",
-      "id": "native.android.7b95b9e103bbbb92"
+      "id": "native.android.96d5880497e1d2f0"
     },
     {
       "kind": "ui-call",
@@ -5347,6 +5363,14 @@
     },
     {
       "kind": "ui-call",
+      "line": 2861,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
+      "source": "Gateway approval is in progress. OpenClaw will retry automatically.",
+      "surface": "android",
+      "id": "native.android.bdd063b9f766050b"
+    },
+    {
+      "kind": "ui-call",
       "line": 2865,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
       "source": "Gateway paired. Checking node capability approval.",
@@ -5365,9 +5389,9 @@
       "kind": "ui-call",
       "line": 2869,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Gateway approval is in progress. OpenClaw will retry automatically.",
+      "source": "Gateway approval is in progress. OpenCrustacean will retry automatically.",
       "surface": "android",
-      "id": "native.android.bdd063b9f766050b"
+      "id": "native.android.948f62b72cb2c49c"
     },
     {
       "kind": "ui-call",
@@ -5453,25 +5477,25 @@
       "kind": "ui-call",
       "line": 2903,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "This app is older than the Gateway. Update OpenClaw on this device, then retry.",
+      "source": "This app is older than the Gateway. Update OpenCrustacean on this device, then retry.",
       "surface": "android",
-      "id": "native.android.c94c164d474cb0db"
+      "id": "native.android.1802d168963cdf25"
     },
     {
       "kind": "ui-call",
       "line": 2905,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "The Gateway is older than this app. Update OpenClaw on the Gateway host, then retry.",
+      "source": "The Gateway is older than this app. Update OpenCrustacean on the Gateway host, then retry.",
       "surface": "android",
-      "id": "native.android.48ba24436b643607"
+      "id": "native.android.f1bed29fdfd5d722"
     },
     {
       "kind": "ui-call",
       "line": 2906,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "The app and Gateway use incompatible protocol versions. Update OpenClaw on both, then retry.",
+      "source": "The app and Gateway use incompatible protocol versions. Update OpenCrustacean on both, then retry.",
       "surface": "android",
-      "id": "native.android.1473077d05ac1739"
+      "id": "native.android.824a3329c4c673c0"
     },
     {
       "kind": "ui-call",
@@ -5677,9 +5701,9 @@
       "kind": "ui-call",
       "line": 3282,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/OnboardingFlow.kt",
-      "source": "Show OpenClaw alerts",
+      "source": "Show OpenCrustacean alerts",
       "surface": "android",
-      "id": "native.android.d096df67bff5e611"
+      "id": "native.android.85f31c82595a89b5"
     },
     {
       "kind": "ui-call",
@@ -6173,9 +6197,9 @@
       "kind": "ui-call",
       "line": 345,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SessionsScreen.kt",
-      "source": "OpenClaw thread",
+      "source": "OpenCrustacean thread",
       "surface": "android",
-      "id": "native.android.fc145645b9620e57"
+      "id": "native.android.7106adf15802daa6"
     },
     {
       "kind": "ui-call",
@@ -6277,9 +6301,9 @@
       "kind": "ui-call",
       "line": 650,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SessionsScreen.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.e0af5898db3ba68c"
+      "id": "native.android.bb5fd4aad66d9929"
     },
     {
       "kind": "ui-call",
@@ -6581,9 +6605,9 @@
       "kind": "ui-call",
       "line": 322,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Scheduled OpenClaw work from your gateway.",
+      "source": "Scheduled OpenCrustacean work from your gateway.",
       "surface": "android",
-      "id": "native.android.77e5306c191a88ef"
+      "id": "native.android.428ac2f27adf9e14"
     },
     {
       "kind": "ui-call",
@@ -6837,9 +6861,9 @@
       "kind": "ui-call",
       "line": 657,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "How this phone appears to OpenClaw.",
+      "source": "How this phone appears to OpenCrustacean.",
       "surface": "android",
-      "id": "native.android.5320efca61eb6e96"
+      "id": "native.android.d5d227d4e4ea5e45"
     },
     {
       "kind": "ui-call",
@@ -6901,9 +6925,9 @@
       "kind": "ui-call",
       "line": 730,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Runs on-device while OpenClaw is visible.",
+      "source": "Runs on-device while OpenCrustacean is visible.",
       "surface": "android",
-      "id": "native.android.6e58157abced395f"
+      "id": "native.android.a2c8f2f3a7e57d2f"
     },
     {
       "kind": "ui-call",
@@ -7029,9 +7053,9 @@
       "kind": "ui-call",
       "line": 812,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Check that OpenClaw can speak clearly on this phone.",
+      "source": "Check that OpenCrustacean can speak clearly on this phone.",
       "surface": "android",
-      "id": "native.android.9504fb427982df0b"
+      "id": "native.android.ffa5b2b7090a5374"
     },
     {
       "kind": "ui-call",
@@ -7205,9 +7229,9 @@
       "kind": "ui-call",
       "line": 1096,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Choose what reaches OpenClaw.",
+      "source": "Choose what reaches OpenCrustacean.",
       "surface": "android",
-      "id": "native.android.14d8154e983fc4e2"
+      "id": "native.android.2c0af38a509f5088"
     },
     {
       "kind": "ui-call",
@@ -7237,9 +7261,9 @@
       "kind": "ui-call",
       "line": 1100,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw can receive selected alerts.",
+      "source": "OpenCrustacean can receive selected alerts.",
       "surface": "android",
-      "id": "native.android.4c38dd46b7c40131"
+      "id": "native.android.dd61ac29b68db1e5"
     },
     {
       "kind": "ui-call",
@@ -7493,9 +7517,9 @@
       "kind": "ui-call",
       "line": 1487,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw can list launcher-visible apps.",
+      "source": "OpenCrustacean can list launcher-visible apps.",
       "surface": "android",
-      "id": "native.android.fb212783fa45411a"
+      "id": "native.android.2e88bdd7420fafbc"
     },
     {
       "kind": "ui-call",
@@ -7541,9 +7565,9 @@
       "kind": "ui-call",
       "line": 1509,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Always allows requested location checks while OpenClaw is in the background; Android shows this in the persistent node notification.",
+      "source": "Always allows requested location checks while OpenCrustacean is in the background; Android shows this in the persistent node notification.",
       "surface": "android",
-      "id": "native.android.251b363c1274cf86"
+      "id": "native.android.8d09b475393c9d17"
     },
     {
       "kind": "ui-call",
@@ -7581,17 +7605,17 @@
       "kind": "ui-call",
       "line": 1584,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw collects and sends the names, package IDs, and status of apps visible on this phone when your paired OpenClaw Gateway asks for them. This lets your assistant answer questions and take actions using installed apps.",
+      "source": "OpenCrustacean collects and sends the names, package IDs, and status of apps visible on this phone when your paired OpenCrustacean Gateway asks for them. This lets your assistant answer questions and take actions using installed apps.",
       "surface": "android",
-      "id": "native.android.c3a001bb0191892d"
+      "id": "native.android.a1f036083b9a769c"
     },
     {
       "kind": "ui-call",
       "line": 1587,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Your phone sends this information to your Gateway, not to a server run by OpenClaw. Your Gateway may include it in requests to the AI provider you chose.",
+      "source": "Your phone sends this information to your Gateway, not to a server run by OpenCrustacean. Your Gateway may include it in requests to the AI provider you chose.",
       "surface": "android",
-      "id": "native.android.b05f8909de072d71"
+      "id": "native.android.5895d5184f365fee"
     },
     {
       "kind": "ui-call",
@@ -7661,9 +7685,9 @@
       "kind": "ui-call",
       "line": 1742,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "Connection between this phone and OpenClaw.",
+      "source": "Connection between this phone and OpenCrustacean.",
       "surface": "android",
-      "id": "native.android.43915f59da302c47"
+      "id": "native.android.ea42a8935a2d6903"
     },
     {
       "kind": "ui-call",
@@ -8173,9 +8197,9 @@
       "kind": "ui-call",
       "line": 2142,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw for Android.",
+      "source": "OpenCrustacean for Android.",
       "surface": "android",
-      "id": "native.android.0221754fa3e5df6d"
+      "id": "native.android.9c5d5ed1f562aefc"
     },
     {
       "kind": "ui-call",
@@ -8245,25 +8269,25 @@
       "kind": "ui-call",
       "line": 2176,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
+      "source": "© 2026 OpenCrustacean Foundation — MIT License.",
       "surface": "android",
-      "id": "native.android.3fdffcb285e875e8"
+      "id": "native.android.4b36da2efd18723c"
     },
     {
       "kind": "ui-call",
       "line": 2193,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw logo",
+      "source": "OpenCrustacean logo",
       "surface": "android",
-      "id": "native.android.2a94b5f795f3956d"
+      "id": "native.android.b6d96fdc12b67ee8"
     },
     {
       "kind": "ui-call",
       "line": 2195,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.fef1c35e1ac5e5e1"
+      "id": "native.android.35e9bb40cfb98ae6"
     },
     {
       "kind": "ui-call",
@@ -8285,9 +8309,9 @@
       "kind": "ui-call",
       "line": 2256,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw appreciates its partners in the open-source community.",
+      "source": "OpenCrustacean appreciates its partners in the open-source community.",
       "surface": "android",
-      "id": "native.android.d28f97e1a67d60ea"
+      "id": "native.android.9ae7995709daef92"
     },
     {
       "kind": "ui-call",
@@ -8365,9 +8389,9 @@
       "kind": "ui-call",
       "line": 2343,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
-      "source": "OpenClaw turns this phone into a clean mobile command surface for threads, voice, providers, and Gateway.",
+      "source": "OpenCrustacean turns this phone into a clean mobile command surface for threads, voice, providers, and Gateway.",
       "surface": "android",
-      "id": "native.android.c971506716c96e91"
+      "id": "native.android.f5c098021ce7c7bb"
     },
     {
       "kind": "ui-call",
@@ -9125,9 +9149,9 @@
       "kind": "ui-call",
       "line": 615,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
-      "source": "Start a chat and your active OpenClaw conversations will appear here.",
+      "source": "Start a chat and your active OpenCrustacean conversations will appear here.",
       "surface": "android",
-      "id": "native.android.08188983fb7afdce"
+      "id": "native.android.0412f6af9423e859"
     },
     {
       "kind": "ui-call",
@@ -9459,6 +9483,14 @@
     },
     {
       "kind": "ui-call",
+      "line": 1295,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
+      "source": "OpenClaw",
+      "surface": "android",
+      "id": "native.android.e1a7cc2e4f02a109"
+    },
+    {
+      "kind": "ui-call",
       "line": 1327,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
       "source": "Connect before chat, voice, and live status.",
@@ -9565,9 +9597,9 @@
       "kind": "ui-call",
       "line": 1674,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.e1a7cc2e4f02a109"
+      "id": "native.android.d874fb264ea6642f"
     },
     {
       "kind": "ui-call",
@@ -9821,9 +9853,9 @@
       "kind": "ui-call",
       "line": 1768,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
-      "source": "OpenClaw ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+      "source": "OpenCrustacean ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
       "surface": "android",
-      "id": "native.android.4e0a2f3a8cdc9440"
+      "id": "native.android.b0130582c4147aee"
     },
     {
       "kind": "ui-call",
@@ -10125,9 +10157,9 @@
       "kind": "ui-call",
       "line": 2028,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/ShellScreen.kt",
-      "source": "OpenClaw mobile",
+      "source": "OpenCrustacean mobile",
       "surface": "android",
-      "id": "native.android.4c701ce37c2c3107"
+      "id": "native.android.7794a9582e2e18e4"
     },
     {
       "kind": "ui-call",
@@ -11117,9 +11149,9 @@
       "kind": "ui-call",
       "line": 86,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.4b2c29c94377f235"
+      "id": "native.android.04b52a49395fc29f"
     },
     {
       "kind": "ui-call",
@@ -11157,9 +11189,9 @@
       "kind": "ui-call",
       "line": 128,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "Connect this phone to a Gateway before opening OpenClaw.",
+      "source": "Connect this phone to a Gateway before opening OpenCrustacean.",
       "surface": "android",
-      "id": "native.android.06e5bfbad4b42e3b"
+      "id": "native.android.8ab2b5edf1ab2f1f"
     },
     {
       "kind": "ui-call",
@@ -11173,25 +11205,25 @@
       "kind": "ui-call",
       "line": 130,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "Checking whether this Gateway supports the OpenClaw settings assistant.",
+      "source": "Checking whether this Gateway supports the OpenCrustacean settings assistant.",
       "surface": "android",
-      "id": "native.android.6089cc78ebd95573"
+      "id": "native.android.fa0ef7cb7911978b"
     },
     {
       "kind": "ui-call",
       "line": 131,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "Update this Gateway to use the OpenClaw settings assistant.",
+      "source": "Update this Gateway to use the OpenCrustacean settings assistant.",
       "surface": "android",
-      "id": "native.android.3c3a35369bc2f1f9"
+      "id": "native.android.d73b6f98731c01a3"
     },
     {
       "kind": "ui-call",
       "line": 184,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "OpenClaw is working…",
+      "source": "OpenCrustacean is working…",
       "surface": "android",
-      "id": "native.android.41b7b9cd883e3e81"
+      "id": "native.android.7afe9445dfb27d03"
     },
     {
       "kind": "ui-call",
@@ -11205,9 +11237,9 @@
       "kind": "ui-call",
       "line": 204,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "OpenClaw is ready to continue in your ordinary chat.",
+      "source": "OpenCrustacean is ready to continue in your ordinary chat.",
       "surface": "android",
-      "id": "native.android.25fcaa5f2ef2546e"
+      "id": "native.android.414cd73c5a407def"
     },
     {
       "kind": "ui-call",
@@ -11253,9 +11285,9 @@
       "kind": "ui-call",
       "line": 301,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/SystemAgentSettingsScreen.kt",
-      "source": "Reply to OpenClaw…",
+      "source": "Reply to OpenCrustacean…",
       "surface": "android",
-      "id": "native.android.4753194a1f8c6c6b"
+      "id": "native.android.9293afe41c692ac1"
     },
     {
       "kind": "ui-call",
@@ -11381,9 +11413,9 @@
       "kind": "ui-call",
       "line": 499,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw speaking",
+      "source": "OpenCrustacean speaking",
       "surface": "android",
-      "id": "native.android.9d977253fdcda216"
+      "id": "native.android.feb86121b783e803"
     },
     {
       "kind": "ui-call",
@@ -11475,6 +11507,14 @@
     },
     {
       "kind": "ui-call",
+      "line": 672,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
+      "source": "OpenClaw",
+      "surface": "android",
+      "id": "native.android.41ee56880eb211cb"
+    },
+    {
+      "kind": "ui-call",
       "line": 677,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
       "source": "Search voice",
@@ -11509,9 +11549,9 @@
       "kind": "ui-call",
       "line": 741,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw is replying",
+      "source": "OpenCrustacean is replying",
       "surface": "android",
-      "id": "native.android.2e2b5efe4ca2380a"
+      "id": "native.android.cda2ff29a7da6de8"
     },
     {
       "kind": "ui-call",
@@ -11669,9 +11709,9 @@
       "kind": "ui-call",
       "line": 1085,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.41ee56880eb211cb"
+      "id": "native.android.ca9d8baac347fc14"
     },
     {
       "kind": "ui-call",
@@ -11701,9 +11741,9 @@
       "kind": "ui-call",
       "line": 1110,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw is preparing a response.",
+      "source": "OpenCrustacean is preparing a response.",
       "surface": "android",
-      "id": "native.android.5bc7ecbc5f2a49cf"
+      "id": "native.android.728eb5da8c058171"
     },
     {
       "kind": "ui-call",
@@ -11725,9 +11765,9 @@
       "kind": "ui-call",
       "line": 1128,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw only listens when you start Talk or Dictation.",
+      "source": "OpenCrustacean only listens when you start Talk or Dictation.",
       "surface": "android",
-      "id": "native.android.14d924bca8ecc830"
+      "id": "native.android.1c94fc10d818ac23"
     },
     {
       "kind": "ui-call",
@@ -11741,9 +11781,9 @@
       "kind": "ui-call",
       "line": 1200,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
-      "source": "OpenClaw is speaking",
+      "source": "OpenCrustacean is speaking",
       "surface": "android",
-      "id": "native.android.c8bff891c9a442d9"
+      "id": "native.android.e1e49495ca3a4dee"
     },
     {
       "kind": "ui-call",
@@ -12613,9 +12653,9 @@
       "kind": "ui-named-argument",
       "line": 585,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatMessageViews.kt",
-      "source": "OpenClaw · Live",
+      "source": "OpenCrustacean · Live",
       "surface": "android",
-      "id": "native.android.60c9a2b33fed8aac"
+      "id": "native.android.9e6f399422ce2bc7"
     },
     {
       "kind": "ui-call",
@@ -12637,9 +12677,9 @@
       "kind": "ui-call",
       "line": 623,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatMessageViews.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.31e961bd32783c5d"
+      "id": "native.android.26a38d6381e6fa71"
     },
     {
       "kind": "ui-call",
@@ -12800,6 +12840,14 @@
       "source": "All",
       "surface": "android",
       "id": "native.android.b73c79389a8cff07"
+    },
+    {
+      "kind": "ui-call",
+      "line": 1110,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
+      "source": "OpenClaw",
+      "surface": "android",
+      "id": "native.android.ee660a4842207fb6"
     },
     {
       "kind": "ui-call",
@@ -12965,9 +13013,9 @@
       "kind": "ui-call",
       "line": 1628,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "Catch me up on my recent OpenClaw threads and suggest next steps.",
+      "source": "Catch me up on my recent OpenCrustacean threads and suggest next steps.",
       "surface": "android",
-      "id": "native.android.ebe49a8b8df80bd3"
+      "id": "native.android.2082c3bb84150e8f"
     },
     {
       "kind": "ui-call",
@@ -13005,9 +13053,9 @@
       "kind": "ui-call",
       "line": 1639,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "Ask OpenClaw to use Android capabilities.",
+      "source": "Ask OpenCrustacean to use Android capabilities.",
       "surface": "android",
-      "id": "native.android.1656b8b922a5e3f2"
+      "id": "native.android.91fdddbed79d62ec"
     },
     {
       "kind": "ui-call",
@@ -13021,9 +13069,9 @@
       "kind": "ui-call",
       "line": 1724,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "OpenClaw · Live",
+      "source": "OpenCrustacean · Live",
       "surface": "android",
-      "id": "native.android.67075c8d2ccc0bb5"
+      "id": "native.android.9af1974bafb80f40"
     },
     {
       "kind": "ui-call",
@@ -13045,9 +13093,9 @@
       "kind": "ui-call",
       "line": 1727,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.ee660a4842207fb6"
+      "id": "native.android.598f9d617a72052a"
     },
     {
       "kind": "ui-call",
@@ -13109,9 +13157,9 @@
       "kind": "ui-call",
       "line": 1900,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "OpenClaw is working",
+      "source": "OpenCrustacean is working",
       "surface": "android",
-      "id": "native.android.a7049c6ca1631d53"
+      "id": "native.android.b07df0fc2db7d569"
     },
     {
       "kind": "ui-call",
@@ -13293,9 +13341,9 @@
       "kind": "ui-call",
       "line": 2686,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
-      "source": "Message OpenClaw",
+      "source": "Message OpenCrustacean",
       "surface": "android",
-      "id": "native.android.377738368b2028c0"
+      "id": "native.android.e85240e964684382"
     },
     {
       "kind": "ui-call",
@@ -13779,6 +13827,14 @@
     },
     {
       "kind": "ui-named-argument",
+      "line": 587,
+      "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
+      "source": "OpenClaw",
+      "surface": "android",
+      "id": "native.android.ff13ffcb0f13c2d0"
+    },
+    {
+      "kind": "ui-named-argument",
       "line": 588,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
       "source": "Local command center",
@@ -13805,9 +13861,9 @@
       "kind": "ui-named-argument",
       "line": 601,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "android",
-      "id": "native.android.ff13ffcb0f13c2d0"
+      "id": "native.android.9675c5f7908038c4"
     },
     {
       "kind": "ui-named-argument",
@@ -13861,17 +13917,17 @@
       "kind": "ui-named-argument",
       "line": 623,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
-      "source": "OpenClaw gateway",
+      "source": "OpenCrustacean gateway",
       "surface": "android",
-      "id": "native.android.d704e1644ae338b0"
+      "id": "native.android.9ef02099e55bb70e"
     },
     {
       "kind": "ui-named-argument",
       "line": 628,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
-      "source": "Ask OpenClaw anything",
+      "source": "Ask OpenCrustacean anything",
       "surface": "android",
-      "id": "native.android.8432ceda35222fe7"
+      "id": "native.android.90f665898d0bf03e"
     },
     {
       "kind": "ui-named-argument",
@@ -13925,9 +13981,9 @@
       "kind": "ui-named-argument",
       "line": 643,
       "path": "apps/android/app/src/main/java/ai/openclaw/app/ui/design/ClawComponents.kt",
-      "source": "OpenClaw will surface approvals, failed jobs, and channel issues here.",
+      "source": "OpenCrustacean will surface approvals, failed jobs, and channel issues here.",
       "surface": "android",
-      "id": "native.android.db422f5953772c69"
+      "id": "native.android.c3368cd1c6d5d9a0"
     },
     {
       "kind": "ui-call",
@@ -14381,25 +14437,25 @@
       "kind": "resource-item",
       "line": 3,
       "path": "apps/android/app/src/main/res/values/assistant.xml",
-      "source": "ask OpenClaw $prompt",
+      "source": "ask OpenCrustacean $prompt",
       "surface": "android",
-      "id": "native.android.1c8204beac579400"
+      "id": "native.android.c5587aa7856fa5c7"
     },
     {
       "kind": "resource-item",
       "line": 4,
       "path": "apps/android/app/src/main/res/values/assistant.xml",
-      "source": "tell OpenClaw to $prompt",
+      "source": "tell OpenCrustacean to $prompt",
       "surface": "android",
-      "id": "native.android.5e6a4cdb1a3396b4"
+      "id": "native.android.549c4744a978708a"
     },
     {
       "kind": "resource-item",
       "line": 5,
       "path": "apps/android/app/src/main/res/values/assistant.xml",
-      "source": "open OpenClaw and ask $prompt",
+      "source": "open OpenCrustacean and ask $prompt",
       "surface": "android",
-      "id": "native.android.955cf25f83e27ddf"
+      "id": "native.android.0c1ce9c4b77cc2cb"
     },
     {
       "kind": "resource-string",
@@ -15589,9 +15645,9 @@
       "kind": "ui-call",
       "line": 55,
       "path": "apps/ios/ActivityWidget/OpenClawLiveActivity.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.767a39dadf2f332a"
+      "id": "native.apple.121bc3710a38d8a6"
     },
     {
       "kind": "ui-call",
@@ -19189,9 +19245,9 @@
       "kind": "ui-call",
       "line": 205,
       "path": "apps/ios/Sources/Design/ChatProTab.swift",
-      "source": "OpenClaw could not prepare the Markdown file.",
+      "source": "OpenCrustacean could not prepare the Markdown file.",
       "surface": "apple",
-      "id": "native.apple.a80ae10704a44df1"
+      "id": "native.apple.34aa4a4e8a9f8b36"
     },
     {
       "kind": "ui-localized-call",
@@ -19381,17 +19437,17 @@
       "kind": "ui-localized-call",
       "line": 929,
       "path": "apps/ios/Sources/Design/ChatProTab.swift",
-      "source": "Check OpenClaw status",
+      "source": "Check OpenCrustacean status",
       "surface": "apple",
-      "id": "native.apple.e1501481753605ff"
+      "id": "native.apple.5d7501248f3d93fc"
     },
     {
       "kind": "ui-localized-call",
       "line": 930,
       "path": "apps/ios/Sources/Design/ChatProTab.swift",
-      "source": "Summarize the current OpenClaw status and tell me what needs attention.",
+      "source": "Summarize the current OpenCrustacean status and tell me what needs attention.",
       "surface": "apple",
-      "id": "native.apple.dbac5d9eaf51f8e5"
+      "id": "native.apple.eb817e2b2ef55ffd"
     },
     {
       "kind": "ui-localized-call",
@@ -21165,9 +21221,9 @@
       "kind": "ui-named-argument",
       "line": 96,
       "path": "apps/ios/Sources/Design/OpenClawDocsScreen.swift",
-      "source": "Browse the current OpenClaw reference.",
+      "source": "Browse the current OpenCrustacean reference.",
       "surface": "apple",
-      "id": "native.apple.8e6797ab3b17ba28"
+      "id": "native.apple.4212560d6881d855"
     },
     {
       "kind": "ui-named-argument",
@@ -21213,9 +21269,9 @@
       "kind": "ui-modifier",
       "line": 647,
       "path": "apps/ios/Sources/Design/OpenClawProComponents.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.8ccc4a8d1a4a904b"
+      "id": "native.apple.ead98cbb69a9ff49"
     },
     {
       "kind": "ui-localized-call",
@@ -21701,9 +21757,9 @@
       "kind": "ui-call",
       "line": 404,
       "path": "apps/ios/Sources/Design/SettingsProTab.swift",
-      "source": "Enable OpenClaw Hosted Push Relay?",
+      "source": "Enable OpenCrustacean Hosted Push Relay?",
       "surface": "apple",
-      "id": "native.apple.b71aa3216235c1dd"
+      "id": "native.apple.794f01d1bf4ef8c7"
     },
     {
       "kind": "ui-call",
@@ -21989,9 +22045,9 @@
       "kind": "ui-localized-call",
       "line": 935,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.2d878afa870cd7cc"
+      "id": "native.apple.ff7c7cce86cd3ca8"
     },
     {
       "kind": "ui-localized-call",
@@ -22085,17 +22141,17 @@
       "kind": "ui-localized-call",
       "line": 958,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "Setup sent. Open OpenClaw on the watch to connect.",
+      "source": "Setup sent. Open OpenCrustacean on the watch to connect.",
       "surface": "apple",
-      "id": "native.apple.97b4f45efb35431f"
+      "id": "native.apple.a754a78381a6a395"
     },
     {
       "kind": "ui-localized-call",
       "line": 960,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "Setup queued for the watch. Open OpenClaw before the code expires.",
+      "source": "Setup queued for the watch. Open OpenCrustacean before the code expires.",
       "surface": "apple",
-      "id": "native.apple.28b25a11c0c8692a"
+      "id": "native.apple.17f22b70935e35dd"
     },
     {
       "kind": "ui-localized-call",
@@ -22109,9 +22165,9 @@
       "kind": "ui-localized-call",
       "line": 1057,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "Pairing required. Run /pair approve in your OpenClaw chat, then connect again.",
+      "source": "Pairing required. Run /pair approve in your OpenCrustacean chat, then connect again.",
       "surface": "apple",
-      "id": "native.apple.07668650c75a20f1"
+      "id": "native.apple.61b4149057070bc0"
     },
     {
       "kind": "ui-localized-call",
@@ -22237,9 +22293,9 @@
       "kind": "ui-localized-call",
       "line": 1223,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "Foreground approvals still appear while OpenClaw is connected.",
+      "source": "Foreground approvals still appear while OpenCrustacean is connected.",
       "surface": "apple",
-      "id": "native.apple.3d805ac21285b092"
+      "id": "native.apple.8f0a40a6d15a01b0"
     },
     {
       "kind": "ui-localized-call",
@@ -22461,25 +22517,25 @@
       "kind": "ui-localized-call",
       "line": 1401,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "This build uses OpenClaw's hosted push relay at %@ for notification delivery data.",
+      "source": "This build uses OpenCrustacean's hosted push relay at %@ for notification delivery data.",
       "surface": "apple",
-      "id": "native.apple.817057c658a751c7"
+      "id": "native.apple.30840664441e7557"
     },
     {
       "kind": "ui-localized-call",
       "line": 1405,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "This build is not configured to use OpenClaw's hosted push relay.",
+      "source": "This build is not configured to use OpenCrustacean's hosted push relay.",
       "surface": "apple",
-      "id": "native.apple.d70d23305da2016a"
+      "id": "native.apple.4523e5d7a4361d61"
     },
     {
       "kind": "ui-localized-call",
       "line": 1410,
       "path": "apps/ios/Sources/Design/SettingsProTabActions.swift",
-      "source": "Enabling this sends delivery data through OpenClaw's hosted push relay.",
+      "source": "Enabling this sends delivery data through OpenCrustacean's hosted push relay.",
       "surface": "apple",
-      "id": "native.apple.6c81c3d48548ca05"
+      "id": "native.apple.423a40c217e2ccc6"
     },
     {
       "kind": "ui-modifier",
@@ -22541,9 +22597,9 @@
       "kind": "ui-named-argument",
       "line": 164,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.31ec646e921aa707"
+      "id": "native.apple.9791b61e7e842a42"
     },
     {
       "kind": "ui-named-argument",
@@ -22781,9 +22837,9 @@
       "kind": "ui-localized-call",
       "line": 491,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "Install the OpenClaw watch app before enabling direct mode.",
+      "source": "Install the OpenCrustacean watch app before enabling direct mode.",
       "surface": "apple",
-      "id": "native.apple.f31590a34ada7ea2"
+      "id": "native.apple.b39b31041416cbde"
     },
     {
       "kind": "ui-localized-call",
@@ -22845,9 +22901,9 @@
       "kind": "ui-call",
       "line": 540,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "Enable Notifications to receive approval alerts while OpenClaw is not open.",
+      "source": "Enable Notifications to receive approval alerts while OpenCrustacean is not open.",
       "surface": "apple",
-      "id": "native.apple.9b0d31ed51e810b9"
+      "id": "native.apple.d6520d3d4d6f20bf"
     },
     {
       "kind": "ui-call",
@@ -23021,9 +23077,9 @@
       "kind": "ui-modifier",
       "line": 797,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "Turns OpenClaw notification delivery on or off",
+      "source": "Turns OpenCrustacean notification delivery on or off",
       "surface": "apple",
-      "id": "native.apple.aeb8d6201e4faa50"
+      "id": "native.apple.320c884e71934d1a"
     },
     {
       "kind": "ui-named-argument",
@@ -23053,9 +23109,17 @@
       "kind": "ui-call",
       "line": 860,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "OpenClaw appreciates its partners in the open-source community.",
+      "source": "OpenCrustacean appreciates its partners in the open-source community.",
       "surface": "apple",
-      "id": "native.apple.91db6b9cf4db2aaa"
+      "id": "native.apple.a55ecd7da8b3bb20"
+    },
+    {
+      "kind": "ui-call",
+      "line": 900,
+      "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
+      "source": "OpenClaw",
+      "surface": "apple",
+      "id": "native.apple.31ec646e921aa707"
     },
     {
       "kind": "ui-call",
@@ -23109,9 +23173,9 @@
       "kind": "ui-call",
       "line": 946,
       "path": "apps/ios/Sources/Design/SettingsProTabSections.swift",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
+      "source": "© 2026 OpenCrustacean Foundation — MIT License.",
       "surface": "apple",
-      "id": "native.apple.aaf59ca16bbe895a"
+      "id": "native.apple.220e7367d622a76d"
     },
     {
       "kind": "ui-call",
@@ -23749,17 +23813,17 @@
       "kind": "ui-localized-call",
       "line": 324,
       "path": "apps/ios/Sources/Design/SettingsProTabSupport.swift",
-      "source": "OpenClaw can show approval prompts and event alerts when the app is not active.",
+      "source": "OpenCrustacean can show approval prompts and event alerts when the app is not active.",
       "surface": "apple",
-      "id": "native.apple.98471e5735f9ff12"
+      "id": "native.apple.5595d3ff3e4e728f"
     },
     {
       "kind": "ui-localized-call",
       "line": 326,
       "path": "apps/ios/Sources/Design/SettingsProTabSupport.swift",
-      "source": "OpenClaw notifications are off.",
+      "source": "OpenCrustacean notifications are off.",
       "surface": "apple",
-      "id": "native.apple.cf35fb743bf5bd6a"
+      "id": "native.apple.fca76d1dee9f69ac"
     },
     {
       "kind": "ui-localized-call",
@@ -23789,9 +23853,9 @@
       "kind": "ui-localized-call",
       "line": 336,
       "path": "apps/ios/Sources/Design/SettingsProTabSupport.swift",
-      "source": "OpenClaw cannot determine the current notification permission state.",
+      "source": "OpenCrustacean cannot determine the current notification permission state.",
       "surface": "apple",
-      "id": "native.apple.34e46ffc0dac7b3d"
+      "id": "native.apple.19da6b97dd6f3311"
     },
     {
       "kind": "ui-call",
@@ -24563,6 +24627,14 @@
     },
     {
       "kind": "ui-localized-call",
+      "line": 220,
+      "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
+      "source": "The Gateway connection changed. Restart OpenClaw to reconnect.",
+      "surface": "apple",
+      "id": "native.apple.8aee90eb1e1061b9"
+    },
+    {
+      "kind": "ui-localized-call",
       "line": 379,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
       "source": "Gateway is not connected",
@@ -24581,25 +24653,25 @@
       "kind": "ui-localized-call",
       "line": 457,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "The Gateway connection changed. Restart OpenClaw to reconnect.",
+      "source": "The Gateway connection changed. Restart OpenCrustacean to reconnect.",
       "surface": "apple",
-      "id": "native.apple.8aee90eb1e1061b9"
+      "id": "native.apple.15262e83eb96e8c1"
     },
     {
       "kind": "ui-modifier",
       "line": 501,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.47bc765cd8464c1e"
+      "id": "native.apple.a74c78561974561d"
     },
     {
       "kind": "ui-call",
       "line": 562,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "OpenClaw is working…",
+      "source": "OpenCrustacean is working…",
       "surface": "apple",
-      "id": "native.apple.a791a671fb60b5f7"
+      "id": "native.apple.08ae7e0460ad37a7"
     },
     {
       "kind": "ui-localized-call",
@@ -24637,9 +24709,9 @@
       "kind": "ui-localized-call",
       "line": 631,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "Connect this iPhone to a Gateway before opening the OpenClaw settings assistant.",
+      "source": "Connect this iPhone to a Gateway before opening the OpenCrustacean settings assistant.",
       "surface": "apple",
-      "id": "native.apple.441f1770a487a055"
+      "id": "native.apple.5121afdb669d4b32"
     },
     {
       "kind": "ui-localized-call",
@@ -24653,17 +24725,17 @@
       "kind": "ui-localized-call",
       "line": 635,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "Checking whether this Gateway supports the OpenClaw settings assistant.",
+      "source": "Checking whether this Gateway supports the OpenCrustacean settings assistant.",
       "surface": "apple",
-      "id": "native.apple.9115f5d67e36fd08"
+      "id": "native.apple.97dba2f9b5e93dbd"
     },
     {
       "kind": "ui-localized-call",
       "line": 637,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "Update this Gateway to use the OpenClaw settings assistant.",
+      "source": "Update this Gateway to use the OpenCrustacean settings assistant.",
       "surface": "apple",
-      "id": "native.apple.3a7955c72e7ab728"
+      "id": "native.apple.b54f5d21d6765167"
     },
     {
       "kind": "ui-call",
@@ -24677,9 +24749,9 @@
       "kind": "ui-call",
       "line": 666,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "OpenClaw is ready to continue in your ordinary chat.",
+      "source": "OpenCrustacean is ready to continue in your ordinary chat.",
       "surface": "apple",
-      "id": "native.apple.7ec6b261897ee62c"
+      "id": "native.apple.4957b3bb28dca169"
     },
     {
       "kind": "ui-call",
@@ -24709,9 +24781,9 @@
       "kind": "ui-call",
       "line": 707,
       "path": "apps/ios/Sources/Design/SettingsSystemAgentChat.swift",
-      "source": "Reply to OpenClaw…",
+      "source": "Reply to OpenCrustacean…",
       "surface": "apple",
-      "id": "native.apple.e40e721e131e606e"
+      "id": "native.apple.c9b99c27d4c82412"
     },
     {
       "kind": "ui-modifier",
@@ -24789,9 +24861,9 @@
       "kind": "ui-call",
       "line": 17,
       "path": "apps/ios/Sources/Gateway/DeepLinkAgentPromptAlert.swift",
-      "source": "Run OpenClaw agent?",
+      "source": "Run OpenCrustacean agent?",
       "surface": "apple",
-      "id": "native.apple.ff54e660cf3e40e9"
+      "id": "native.apple.977bc2d37e8a1005"
     },
     {
       "kind": "ui-localized-call-multiline",
@@ -25507,7 +25579,7 @@
     },
     {
       "kind": "plist-string",
-      "line": 56,
+      "line": 54,
       "path": "apps/ios/Sources/Info.plist",
       "source": "OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.",
       "surface": "apple",
@@ -25515,107 +25587,115 @@
     },
     {
       "kind": "plist-string",
+      "line": 56,
+      "path": "apps/ios/Sources/Info.plist",
+      "source": "OpenCrustacean uses your calendars to show events and scheduling context when you enable calendar access.",
+      "surface": "apple",
+      "id": "native.apple.cb0a5d86d2180ac3"
+    },
+    {
+      "kind": "plist-string",
       "line": 58,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses your calendars to add events when you enable calendar access.",
+      "source": "OpenCrustacean uses your calendars to add events when you enable calendar access.",
       "surface": "apple",
-      "id": "native.apple.a0809d595c57e45f"
+      "id": "native.apple.9cb07a50a63cc1d7"
     },
     {
       "kind": "plist-string",
       "line": 60,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses the camera when you scan a Gateway setup QR code or ask your paired Gateway or assistant to capture a photo or short video from this iPhone, for example to connect to your Gateway or show your assistant a document, device screen, or workspace.",
+      "source": "OpenCrustacean uses the camera when you scan a Gateway setup QR code or ask your paired Gateway or assistant to capture a photo or short video from this iPhone, for example to connect to your Gateway or show your assistant a document, device screen, or workspace.",
       "surface": "apple",
-      "id": "native.apple.0b4699f009127b0f"
+      "id": "native.apple.0a5e354632da7a23"
     },
     {
       "kind": "plist-string",
       "line": 62,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses your contacts so you can search and reference people while using the assistant.",
+      "source": "OpenCrustacean uses your contacts so you can search and reference people while using the assistant.",
       "surface": "apple",
-      "id": "native.apple.1709a63b06e06e29"
+      "id": "native.apple.3d5f787c63897d5b"
     },
     {
       "kind": "plist-string",
       "line": 64,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw discovers and connects to your OpenClaw gateway on the local network.",
+      "source": "OpenCrustacean discovers and connects to your OpenCrustacean gateway on the local network.",
       "surface": "apple",
-      "id": "native.apple.4dfc6013662fc044"
+      "id": "native.apple.1944c27660019a3c"
     },
     {
       "kind": "plist-string",
       "line": 66,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw can share your location in the background when you enable Always.",
+      "source": "OpenCrustacean can share your location in the background when you enable Always.",
       "surface": "apple",
-      "id": "native.apple.5926060694e6bae2"
+      "id": "native.apple.66370670212f0bdf"
     },
     {
       "kind": "plist-string",
       "line": 68,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses your location when you allow location sharing.",
+      "source": "OpenCrustacean uses your location when you allow location sharing.",
       "surface": "apple",
-      "id": "native.apple.0a682f55d98cef2c"
+      "id": "native.apple.f9700786aea11b43"
     },
     {
       "kind": "plist-string",
       "line": 70,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses the microphone for realtime chat, voice wake, push-to-talk, and voice notes.",
+      "source": "OpenCrustacean uses the microphone for realtime chat, voice wake, push-to-talk, and voice notes.",
       "surface": "apple",
-      "id": "native.apple.9c7f16e9b041a73d"
+      "id": "native.apple.72b2c2f0c61a02a5"
     },
     {
       "kind": "plist-string",
       "line": 72,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw may use motion data to support device-aware interactions and automations.",
+      "source": "OpenCrustacean may use motion data to support device-aware interactions and automations.",
       "surface": "apple",
-      "id": "native.apple.821e25899c1e574b"
+      "id": "native.apple.e5360f374b21b38a"
     },
     {
       "kind": "plist-string",
       "line": 74,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw reads your steps, sleep, resting heart rate, and workouts from the Apple Health app to create summaries you request and send them through your Gateway to your configured AI provider.",
+      "source": "OpenCrustacean reads your steps, sleep, resting heart rate, and workouts from the Apple Health app to create summaries you request and send them through your Gateway to your configured AI provider.",
       "surface": "apple",
-      "id": "native.apple.1d3a6099d7e11895"
+      "id": "native.apple.b82d51dcdb143006"
     },
     {
       "kind": "plist-string",
       "line": 76,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw does not write to the Apple Health app. It uses read-only data to create summaries you request and send them through your Gateway to your configured AI provider.",
+      "source": "OpenCrustacean does not write to the Apple Health app. It uses read-only data to create summaries you request and send them through your Gateway to your configured AI provider.",
       "surface": "apple",
-      "id": "native.apple.c90a204b3232c401"
+      "id": "native.apple.a1db212b2939a3da"
     },
     {
       "kind": "plist-string",
       "line": 78,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw lets your assistant read photos you allow and lets you choose photos to share.",
+      "source": "OpenCrustacean lets your assistant read photos you allow and lets you choose photos to share.",
       "surface": "apple",
-      "id": "native.apple.adcb63cd7ae5e07d"
+      "id": "native.apple.3eb3402ebf568052"
     },
     {
       "kind": "plist-string",
       "line": 80,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses your reminders to list, add, and complete tasks when you enable reminders access.",
+      "source": "OpenCrustacean uses your reminders to list, add, and complete tasks when you enable reminders access.",
       "surface": "apple",
-      "id": "native.apple.c7f4ebf4bf2a601b"
+      "id": "native.apple.3f3579b3a58fd1be"
     },
     {
       "kind": "plist-string",
       "line": 82,
       "path": "apps/ios/Sources/Info.plist",
-      "source": "OpenClaw uses on-device speech recognition for talk mode and voice wake.",
+      "source": "OpenCrustacean uses on-device speech recognition for talk mode and voice wake.",
       "surface": "apple",
-      "id": "native.apple.f66ac0cd280d1f8f"
+      "id": "native.apple.840ffd140464987d"
     },
     {
       "kind": "ui-localized-call",
@@ -25733,25 +25813,25 @@
       "kind": "conditional-branch",
       "line": 68,
       "path": "apps/ios/Sources/Location/LocationPermissionSummary.swift",
-      "source": "Location sharing is disabled in OpenClaw. Location Services are off in iOS Settings.",
+      "source": "Location sharing is disabled in OpenCrustacean. Location Services are off in iOS Settings.",
       "surface": "apple",
-      "id": "native.apple.8506df62d1e0bdc3"
+      "id": "native.apple.fe1a3f231d1a1c25"
     },
     {
       "kind": "conditional-branch",
       "line": 70,
       "path": "apps/ios/Sources/Location/LocationPermissionSummary.swift",
-      "source": "Location sharing is disabled in OpenClaw. iOS currently allows Always.",
+      "source": "Location sharing is disabled in OpenCrustacean. iOS currently allows Always.",
       "surface": "apple",
-      "id": "native.apple.b8dd114f2f71712e"
+      "id": "native.apple.0a8b0c2ae294ff0a"
     },
     {
       "kind": "conditional-branch",
       "line": 72,
       "path": "apps/ios/Sources/Location/LocationPermissionSummary.swift",
-      "source": "Location sharing is disabled in OpenClaw. iOS currently allows While Using.",
+      "source": "Location sharing is disabled in OpenCrustacean. iOS currently allows While Using.",
       "surface": "apple",
-      "id": "native.apple.1a92067e10a1e618"
+      "id": "native.apple.95812c4b75c10758"
     },
     {
       "kind": "conditional-branch",
@@ -25869,9 +25949,9 @@
       "kind": "conditional-branch",
       "line": 108,
       "path": "apps/ios/Sources/Location/LocationPermissionSummary.swift",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
       "surface": "apple",
-      "id": "native.apple.db42a5ecf1647d12"
+      "id": "native.apple.2ff090fa8d06b6f7"
     },
     {
       "kind": "ui-localized-call",
@@ -25917,9 +25997,9 @@
       "kind": "ui-localized-call",
       "line": 46,
       "path": "apps/ios/Sources/Location/LocationSettingsPresentation.swift",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "OpenCrustacean cannot determine the current iOS location permission.",
       "surface": "apple",
-      "id": "native.apple.9f430559440a9dbf"
+      "id": "native.apple.a24d5e30957b5ae0"
     },
     {
       "kind": "ui-localized-call",
@@ -26357,9 +26437,9 @@
       "kind": "ui-call",
       "line": 171,
       "path": "apps/ios/Sources/Onboarding/OnboardingWizardSteps.swift",
-      "source": "The connected OpenClaw agent can use device capabilities you enable.",
+      "source": "The connected OpenCrustacean agent can use device capabilities you enable.",
       "surface": "apple",
-      "id": "native.apple.048f49e40b4c8dfd"
+      "id": "native.apple.9d4824179533c1ca"
     },
     {
       "kind": "ui-call",
@@ -26397,9 +26477,9 @@
       "kind": "ui-named-argument",
       "line": 248,
       "path": "apps/ios/Sources/Onboarding/OnboardingWizardSteps.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.749270d1ad655ca9"
+      "id": "native.apple.8a2e2a156492ffd5"
     },
     {
       "kind": "ui-named-argument",
@@ -26677,9 +26757,9 @@
       "kind": "ui-call",
       "line": 573,
       "path": "apps/ios/Sources/Onboarding/OnboardingWizardView.swift",
-      "source": "OpenClaw is checking gateway and node access.",
+      "source": "OpenCrustacean is checking gateway and node access.",
       "surface": "apple",
-      "id": "native.apple.707d3aa0552d4424"
+      "id": "native.apple.1f5a141311dbf242"
     },
     {
       "kind": "ui-call",
@@ -26853,9 +26933,9 @@
       "kind": "conditional-branch",
       "line": 524,
       "path": "apps/ios/Sources/OpenClawApp.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.5b46de1ccb06852b"
+      "id": "native.apple.c80439aef48e9cee"
     },
     {
       "kind": "ui-localized-call",
@@ -27021,9 +27101,9 @@
       "kind": "ui-localized-call",
       "line": 76,
       "path": "apps/ios/Sources/RootSidebar.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.8855710a55de2ed5"
+      "id": "native.apple.c8145987bd8acde8"
     },
     {
       "kind": "ui-localized-call",
@@ -27317,9 +27397,9 @@
       "kind": "conditional-branch",
       "line": 873,
       "path": "apps/ios/Sources/RootTabs.swift",
-      "source": "OpenClaw iOS",
+      "source": "OpenCrustacean iOS",
       "surface": "apple",
-      "id": "native.apple.9da57c45433e8fe9"
+      "id": "native.apple.450abcdee2ddd3ff"
     },
     {
       "kind": "conditional-branch",
@@ -27669,9 +27749,9 @@
       "kind": "ui-localized-call",
       "line": 49,
       "path": "apps/ios/Sources/Settings/VoiceWakeWordsSettingsView.swift",
-      "source": "OpenClaw reacts when any trigger appears in a transcription. Keep them short to avoid false positives.",
+      "source": "OpenCrustacean reacts when any trigger appears in a transcription. Keep them short to avoid false positives.",
       "surface": "apple",
-      "id": "native.apple.e0eaa88f187271fc"
+      "id": "native.apple.3144a4a78e25022e"
     },
     {
       "kind": "ui-modifier",
@@ -28075,6 +28155,14 @@
     },
     {
       "kind": "ui-localized-call",
+      "line": 4092,
+      "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
+      "source": "OpenClaw unavailable",
+      "surface": "apple",
+      "id": "native.apple.deb282fd61fd2de3"
+    },
+    {
+      "kind": "ui-localized-call",
       "line": 4105,
       "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
       "source": "Listening (Realtime)",
@@ -28101,25 +28189,25 @@
       "kind": "ui-localized-call",
       "line": 4111,
       "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
-      "source": "Asking OpenClaw",
+      "source": "Asking OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.5b40cb9cf4ee4d4f"
+      "id": "native.apple.9c1fc5506ce54afd"
     },
     {
       "kind": "ui-localized-call",
       "line": 4113,
       "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
-      "source": "Still asking OpenClaw",
+      "source": "Still asking OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.34531893ae6091b1"
+      "id": "native.apple.3d52f791d39ae4d9"
     },
     {
       "kind": "ui-localized-call",
       "line": 4115,
       "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
-      "source": "Updating OpenClaw",
+      "source": "Updating OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.027ab0bbb4553124"
+      "id": "native.apple.69062e124ceaf574"
     },
     {
       "kind": "ui-localized-call",
@@ -28205,9 +28293,9 @@
       "kind": "ui-localized-call",
       "line": 4137,
       "path": "apps/ios/Sources/Voice/TalkModeManager.swift",
-      "source": "OpenClaw unavailable",
+      "source": "OpenCrustacean unavailable",
       "surface": "apple",
-      "id": "native.apple.deb282fd61fd2de3"
+      "id": "native.apple.15906cf9f073da3a"
     },
     {
       "kind": "ui-localized-call",
@@ -28309,17 +28397,17 @@
       "kind": "conditional-branch",
       "line": 605,
       "path": "apps/ios/Sources/Voice/TalkRealtimeWebRTCSession.swift",
-      "source": "Asking OpenClaw",
+      "source": "Asking OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.d05a2230509ea290"
+      "id": "native.apple.a4399931358a3740"
     },
     {
       "kind": "conditional-branch",
       "line": 605,
       "path": "apps/ios/Sources/Voice/TalkRealtimeWebRTCSession.swift",
-      "source": "Updating OpenClaw",
+      "source": "Updating OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.e16d8f941f841046"
+      "id": "native.apple.f1d74c828c07b717"
     },
     {
       "kind": "conditional-branch",
@@ -28333,9 +28421,9 @@
       "kind": "conditional-branch",
       "line": 694,
       "path": "apps/ios/Sources/Voice/TalkRealtimeWebRTCSession.swift",
-      "source": "OpenClaw unavailable",
+      "source": "OpenCrustacean unavailable",
       "surface": "apple",
-      "id": "native.apple.8a62f0e9416188e3"
+      "id": "native.apple.4b3622eebd8154a8"
     },
     {
       "kind": "ui-localized-call",
@@ -28469,9 +28557,9 @@
       "kind": "plist-string",
       "line": 24,
       "path": "apps/ios/WatchApp/Info.plist",
-      "source": "OpenClaw connects this Apple Watch directly to your Gateway on trusted local networks.",
+      "source": "OpenCrustacean connects this Apple Watch directly to your Gateway on trusted local networks.",
       "surface": "apple",
-      "id": "native.apple.646968ab814b22e8"
+      "id": "native.apple.0ce4ef62d3fbb4ee"
     },
     {
       "kind": "ui-localized-call",
@@ -28549,9 +28637,9 @@
       "kind": "ui-localized-call",
       "line": 225,
       "path": "apps/ios/WatchApp/Sources/WatchDirectNode.swift",
-      "source": "Reconnects when OpenClaw is active",
+      "source": "Reconnects when OpenCrustacean is active",
       "surface": "apple",
-      "id": "native.apple.32473b10033ac0f4"
+      "id": "native.apple.1cc7c6c2d87bdff4"
     },
     {
       "kind": "ui-localized-call",
@@ -29013,9 +29101,9 @@
       "kind": "conditional-branch",
       "line": 380,
       "path": "apps/ios/WatchApp/Sources/WatchInboxStore.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.ca02fd2965efe74e"
+      "id": "native.apple.0c22f0d86fbd7a82"
     },
     {
       "kind": "ui-localized-call",
@@ -29253,9 +29341,9 @@
       "kind": "conditional-branch",
       "line": 358,
       "path": "apps/ios/WatchApp/Sources/WatchInboxView.swift",
-      "source": "Uses Wi-Fi or cellular while OpenClaw is active",
+      "source": "Uses Wi-Fi or cellular while OpenCrustacean is active",
       "surface": "apple",
-      "id": "native.apple.709a8396352de098"
+      "id": "native.apple.efa26722dcd7e6d7"
     },
     {
       "kind": "conditional-branch",
@@ -29522,6 +29610,14 @@
       "id": "native.apple.fadaa0ca97ba0c43"
     },
     {
+      "kind": "ui-localized-call",
+      "line": 1020,
+      "path": "apps/ios/WatchApp/Sources/WatchInboxView.swift",
+      "source": "OpenClaw",
+      "surface": "apple",
+      "id": "native.apple.e54d954151312621"
+    },
+    {
       "kind": "ui-call",
       "line": 1080,
       "path": "apps/ios/WatchApp/Sources/WatchInboxView.swift",
@@ -29557,9 +29653,9 @@
       "kind": "conditional-branch",
       "line": 1172,
       "path": "apps/ios/WatchApp/Sources/WatchInboxView.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.e54d954151312621"
+      "id": "native.apple.b28bdaac86abf8a5"
     },
     {
       "kind": "ui-named-argument",
@@ -29621,9 +29717,9 @@
       "kind": "ui-call",
       "line": 1370,
       "path": "apps/ios/WatchApp/Sources/WatchInboxView.swift",
-      "source": "Message OpenClaw",
+      "source": "Message OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.068d84c26a524222"
+      "id": "native.apple.4b160eb2e7d9cbbf"
     },
     {
       "kind": "ui-localized-call",
@@ -29821,9 +29917,9 @@
       "kind": "ui-call",
       "line": 32,
       "path": "apps/macos/Sources/OpenClaw/AboutSettings.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.4d3f983a1ea909ee"
+      "id": "native.apple.73932215ec7eea9e"
     },
     {
       "kind": "ui-call",
@@ -29893,9 +29989,9 @@
       "kind": "ui-call",
       "line": 79,
       "path": "apps/macos/Sources/OpenClaw/AboutSettings.swift",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
+      "source": "© 2026 OpenCrustacean Foundation — MIT License.",
       "surface": "apple",
-      "id": "native.apple.44b8ba7768ea2e7b"
+      "id": "native.apple.1bb523f6c35334b1"
     },
     {
       "kind": "ui-call",
@@ -30013,33 +30109,33 @@
       "kind": "conditional-branch",
       "line": 990,
       "path": "apps/macos/Sources/OpenClaw/ApplicationRelocator.swift",
-      "source": "Replace the older OpenClaw in Applications?",
+      "source": "Replace the older OpenCrustacean in Applications?",
       "surface": "apple",
-      "id": "native.apple.7f86f5acf3d32ec2"
+      "id": "native.apple.fbedf43efaf96e61"
     },
     {
       "kind": "conditional-branch",
       "line": 991,
       "path": "apps/macos/Sources/OpenClaw/ApplicationRelocator.swift",
-      "source": "Install OpenClaw in Applications?",
+      "source": "Install OpenCrustacean in Applications?",
       "surface": "apple",
-      "id": "native.apple.088b39cc34b44e54"
+      "id": "native.apple.b546f9d6759106d2"
     },
     {
       "kind": "conditional-branch",
       "line": 993,
       "path": "apps/macos/Sources/OpenClaw/ApplicationRelocator.swift",
-      "source": "This copy is newer than the installed app. OpenClaw will replace it and reopen from Applications.",
+      "source": "This copy is newer than the installed app. OpenCrustacean will replace it and reopen from Applications.",
       "surface": "apple",
-      "id": "native.apple.c8898d685457401f"
+      "id": "native.apple.7a43848b4d107f40"
     },
     {
       "kind": "conditional-branch",
       "line": 994,
       "path": "apps/macos/Sources/OpenClaw/ApplicationRelocator.swift",
-      "source": "OpenClaw will copy itself to Applications and reopen there so updates and launch at login stay reliable.",
+      "source": "OpenCrustacean will copy itself to Applications and reopen there so updates and launch at login stay reliable.",
       "surface": "apple",
-      "id": "native.apple.a77a46d0ca32551f"
+      "id": "native.apple.621a1e228fc2ce1f"
     },
     {
       "kind": "conditional-branch",
@@ -30253,25 +30349,25 @@
       "kind": "conditional-branch",
       "line": 133,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "OpenClaw Gateway \\(version) is ready.",
+      "source": "OpenCrustacean Gateway \\(version) is ready.",
       "surface": "apple",
-      "id": "native.apple.d56c7e42cf2c4813"
+      "id": "native.apple.f2a09fd0ac4f749e"
     },
     {
       "kind": "conditional-branch",
       "line": 135,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "OpenClaw Gateway is not installed yet.",
+      "source": "OpenCrustacean Gateway is not installed yet.",
       "surface": "apple",
-      "id": "native.apple.75d3c619b85985dd"
+      "id": "native.apple.cfbab46b61cbfcce"
     },
     {
       "kind": "conditional-branch",
       "line": 137,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "The OpenClaw Gateway could not be verified. Setup will repair it.",
+      "source": "The OpenCrustacean Gateway could not be verified. Setup will repair it.",
       "surface": "apple",
-      "id": "native.apple.ecb715a65dcb04b3"
+      "id": "native.apple.597306c43b5644b0"
     },
     {
       "kind": "conditional-branch",
@@ -30285,17 +30381,17 @@
       "kind": "ui-localized-call",
       "line": 429,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "Repairing the OpenClaw Gateway update…",
+      "source": "Repairing the OpenCrustacean Gateway update…",
       "surface": "apple",
-      "id": "native.apple.86e7c86924ad0c70"
+      "id": "native.apple.0f2b7d41f63601bb"
     },
     {
       "kind": "ui-localized-call",
       "line": 430,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "Updating the OpenClaw Gateway to \\(targetVersion)…",
+      "source": "Updating the OpenCrustacean Gateway to \\(targetVersion)…",
       "surface": "apple",
-      "id": "native.apple.b59713e1e3e7ee65"
+      "id": "native.apple.6d540c51783d4061"
     },
     {
       "kind": "ui-localized-call",
@@ -30325,9 +30421,9 @@
       "kind": "ui-localized-call",
       "line": 475,
       "path": "apps/macos/Sources/OpenClaw/CLIInstaller.swift",
-      "source": "OpenClaw Gateway \\(installedVersion) is installed.",
+      "source": "OpenCrustacean Gateway \\(installedVersion) is installed.",
       "surface": "apple",
-      "id": "native.apple.66f44c526206f5de"
+      "id": "native.apple.fde9d2b20e970ecf"
     },
     {
       "kind": "conditional-branch",
@@ -30461,9 +30557,9 @@
       "kind": "ui-named-argument",
       "line": 637,
       "path": "apps/macos/Sources/OpenClaw/ChannelConfigForm.swift",
-      "source": "OpenClaw could not load editable settings for this channel.",
+      "source": "OpenCrustacean could not load editable settings for this channel.",
       "surface": "apple",
-      "id": "native.apple.9a58a96b30b47d0f"
+      "id": "native.apple.76aa667a8b619d45"
     },
     {
       "kind": "ui-call",
@@ -31261,9 +31357,9 @@
       "kind": "ui-call",
       "line": 326,
       "path": "apps/macos/Sources/OpenClaw/CronJobEditor.swift",
-      "source": "What should OpenClaw do?",
+      "source": "What should OpenCrustacean do?",
       "surface": "apple",
-      "id": "native.apple.e8071fa049d8aa30"
+      "id": "native.apple.4b6d700763545b78"
     },
     {
       "kind": "ui-call",
@@ -31781,49 +31877,49 @@
       "kind": "ui-localized-call",
       "line": 40,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "OpenClaw Not Configured",
+      "source": "OpenCrustacean Not Configured",
       "surface": "apple",
-      "id": "native.apple.905508b749e99f2a"
+      "id": "native.apple.f93b48d985ed7054"
     },
     {
       "kind": "ui-localized-call",
       "line": 42,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "Remote OpenClaw Active",
+      "source": "Remote OpenCrustacean Active",
       "surface": "apple",
-      "id": "native.apple.293bf9a6e721036d"
+      "id": "native.apple.1e0ddfaaa40ac3db"
     },
     {
       "kind": "ui-localized-call",
       "line": 44,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "OpenClaw Active",
+      "source": "OpenCrustacean Active",
       "surface": "apple",
-      "id": "native.apple.a7b0d4e6bf5796c0"
+      "id": "native.apple.afa1011bb1841f8a"
     },
     {
       "kind": "ui-localized-call",
       "line": 49,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "OpenClaw Not Configured — \\(primaryName)",
+      "source": "OpenCrustacean Not Configured — \\(primaryName)",
       "surface": "apple",
-      "id": "native.apple.b36a54d8fef80333"
+      "id": "native.apple.da614d29b6819f57"
     },
     {
       "kind": "ui-localized-call",
       "line": 51,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "Remote OpenClaw Active — \\(primaryName)",
+      "source": "Remote OpenCrustacean Active — \\(primaryName)",
       "surface": "apple",
-      "id": "native.apple.adee4bfd71731d2d"
+      "id": "native.apple.81c5b6abbed1c3c9"
     },
     {
       "kind": "ui-localized-call",
       "line": 53,
       "path": "apps/macos/Sources/OpenClaw/DashboardGatewayMenuModel.swift",
-      "source": "OpenClaw Active — \\(primaryName)",
+      "source": "OpenCrustacean Active — \\(primaryName)",
       "surface": "apple",
-      "id": "native.apple.2be6d3dd1a0d2699"
+      "id": "native.apple.36229c1ee8e25721"
     },
     {
       "kind": "ui-call",
@@ -32197,9 +32293,9 @@
       "kind": "ui-modifier-concatenated",
       "line": 298,
       "path": "apps/macos/Sources/OpenClaw/DebugSettings.swift",
-      "source": "Writes a rotating, local-only log under ~/Library/Logs/OpenClaw/. Enable only while actively debugging.",
+      "source": "Writes a rotating, local-only log under ~/Library/Logs/OpenCrustacean/. Enable only while actively debugging.",
       "surface": "apple",
-      "id": "native.apple.5437c7d545b749ca"
+      "id": "native.apple.a8ab315f38c1a761"
     },
     {
       "kind": "ui-call",
@@ -32277,9 +32373,9 @@
       "kind": "ui-call",
       "line": 406,
       "path": "apps/macos/Sources/OpenClaw/DebugSettings.swift",
-      "source": "OpenClaw project root",
+      "source": "OpenCrustacean project root",
       "surface": "apple",
-      "id": "native.apple.813c8586ae04a3fc"
+      "id": "native.apple.50b09b07a3b70b38"
     },
     {
       "kind": "ui-call",
@@ -32389,9 +32485,9 @@
       "kind": "ui-call",
       "line": 517,
       "path": "apps/macos/Sources/OpenClaw/DebugSettings.swift",
-      "source": "Restart OpenClaw",
+      "source": "Restart OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.f596e59c9f0bb0a0"
+      "id": "native.apple.f51351190321bf8b"
     },
     {
       "kind": "ui-call",
@@ -32579,7 +32675,7 @@
     },
     {
       "kind": "ui-named-argument",
-      "line": 74,
+      "line": 68,
       "path": "apps/macos/Sources/OpenClaw/DeepLinks.swift",
       "source": "OpenClaw is paused",
       "surface": "apple",
@@ -32587,11 +32683,27 @@
     },
     {
       "kind": "ui-named-argument",
-      "line": 74,
+      "line": 68,
       "path": "apps/macos/Sources/OpenClaw/DeepLinks.swift",
       "source": "Unpause OpenClaw to run agent actions.",
       "surface": "apple",
       "id": "native.apple.3231abf69ea32ce3"
+    },
+    {
+      "kind": "ui-named-argument",
+      "line": 74,
+      "path": "apps/macos/Sources/OpenClaw/DeepLinks.swift",
+      "source": "OpenCrustacean is paused",
+      "surface": "apple",
+      "id": "native.apple.731c433d02540c7d"
+    },
+    {
+      "kind": "ui-named-argument",
+      "line": 74,
+      "path": "apps/macos/Sources/OpenClaw/DeepLinks.swift",
+      "source": "Unpause OpenCrustacean to run agent actions.",
+      "surface": "apple",
+      "id": "native.apple.a7ab35dce23b5399"
     },
     {
       "kind": "ui-named-argument",
@@ -32629,9 +32741,9 @@
       "kind": "ui-named-argument",
       "line": 107,
       "path": "apps/macos/Sources/OpenClaw/DeepLinks.swift",
-      "source": "Run OpenClaw agent?",
+      "source": "Run OpenCrustacean agent?",
       "surface": "apple",
-      "id": "native.apple.ded882f2033ad61b"
+      "id": "native.apple.9d823e08f7523170"
     },
     {
       "kind": "ui-named-argument",
@@ -32781,9 +32893,9 @@
       "kind": "ui-modifier",
       "line": 115,
       "path": "apps/macos/Sources/OpenClaw/GatewayDiscoveryMenu.swift",
-      "source": "Discover OpenClaw gateways on your LAN",
+      "source": "Discover OpenCrustacean gateways on your LAN",
       "surface": "apple",
-      "id": "native.apple.154a5f838bdc1dcd"
+      "id": "native.apple.6549d58e40944d4b"
     },
     {
       "kind": "conditional-branch",
@@ -33037,9 +33149,9 @@
       "kind": "ui-named-argument",
       "line": 84,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "Everyday OpenClaw app behavior.",
+      "source": "Everyday OpenCrustacean app behavior.",
       "surface": "apple",
-      "id": "native.apple.76c1df348dd821b2"
+      "id": "native.apple.c0ebc99030845774"
     },
     {
       "kind": "ui-call",
@@ -33061,17 +33173,17 @@
       "kind": "conditional-branch",
       "line": 92,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "Automatically start OpenClaw after you sign in.",
+      "source": "Automatically start OpenCrustacean after you sign in.",
       "surface": "apple",
-      "id": "native.apple.738cdc07c3539aca"
+      "id": "native.apple.ed50e3e65929881b"
     },
     {
       "kind": "conditional-branch",
       "line": 93,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "Move OpenClaw to Applications before enabling launch at login.",
+      "source": "Move OpenCrustacean to Applications before enabling launch at login.",
       "surface": "apple",
-      "id": "native.apple.8b74758a60f78642"
+      "id": "native.apple.c412a1fbda809a15"
     },
     {
       "kind": "ui-named-argument",
@@ -33301,17 +33413,17 @@
       "kind": "conditional-branch",
       "line": 232,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "OpenClaw paused",
+      "source": "OpenCrustacean paused",
       "surface": "apple",
-      "id": "native.apple.e9d809a3de586f91"
+      "id": "native.apple.b6cdc4488ee323e4"
     },
     {
       "kind": "ui-call",
       "line": 242,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "OpenClaw active",
+      "source": "OpenCrustacean active",
       "surface": "apple",
-      "id": "native.apple.5b090fade239551d"
+      "id": "native.apple.5717beb42488033e"
     },
     {
       "kind": "conditional-branch",
@@ -33397,9 +33509,9 @@
       "kind": "conditional-branch",
       "line": 402,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "OpenClaw starts and monitors the Gateway on this Mac.",
+      "source": "OpenCrustacean starts and monitors the Gateway on this Mac.",
       "surface": "apple",
-      "id": "native.apple.8a1da5add032f549"
+      "id": "native.apple.bee0084cfe0b7ba5"
     },
     {
       "kind": "conditional-branch",
@@ -33421,9 +33533,9 @@
       "kind": "ui-named-argument",
       "line": 418,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "OpenClaw runs",
+      "source": "OpenCrustacean runs",
       "surface": "apple",
-      "id": "native.apple.020b57c84c6cba10"
+      "id": "native.apple.2c9337d774e62056"
     },
     {
       "kind": "ui-named-argument",
@@ -33597,9 +33709,9 @@
       "kind": "ui-named-argument",
       "line": 578,
       "path": "apps/macos/Sources/OpenClaw/GeneralSettings.swift",
-      "source": "/Applications/OpenClaw.app/.../openclaw",
+      "source": "/Applications/OpenCrustacean.app/.../openclaw",
       "surface": "apple",
-      "id": "native.apple.dcfa754168e437b2"
+      "id": "native.apple.1a4f7ff568986e81"
     },
     {
       "kind": "ui-call",
@@ -33941,9 +34053,9 @@
       "kind": "ui-call",
       "line": 56,
       "path": "apps/macos/Sources/OpenClaw/InstancesSettings.swift",
-      "source": "Latest presence beacons from OpenClaw nodes. Updated periodically.",
+      "source": "Latest presence beacons from OpenCrustacean nodes. Updated periodically.",
       "surface": "apple",
-      "id": "native.apple.1c2e64bd2112e266"
+      "id": "native.apple.85055a81d3b2623d"
     },
     {
       "kind": "ui-named-argument",
@@ -34117,17 +34229,17 @@
       "kind": "conditional-branch",
       "line": 157,
       "path": "apps/macos/Sources/OpenClaw/MenuBar.swift",
-      "source": "OpenClaw - Voice Wake live meter active",
+      "source": "OpenCrustacean - Voice Wake live meter active",
       "surface": "apple",
-      "id": "native.apple.c8c910234d1b2ab8"
+      "id": "native.apple.c885fe952294a8ef"
     },
     {
       "kind": "conditional-branch",
       "line": 158,
       "path": "apps/macos/Sources/OpenClaw/MenuBar.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.c463c0849cb4242c"
+      "id": "native.apple.fd3e5416f2da4d69"
     },
     {
       "kind": "conditional-branch",
@@ -34301,9 +34413,9 @@
       "kind": "ui-call",
       "line": 170,
       "path": "apps/macos/Sources/OpenClaw/MenuContentView.swift",
-      "source": "About OpenClaw",
+      "source": "About OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.4f087c4a5c95a11c"
+      "id": "native.apple.02384d112433e16d"
     },
     {
       "kind": "ui-call",
@@ -34755,7 +34867,7 @@
     },
     {
       "kind": "conditional-branch",
-      "line": 52,
+      "line": 29,
       "path": "apps/macos/Sources/OpenClaw/OnboardingAISetup.swift",
       "source": "OpenClaw is preparing a local model.",
       "surface": "apple",
@@ -34763,11 +34875,27 @@
     },
     {
       "kind": "conditional-branch",
-      "line": 53,
+      "line": 30,
       "path": "apps/macos/Sources/OpenClaw/OnboardingAISetup.swift",
       "source": "OpenClaw is completing provider sign-in.",
       "surface": "apple",
       "id": "native.apple.c5992a23c991f948"
+    },
+    {
+      "kind": "conditional-branch",
+      "line": 52,
+      "path": "apps/macos/Sources/OpenClaw/OnboardingAISetup.swift",
+      "source": "OpenCrustacean is preparing a local model.",
+      "surface": "apple",
+      "id": "native.apple.b2a7e7c9d3146551"
+    },
+    {
+      "kind": "conditional-branch",
+      "line": 53,
+      "path": "apps/macos/Sources/OpenClaw/OnboardingAISetup.swift",
+      "source": "OpenCrustacean is completing provider sign-in.",
+      "surface": "apple",
+      "id": "native.apple.0d9388500509dc2a"
     },
     {
       "kind": "conditional-branch",
@@ -34821,9 +34949,9 @@
       "kind": "conditional-branch",
       "line": 192,
       "path": "apps/macos/Sources/OpenClaw/OnboardingAISetupView.swift",
-      "source": "OpenClaw will check again before changing any inference settings.",
+      "source": "OpenCrustacean will check again before changing any inference settings.",
       "surface": "apple",
-      "id": "native.apple.e3e27d22fd2312a2"
+      "id": "native.apple.ce563f79d4156ea7"
     },
     {
       "kind": "conditional-branch",
@@ -34885,9 +35013,9 @@
       "kind": "ui-call",
       "line": 280,
       "path": "apps/macos/Sources/OpenClaw/OnboardingAISetupView.swift",
-      "source": "Need help? Chat with OpenClaw",
+      "source": "Need help? Chat with OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.a0431b20c0650139"
+      "id": "native.apple.a3c8fd3528a8d56a"
     },
     {
       "kind": "ui-call",
@@ -35237,9 +35365,9 @@
       "kind": "ui-call",
       "line": 895,
       "path": "apps/macos/Sources/OpenClaw/OnboardingAISetupView.swift",
-      "source": "OpenClaw — setup helper",
+      "source": "OpenCrustacean — setup helper",
       "surface": "apple",
-      "id": "native.apple.e874bd0fad63f012"
+      "id": "native.apple.a3170849e53efdb6"
     },
     {
       "kind": "ui-call",
@@ -35333,25 +35461,25 @@
       "kind": "conditional-branch",
       "line": 289,
       "path": "apps/macos/Sources/OpenClaw/OnboardingSystemAgentChat.swift",
-      "source": "OpenClaw was interrupted. Restart to try again.",
+      "source": "OpenCrustacean was interrupted. Restart to try again.",
       "surface": "apple",
-      "id": "native.apple.b92f94ddc6bbc8e5"
+      "id": "native.apple.29b28d402f4de252"
     },
     {
       "kind": "conditional-branch",
       "line": 290,
       "path": "apps/macos/Sources/OpenClaw/OnboardingSystemAgentChat.swift",
-      "source": "The Gateway connection changed. Restart OpenClaw to reconnect.",
+      "source": "The Gateway connection changed. Restart OpenCrustacean to reconnect.",
       "surface": "apple",
-      "id": "native.apple.829845818e97978a"
+      "id": "native.apple.d0cfa53dd1df2350"
     },
     {
       "kind": "ui-call",
       "line": 332,
       "path": "apps/macos/Sources/OpenClaw/OnboardingSystemAgentChat.swift",
-      "source": "OpenClaw is working…",
+      "source": "OpenCrustacean is working…",
       "surface": "apple",
-      "id": "native.apple.012861f82eff0ca9"
+      "id": "native.apple.051428ffd030a568"
     },
     {
       "kind": "ui-call",
@@ -35421,9 +35549,9 @@
       "kind": "ui-call",
       "line": 8,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+MemoryImportPage.swift",
-      "source": "OpenClaw can bring useful context from AI tools you already use into your new assistant.",
+      "source": "OpenCrustacean can bring useful context from AI tools you already use into your new assistant.",
       "surface": "apple",
-      "id": "native.apple.b57ee4f83cff23f3"
+      "id": "native.apple.e1058349a4585f55"
     },
     {
       "kind": "ui-named-argument",
@@ -35549,9 +35677,9 @@
       "kind": "ui-call",
       "line": 184,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+MemoryImportPage.swift",
-      "source": "Imported \\(imported) \\(self.memoryLabel(imported)) into OpenClaw.",
+      "source": "Imported \\(imported) \\(self.memoryLabel(imported)) into OpenCrustacean.",
       "surface": "apple",
-      "id": "native.apple.6dbe5b174271b62a"
+      "id": "native.apple.6139e94b4a85f4bc"
     },
     {
       "kind": "ui-call",
@@ -35573,9 +35701,9 @@
       "kind": "ui-call",
       "line": 34,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+Pages.swift",
-      "source": "Welcome to OpenClaw",
+      "source": "Welcome to OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.6f266200b7b28e40"
+      "id": "native.apple.c02b66f7aee6cbc8"
     },
     {
       "kind": "ui-call",
@@ -35701,9 +35829,9 @@
       "kind": "ui-call",
       "line": 141,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+Pages.swift",
-      "source": "OK — OpenClaw won’t start anything yet. Pick Local or Remote later in Settings → General.",
+      "source": "OK — OpenCrustacean won’t start anything yet. Pick Local or Remote later in Settings → General.",
       "surface": "apple",
-      "id": "native.apple.a3c214bd839492b6"
+      "id": "native.apple.1215d4b339fa04da"
     },
     {
       "kind": "conditional-branch",
@@ -35789,9 +35917,9 @@
       "kind": "ui-call",
       "line": 365,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+Pages.swift",
-      "source": "Verify OpenClaw can reach this gateway.",
+      "source": "Verify OpenCrustacean can reach this gateway.",
       "surface": "apple",
-      "id": "native.apple.f6332654911cb2e2"
+      "id": "native.apple.66ac5a79f3c068b0"
     },
     {
       "kind": "ui-call",
@@ -36005,9 +36133,9 @@
       "kind": "ui-named-argument",
       "line": 815,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+Pages.swift",
-      "source": "Install OpenClaw",
+      "source": "Install OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.e95f1cc961aee5a3"
+      "id": "native.apple.37cf55561202ff77"
     },
     {
       "kind": "conditional-branch",
@@ -36141,9 +36269,9 @@
       "kind": "ui-named-argument",
       "line": 960,
       "path": "apps/macos/Sources/OpenClaw/OnboardingView+Pages.swift",
-      "source": "Click the OpenClaw menu bar icon for the compact chat panel and status.",
+      "source": "Click the OpenCrustacean menu bar icon for the compact chat panel and status.",
       "surface": "apple",
-      "id": "native.apple.409bfb3a6e0f9f7c"
+      "id": "native.apple.34e138b4696c14f9"
     },
     {
       "kind": "ui-named-argument",
@@ -36357,17 +36485,17 @@
       "kind": "conditional-branch",
       "line": 270,
       "path": "apps/macos/Sources/OpenClaw/PairingApprovalPanelView.swift",
-      "source": "A node wants to connect to OpenClaw.",
+      "source": "A node wants to connect to OpenCrustacean.",
       "surface": "apple",
-      "id": "native.apple.fcef164f14da6208"
+      "id": "native.apple.badb90fdb966a795"
     },
     {
       "kind": "conditional-branch",
       "line": 271,
       "path": "apps/macos/Sources/OpenClaw/PairingApprovalPanelView.swift",
-      "source": "A device wants to connect to OpenClaw.",
+      "source": "A device wants to connect to OpenCrustacean.",
       "surface": "apple",
-      "id": "native.apple.217056cdb4424709"
+      "id": "native.apple.f13e355c954c2089"
     },
     {
       "kind": "conditional-branch",
@@ -36381,9 +36509,9 @@
       "kind": "conditional-branch",
       "line": 281,
       "path": "apps/macos/Sources/OpenClaw/PairingApprovalPanelView.swift",
-      "source": "OpenClaw Mac app",
+      "source": "OpenCrustacean Mac app",
       "surface": "apple",
-      "id": "native.apple.154fe84f1d704fb5"
+      "id": "native.apple.24bebe9fb345e8fb"
     },
     {
       "kind": "conditional-branch",
@@ -36525,9 +36653,9 @@
       "kind": "ui-call",
       "line": 75,
       "path": "apps/macos/Sources/OpenClaw/PermissionsSettings.swift",
-      "source": "OpenClaw only asks for macOS capabilities when a feature needs them.",
+      "source": "OpenCrustacean only asks for macOS capabilities when a feature needs them.",
       "surface": "apple",
-      "id": "native.apple.49b40cdcd258b296"
+      "id": "native.apple.b153199bcf70f39a"
     },
     {
       "kind": "ui-named-argument",
@@ -36739,19 +36867,27 @@
     },
     {
       "kind": "ui-localized-call",
+      "line": 202,
+      "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
+      "source": "Finishing your OpenClaw update",
+      "surface": "apple",
+      "id": "native.apple.6197fc2d1ebd6b2e"
+    },
+    {
+      "kind": "ui-localized-call",
       "line": 311,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "OpenClaw updated",
+      "source": "OpenCrustacean updated",
       "surface": "apple",
-      "id": "native.apple.65c21de72f06fd33"
+      "id": "native.apple.40555df4a2f20535"
     },
     {
       "kind": "ui-localized-call",
       "line": 330,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "Finishing your OpenClaw update",
+      "source": "Finishing your OpenCrustacean update",
       "surface": "apple",
-      "id": "native.apple.6197fc2d1ebd6b2e"
+      "id": "native.apple.9b1d4657d713e151"
     },
     {
       "kind": "ui-localized-call",
@@ -36773,9 +36909,9 @@
       "kind": "ui-localized-call",
       "line": 440,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "The managed OpenClaw runtime could not be reinstalled.",
+      "source": "The managed OpenCrustacean runtime could not be reinstalled.",
       "surface": "apple",
-      "id": "native.apple.91debe404bb7affc"
+      "id": "native.apple.5ddb5b5544e1953a"
     },
     {
       "kind": "ui-localized-call",
@@ -36813,25 +36949,25 @@
       "kind": "ui-localized-call",
       "line": 496,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "OpenClaw \\(receipt.toVersion) and its Gateway are ready.",
+      "source": "OpenCrustacean \\(receipt.toVersion) and its Gateway are ready.",
       "surface": "apple",
-      "id": "native.apple.69b54e24b90414dd"
+      "id": "native.apple.7c98dd8e7499a461"
     },
     {
       "kind": "ui-localized-call",
       "line": 497,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "OpenClaw \\(receipt.toVersion) and its Mac node runtime are ready.",
+      "source": "OpenCrustacean \\(receipt.toVersion) and its Mac node runtime are ready.",
       "surface": "apple",
-      "id": "native.apple.f9d6fa6d7aaf23b6"
+      "id": "native.apple.f3c4897b283a93cc"
     },
     {
       "kind": "ui-localized-call",
       "line": 500,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "Your agent could not be notified yet. OpenClaw will retry after the next app launch.",
+      "source": "Your agent could not be notified yet. OpenCrustacean will retry after the next app launch.",
       "surface": "apple",
-      "id": "native.apple.a3fa88f5fd3c2732"
+      "id": "native.apple.1ab38d056a1ed89f"
     },
     {
       "kind": "ui-localized-call-multiline",
@@ -36861,17 +36997,17 @@
       "kind": "ui-localized-call",
       "line": 523,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "The remote Gateway is older than this Mac app, so OpenClaw skipped the agent notification.",
+      "source": "The remote Gateway is older than this Mac app, so OpenCrustacean skipped the agent notification.",
       "surface": "apple",
-      "id": "native.apple.a3deea03e4870dd0"
+      "id": "native.apple.18ca9ef2499d2e94"
     },
     {
       "kind": "ui-localized-call",
       "line": 525,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "The Gateway remains paused, so OpenClaw did not wake your agent.",
+      "source": "The Gateway remains paused, so OpenCrustacean did not wake your agent.",
       "surface": "apple",
-      "id": "native.apple.3636a8b503ff00d2"
+      "id": "native.apple.182303c8d5b9294e"
     },
     {
       "kind": "ui-localized-call",
@@ -36941,9 +37077,9 @@
       "kind": "ui-localized-call",
       "line": 593,
       "path": "apps/macos/Sources/OpenClaw/PostUpdate.swift",
-      "source": "OpenClaw installed the update but could not verify the Gateway connection.",
+      "source": "OpenCrustacean installed the update but could not verify the Gateway connection.",
       "surface": "apple",
-      "id": "native.apple.9ac2dfa295929a92"
+      "id": "native.apple.3381b0e9da3f20d5"
     },
     {
       "kind": "ui-localized-call",
@@ -37165,9 +37301,9 @@
       "kind": "ui-localized-call",
       "line": 313,
       "path": "apps/macos/Sources/OpenClaw/QuickChatFocusedTextCapture.swift",
-      "source": "Allow OpenClaw to read text from \\(appName)",
+      "source": "Allow OpenCrustacean to read text from \\(appName)",
       "surface": "apple",
-      "id": "native.apple.507c2d9c7e94716f"
+      "id": "native.apple.99143db64f1fdd1f"
     },
     {
       "kind": "ui-localized-call",
@@ -37437,17 +37573,17 @@
       "kind": "ui-localized-call",
       "line": 221,
       "path": "apps/macos/Sources/OpenClaw/QuickChatWindowPicker.swift",
-      "source": "Allow OpenClaw to capture windows",
+      "source": "Allow OpenCrustacean to capture windows",
       "surface": "apple",
-      "id": "native.apple.88d0123c86b06144"
+      "id": "native.apple.f0a2425fc14e93e7"
     },
     {
       "kind": "ui-localized-call",
       "line": 222,
       "path": "apps/macos/Sources/OpenClaw/QuickChatWindowPicker.swift",
-      "source": "Allow OpenClaw to capture a screen area",
+      "source": "Allow OpenCrustacean to capture a screen area",
       "surface": "apple",
-      "id": "native.apple.677c5733cd132aed"
+      "id": "native.apple.1ad96be5a07c49c8"
     },
     {
       "kind": "ui-localized-call",
@@ -37557,9 +37693,9 @@
       "kind": "conditional-branch",
       "line": 74,
       "path": "apps/macos/Sources/OpenClaw/RemoteGatewayProbe.swift",
-      "source": "Scan or paste a fresh setup code from an already-paired OpenClaw client, then try again.",
+      "source": "Scan or paste a fresh setup code from an already-paired OpenCrustacean client, then try again.",
       "surface": "apple",
-      "id": "native.apple.e85b68221571e93c"
+      "id": "native.apple.a642abda73c1e815"
     },
     {
       "kind": "conditional-branch",
@@ -37573,9 +37709,9 @@
       "kind": "conditional-branch",
       "line": 79,
       "path": "apps/macos/Sources/OpenClaw/RemoteGatewayProbe.swift",
-      "source": "Approve this device from an already-paired OpenClaw client. In your OpenClaw chat, run `/pair approve`, then click **Check connection** again.",
+      "source": "Approve this device from an already-paired OpenCrustacean client. In your OpenClaw chat, run `/pair approve`, then click **Check connection** again.",
       "surface": "apple",
-      "id": "native.apple.52c0f97f0b3bb792"
+      "id": "native.apple.3d036c0b8d9d3a24"
     },
     {
       "kind": "conditional-branch",
@@ -37621,9 +37757,9 @@
       "kind": "conditional-branch",
       "line": 112,
       "path": "apps/macos/Sources/OpenClaw/RemoteGatewayProbe.swift",
-      "source": "Pairing required. In an already-paired OpenClaw client, run /pair approve, then check the connection again.",
+      "source": "Pairing required. In an already-paired OpenCrustacean client, run /pair approve, then check the connection again.",
       "surface": "apple",
-      "id": "native.apple.3e5a2b2a24f73418"
+      "id": "native.apple.a4a2803caf9814d5"
     },
     {
       "kind": "conditional-branch",
@@ -38005,9 +38141,9 @@
       "kind": "conditional-branch",
       "line": 515,
       "path": "apps/macos/Sources/OpenClaw/SettingsRootView.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.59bed721dff1a25f"
+      "id": "native.apple.8a500545b387cbe1"
     },
     {
       "kind": "conditional-branch",
@@ -38469,9 +38605,9 @@
       "kind": "ui-named-argument",
       "line": 22,
       "path": "apps/macos/Sources/OpenClaw/SystemAgentSettings.swift",
-      "source": "OpenClaw",
+      "source": "OpenCrustacean",
       "surface": "apple",
-      "id": "native.apple.4b27b3be5f3f1f66"
+      "id": "native.apple.3c6039a3a52d104d"
     },
     {
       "kind": "ui-named-argument-multiline",
@@ -39653,17 +39789,17 @@
       "kind": "ui-localized-call",
       "line": 976,
       "path": "apps/macos/Sources/OpenClaw/WebChatSwiftUI.swift",
-      "source": "Check OpenClaw status",
+      "source": "Check OpenCrustacean status",
       "surface": "apple",
-      "id": "native.apple.448dfe21a7f3a883"
+      "id": "native.apple.7e13e8ea4e556f78"
     },
     {
       "kind": "ui-localized-call",
       "line": 977,
       "path": "apps/macos/Sources/OpenClaw/WebChatSwiftUI.swift",
-      "source": "Summarize the current OpenClaw status and tell me what needs attention.",
+      "source": "Summarize the current OpenCrustacean status and tell me what needs attention.",
       "surface": "apple",
-      "id": "native.apple.00f4977e0123ce7a"
+      "id": "native.apple.65bf65475c68b78a"
     },
     {
       "kind": "ui-localized-call",
@@ -42901,9 +43037,9 @@
       "kind": "ui-localized-call",
       "line": 738,
       "path": "apps/shared/OpenClawKit/Sources/OpenClawKit/GatewayConnectionProblem.swift",
-      "source": "OpenClaw could not read the gateway certificate for %@.",
+      "source": "OpenCrustacean could not read the gateway certificate for %@.",
       "surface": "apple",
-      "id": "native.apple.1823d7bddaa73a1a"
+      "id": "native.apple.a37c67e5597a270e"
     },
     {
       "kind": "ui-localized-call",
@@ -42925,9 +43061,9 @@
       "kind": "ui-localized-call",
       "line": 769,
       "path": "apps/shared/OpenClawKit/Sources/OpenClawKit/GatewayConnectionProblem.swift",
-      "source": "OpenClaw could not securely save the TLS certificate pin for %@.",
+      "source": "OpenCrustacean could not securely save the TLS certificate pin for %@.",
       "surface": "apple",
-      "id": "native.apple.7493b8bf5dcaa05f"
+      "id": "native.apple.85cde5457fb05da7"
     },
     {
       "kind": "ui-localized-call",

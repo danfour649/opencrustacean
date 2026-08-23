@@ -94,7 +94,7 @@ struct OpenClawApp: App {
             BrowserProfileImportModel.shared.handleConnectionModeChange()
         }
 
-        Window("OpenClaw Settings", id: SettingsWindowOpener.windowID) {
+        Window("OpenCrustacean Settings", id: SettingsWindowOpener.windowID) {
             SettingsRootView(state: self.state, updater: self.delegate.updaterController)
                 .frame(width: SettingsTab.windowWidth, height: SettingsTab.windowHeight, alignment: .topLeading)
                 .environment(self.tailscaleService)
@@ -154,8 +154,8 @@ struct OpenClawApp: App {
         // leak into menu item validation and grey out app-level commands like Settings.
         self.statusItem?.button?.appearsDisabled = false
         self.statusItem?.button?.toolTip = self.state.voiceWakeMeterActive
-            ? "OpenClaw - Voice Wake live meter active"
-            : "OpenClaw"
+            ? "OpenCrustacean - Voice Wake live meter active"
+            : "OpenCrustacean"
     }
 
     private static func applyAttachOnlyOverrideIfNeeded() {
@@ -740,7 +740,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             // Bind inference discovery to the connected route. A socket without a
-            // default-agent model cannot run OpenClaw and must stay in onboarding.
+            // default-agent model cannot run OpenCrustacean and must stay in onboarding.
             do {
                 configuredInferenceModel = try await GatewayConnection.shared.configuredInferenceModel(
                     ifCurrentRoute: route)

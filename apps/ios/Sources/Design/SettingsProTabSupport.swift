@@ -321,9 +321,9 @@ enum SettingsNotificationPresentation: Equatable {
             String(localized: "Checking iOS notification permission.")
         case .enabled:
             String(
-                localized: "OpenClaw can show approval prompts and event alerts when the app is not active.")
+                localized: "OpenCrustacean can show approval prompts and event alerts when the app is not active.")
         case .off:
-            String(localized: "OpenClaw notifications are off.")
+            String(localized: "OpenCrustacean notifications are off.")
         case .setup:
             String(
                 localized: "Finish notification setup to receive alerts when the app is not active.")
@@ -333,7 +333,7 @@ enum SettingsNotificationPresentation: Equatable {
             String(
                 localized: "Enable notifications to receive approval prompts and event alerts outside the app.")
         case .unknown:
-            String(localized: "OpenClaw cannot determine the current notification permission state.")
+            String(localized: "OpenCrustacean cannot determine the current notification permission state.")
         }
     }
 

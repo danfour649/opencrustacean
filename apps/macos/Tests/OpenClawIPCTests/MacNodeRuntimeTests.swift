@@ -910,7 +910,7 @@ struct MacNodeRuntimeTests {
 
         #expect(response.ok == false)
         #expect(response.error?.code == .unavailable)
-        #expect(response.error?.message == "ACCESSIBILITY_REQUIRED: grant Accessibility permission to OpenClaw")
+        #expect(response.error?.message == "ACCESSIBILITY_REQUIRED: grant Accessibility permission to OpenCrustacean")
     }
 
     @Test func `handle invoke rejects malformed computer act params`() async {

@@ -103,7 +103,7 @@ enum DeviceIdentityPaths {
 
     static func legacyStateDirURL() -> URL? {
         if let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
-            return appSupport.appendingPathComponent("OpenClaw", isDirectory: true)
+            return appSupport.appendingPathComponent("OpenCrustacean", isDirectory: true)
         }
         return nil
     }
@@ -139,7 +139,7 @@ enum DeviceIdentityPaths {
         else {
             return nil
         }
-        return containerURL.appendingPathComponent("OpenClaw", isDirectory: true)
+        return containerURL.appendingPathComponent("OpenCrustacean", isDirectory: true)
     }
 
     struct LegacyIdentitySource: Equatable {
@@ -228,7 +228,7 @@ public enum DeviceIdentityStore {
 
     public static func loadOrCreate(profile: GatewayDeviceIdentityProfile) -> DeviceIdentity {
         guard let identity = loadOrCreatePersisted(profile: profile) else {
-            preconditionFailure("Could not persist the OpenClaw device identity")
+            preconditionFailure("Could not persist the OpenCrustacean device identity")
         }
         return identity
     }

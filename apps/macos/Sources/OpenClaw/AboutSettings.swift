@@ -29,7 +29,7 @@ struct AboutSettings: View {
                 }
 
             VStack(spacing: 3) {
-                Text("OpenClaw")
+                Text("OpenCrustacean")
                     .font(.title3.bold())
                 AboutBuildMetadataStrip(metadata: self.buildMetadata)
                     .padding(.top, 3)
@@ -76,7 +76,7 @@ struct AboutSettings: View {
                 }
             }
 
-            Text("© 2026 OpenClaw Foundation — MIT License.")
+            Text("© 2026 OpenCrustacean Foundation — MIT License.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .padding(.top, 4)

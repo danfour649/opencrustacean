@@ -15,7 +15,7 @@ func chatMarkdownDisclosureSummarySource(
 }
 
 /// Shared native Markdown rendering for app-owned chat surfaces outside the
-/// full OpenClaw chat transcript.
+/// full OpenCrustacean chat transcript.
 @MainActor
 public struct OpenClawChatMarkdownView: View {
     private let text: String

@@ -117,7 +117,7 @@ enum MacChatTranscriptCache {
         else {
             return nil
         }
-        let root = base.appendingPathComponent("OpenClaw", isDirectory: true)
+        let root = base.appendingPathComponent("OpenCrustacean", isDirectory: true)
         let databaseDirectoryURL = root.appendingPathComponent("databases", isDirectory: true)
         guard let databases = self.databases(
             directoryURL: databaseDirectoryURL,

@@ -577,11 +577,11 @@ class ShellScreenLogicTest {
       stableOverviewRecentRows(
         previousRows =
           listOf(
-            RecentSessionListItem(key = "main", title = "Main session", source = "OpenClaw", metadata = "1h"),
+            RecentSessionListItem(key = "main", title = "Main session", source = "OpenCrustacean", metadata = "1h"),
           ),
         candidateRows =
           listOf(
-            RecentSessionListItem(key = "main", title = "Main session", source = "OpenClaw", metadata = ""),
+            RecentSessionListItem(key = "main", title = "Main session", source = "OpenCrustacean", metadata = ""),
           ),
       )
 
@@ -594,12 +594,12 @@ class ShellScreenLogicTest {
       stableOverviewRecentRows(
         previousRows =
           listOf(
-            RecentSessionListItem(key = "main", title = "Main session", source = "OpenClaw", metadata = "1h"),
+            RecentSessionListItem(key = "main", title = "Main session", source = "OpenCrustacean", metadata = "1h"),
             RecentSessionListItem(key = "discord", title = "Discord", source = "Discord", metadata = "2h"),
           ),
         candidateRows =
           listOf(
-            RecentSessionListItem(key = "main", title = "Main session", source = "OpenClaw", metadata = "1h"),
+            RecentSessionListItem(key = "main", title = "Main session", source = "OpenCrustacean", metadata = "1h"),
             RecentSessionListItem(key = "cron", title = "Cron", source = "Cron", metadata = "4h"),
           ),
       )
@@ -671,7 +671,7 @@ class ShellScreenLogicTest {
 
     assertEquals("Scout", overviewAgentName(agents = agents, defaultAgentId = "scout"))
     assertEquals("Main", overviewAgentName(agents = agents, defaultAgentId = null))
-    assertEquals("OpenClaw", overviewAgentName(agents = emptyList(), defaultAgentId = null))
+    assertEquals("OpenCrustacean", overviewAgentName(agents = emptyList(), defaultAgentId = null))
   }
 
   @Test
@@ -749,9 +749,9 @@ class ShellScreenLogicTest {
     assertEquals("Telegram", sessionSourceLabel("agent:main:telegram:direct:584667058"))
     assertEquals("Discord", sessionSourceLabel("agent:main:discord:channel:1001"))
     assertEquals("Slack", sessionSourceLabel("agent:main:slack:channel:C123"))
-    assertEquals("OpenClaw", sessionSourceLabel("agent:main:node-android"))
-    assertEquals("OpenClaw", sessionSourceLabel("agent:main:main"))
-    assertEquals("OpenClaw", sessionSourceLabel("Daily standup"))
+    assertEquals("OpenCrustacean", sessionSourceLabel("agent:main:node-android"))
+    assertEquals("OpenCrustacean", sessionSourceLabel("agent:main:main"))
+    assertEquals("OpenCrustacean", sessionSourceLabel("Daily standup"))
   }
 
   @Test

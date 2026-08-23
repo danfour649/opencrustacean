@@ -189,7 +189,7 @@ struct OnboardingAISetupView: View {
                     : "Looking for AI you already use…")
                     .font(.callout.weight(.semibold))
                 Text(self.model.waitingForPendingActivationDeadline
-                    ? "OpenClaw will check again before changing any inference settings."
+                    ? "OpenCrustacean will check again before changing any inference settings."
                     : "Checking CLI logins, saved API keys, and local model servers on the Gateway.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -277,7 +277,7 @@ struct OnboardingAISetupView: View {
                 Button {
                     self.showSystemAgentChat = true
                 } label: {
-                    Label("Need help? Chat with OpenClaw", systemImage: "questionmark.bubble")
+                    Label("Need help? Chat with OpenCrustacean", systemImage: "questionmark.bubble")
                         .font(.caption)
                 }
                 .buttonStyle(.link)
@@ -560,7 +560,7 @@ struct OnboardingAISetupView: View {
                     .font(.headline)
                 Text(
                     "Use an existing subscription or provider account. " +
-                        "OpenClaw opens the provider’s own sign-in flow, then verifies it with a real reply.")
+                        "OpenCrustacean opens the provider’s own sign-in flow, then verifies it with a real reply.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -884,15 +884,15 @@ struct OnboardingAISetupView: View {
     private var manualProviderHelp: String {
         let hint = self.model.selectedManualProvider?.hint?.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let hint, !hint.isEmpty else {
-            return "Paste the key or token here, and OpenClaw checks it with a real test question."
+            return "Paste the key or token here, and OpenCrustacean checks it with a real test question."
         }
-        return "\(hint). Paste it here, and OpenClaw checks it with a real test question."
+        return "\(hint). Paste it here, and OpenCrustacean checks it with a real test question."
     }
 
     private var systemAgentSheet: some View {
         VStack(spacing: 8) {
             HStack {
-                Label("OpenClaw — setup helper", systemImage: "lifepreserver")
+                Label("OpenCrustacean — setup helper", systemImage: "lifepreserver")
                     .font(.headline)
                 Spacer(minLength: 0)
                 Button("Done") {

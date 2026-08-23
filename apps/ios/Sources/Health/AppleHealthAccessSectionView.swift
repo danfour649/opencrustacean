@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// OpenClaw's product opt-in for requesting read-only summaries from Apple Health.
+/// OpenCrustacean's product opt-in for requesting read-only summaries from Apple Health.
 /// Apple Health permission remains owned by the system permission sheet and Settings.
 struct AppleHealthAccessSectionView: View {
     @Environment(GatewayConnectionController.self) private var gatewayController
@@ -37,7 +37,7 @@ struct AppleHealthAccessSectionView: View {
 
     private var healthGrant: DevicePermissionGrant {
         guard HealthAuthorization.isAvailable else { return .denied }
-        // HealthKit hides read authorization; this is only OpenClaw's sharing switch.
+        // HealthKit hides read authorization; this is only OpenCrustacean's sharing switch.
         return self.healthEnabled ? .granted : .notRequested
     }
 

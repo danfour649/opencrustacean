@@ -244,7 +244,7 @@ class PermissionRequester internal constructor(
   private fun buildRationaleMessage(permissions: List<String>): String {
     val labels = permissions.map { permissionLabel(it) }
     return nativeString(
-      "OpenClaw needs \${labels.joinToString(\", \")} permissions to continue.",
+      "OpenCrustacean needs \${labels.joinToString(\", \")} permissions to continue.",
       labels.joinToString(", "),
     )
   }

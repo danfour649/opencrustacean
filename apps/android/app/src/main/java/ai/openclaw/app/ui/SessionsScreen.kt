@@ -342,7 +342,7 @@ internal fun SessionsScreen(
               subtitle =
                 sessionListSubtitle(
                   session,
-                  fallback = if (active) nativeString("Current thread") else nativeString("OpenClaw thread"),
+                  fallback = if (active) nativeString("Current thread") else nativeString("OpenCrustacean thread"),
                 ),
               metadata = (session.lastActivityAt ?: session.updatedAtMs)?.let(::relativeSessionTime) ?: nativeString("now"),
               active = active,
@@ -647,7 +647,7 @@ private fun SessionRow(
               Text(text = subtitle, style = ClawTheme.type.caption.copy(fontSize = 12.5.sp, lineHeight = 16.sp), color = ClawTheme.colors.textMuted, maxLines = 1)
               Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 SessionMiniTag(text = nativeString("Workspace"))
-                SessionMiniTag(text = if (active) nativeString("Current") else nativeString("OpenClaw"))
+                SessionMiniTag(text = if (active) nativeString("Current") else nativeString("OpenCrustacean"))
               }
             }
           }

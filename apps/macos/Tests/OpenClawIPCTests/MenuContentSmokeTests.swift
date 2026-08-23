@@ -204,7 +204,7 @@ struct MenuContentSmokeTests {
         #expect(shouldOpen)
     }
 
-    @Test func `pending OpenClaw handoff survives relaunch and keeps onboarding`() {
+    @Test func `pending OpenCrustacean handoff survives relaunch and keeps onboarding`() {
         let shouldOpen = AppDelegate.shouldOpenDashboardInsteadOfOnboarding(
             connectionMode: .local,
             onboardingSeen: false,

@@ -6,29 +6,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
 // Keep this script independent from the translation client loaded by native-app-i18n.
 // Artifact locale assertions below make drift fail instead of silently dropping a language.
-export const APPLE_I18N_LOCALES = [
-  "zh-CN",
-  "zh-TW",
-  "pt-BR",
-  "de",
-  "es",
-  "ja-JP",
-  "ko",
-  "fr",
-  "hi",
-  "ar",
-  "it",
-  "tr",
-  "uk",
-  "id",
-  "pl",
-  "th",
-  "vi",
-  "nl",
-  "fa",
-  "ru",
-  "sv",
-] as const;
+// English-only fork: OpenCrustacean ships English strings only.
+export const APPLE_I18N_LOCALES = [] as const;
 const REQUIRED_LOCALES = ["en", ...APPLE_I18N_LOCALES];
 const FORMAT_RE = /%(?:%|(?:\d+\$)?(?:lld|ld|[@a-z]))/giu;
 const INFLECTED_COUNT_INTERPOLATION_RE = /\\\([A-Za-z_][A-Za-z0-9_]*\)/gu;

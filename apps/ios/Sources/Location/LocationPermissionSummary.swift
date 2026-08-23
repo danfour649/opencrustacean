@@ -65,11 +65,11 @@ struct LocationPermissionSummary: Equatable {
             self.accuracyAuthorization)
         {
         case (.off, false, _, _):
-            "Location sharing is disabled in OpenClaw. Location Services are off in iOS Settings."
+            "Location sharing is disabled in OpenCrustacean. Location Services are off in iOS Settings."
         case (.off, true, .authorizedAlways, _):
-            "Location sharing is disabled in OpenClaw. iOS currently allows Always."
+            "Location sharing is disabled in OpenCrustacean. iOS currently allows Always."
         case (.off, true, .authorizedWhenInUse, _):
-            "Location sharing is disabled in OpenClaw. iOS currently allows While Using."
+            "Location sharing is disabled in OpenCrustacean. iOS currently allows While Using."
         case (.off, _, _, _):
             "Location sharing is disabled."
         case (_, false, _, _):
@@ -105,7 +105,7 @@ struct LocationPermissionSummary: Equatable {
         case (_, true, .notDetermined, _):
             "Choose a location mode to request iOS permission."
         @unknown default:
-            "OpenClaw cannot determine the current iOS location permission."
+            "OpenCrustacean cannot determine the current iOS location permission."
         }
     }
 }

@@ -310,13 +310,13 @@ struct RootTabsSourceGuardTests {
         #expect(sidebarDetail.contains("headerTitle: \"Dreaming\""))
         #expect(sidebarDetail.contains("headerTitle: \"Usage\""))
         #expect(sidebarDetail.contains("headerTitle: \"Automations\""))
-        #expect(!sidebarDetail.contains("headerTitle: \"OpenClaw\""))
+        #expect(!sidebarDetail.contains("headerTitle: \"OpenCrustacean\""))
         #expect(agentOverviewSource.contains("OpenClawAdaptiveHeaderRow("))
         #expect(agentOverviewSource.contains("title: .localized(self.headerTitle)"))
-        #expect(!agentOverviewSource.contains("Text(\"OpenClaw\")"))
+        #expect(!agentOverviewSource.contains("Text(\"OpenCrustacean\")"))
         #expect(docsSource.contains("OpenClawAdaptiveHeaderRow("))
         #expect(docsSource.contains("title: \"Docs\""))
-        #expect(!docsSource.contains("Text(\"OpenClaw Docs\")"))
+        #expect(!docsSource.contains("Text(\"OpenCrustacean Docs\")"))
     }
 
     @Test func `agents direct route keeps single sidebar control`() throws {
@@ -443,7 +443,7 @@ struct RootTabsSourceGuardTests {
         #expect(!aboutDestination.contains("detailStatusCard("))
         #expect(aboutDestination.contains("detailListCard"))
         #expect(aboutDestination.contains("SettingsBuildMetadataStrip(metadata: DeviceInfoHelper.buildMetadata())"))
-        #expect(!aboutDestination.contains("SettingsDetailRow(\"OpenClaw app version\""))
+        #expect(!aboutDestination.contains("SettingsDetailRow(\"OpenCrustacean app version\""))
         #expect(aboutDestination.contains(
             "SettingsDetailRow(\"Device\", value: .verbatim(DeviceInfoHelper.deviceFamily()))"))
         #expect(aboutDestination.contains(
@@ -1921,7 +1921,7 @@ extension RootTabsSourceGuardTests {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("OpenClaw.xcodeproj/project.pbxproj")
+            .appendingPathComponent("OpenCrustacean.xcodeproj/project.pbxproj")
     }
 
     static func extract(_ source: String, from start: String, to end: String) throws -> String {

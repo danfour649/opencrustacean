@@ -3,15 +3,15 @@ import Testing
 
 struct AppLaunchPresentationPolicyTests {
     @Test func `normal launches allow automatic presentation`() {
-        let policy = AppLaunchPresentationPolicy(arguments: ["OpenClaw"])
+        let policy = AppLaunchPresentationPolicy(arguments: ["OpenCrustacean"])
 
         #expect(policy.allowsAutomaticPresentation)
-        #expect(policy.shouldAutoOpenChat(arguments: ["OpenClaw", "--chat"]))
-        #expect(policy.shouldAutoOpenDashboard(arguments: ["OpenClaw", "--dashboard"]))
+        #expect(policy.shouldAutoOpenChat(arguments: ["OpenCrustacean", "--chat"]))
+        #expect(policy.shouldAutoOpenDashboard(arguments: ["OpenCrustacean", "--dashboard"]))
     }
 
     @Test func `background-only wins over automatic presentation flags`() {
-        let arguments = ["OpenClaw", "--background-only", "--chat", "--dashboard"]
+        let arguments = ["OpenCrustacean", "--background-only", "--chat", "--dashboard"]
         let policy = AppLaunchPresentationPolicy(arguments: arguments)
 
         #expect(!policy.allowsAutomaticPresentation)
@@ -20,7 +20,7 @@ struct AppLaunchPresentationPolicyTests {
     }
 
     @Test func `attach-only does not change presentation behavior`() {
-        let arguments = ["OpenClaw", "--attach-only", "--dashboard"]
+        let arguments = ["OpenCrustacean", "--attach-only", "--dashboard"]
         let policy = AppLaunchPresentationPolicy(arguments: arguments)
 
         #expect(policy.allowsAutomaticPresentation)

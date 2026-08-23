@@ -130,11 +130,11 @@ enum CLIInstaller {
         var message: String {
             switch self {
             case let .ready(_, version):
-                "OpenClaw Gateway \(version) is ready."
+                "OpenCrustacean Gateway \(version) is ready."
             case .missing:
-                "OpenClaw Gateway is not installed yet."
+                "OpenCrustacean Gateway is not installed yet."
             case .unusable:
-                "The OpenClaw Gateway could not be verified. Setup will repair it."
+                "The OpenCrustacean Gateway could not be verified. Setup will repair it."
             case let .incompatible(_, found, required):
                 "Gateway \(found) does not match app \(required). Setup will update it."
             }
@@ -325,9 +325,9 @@ enum CLIInstaller {
         statusHandler: @escaping @MainActor @Sendable (String) async -> Void) async -> Bool
     {
         let prefix = Self.installPrefix()
-        await statusHandler("Installing OpenClaw CLI (\(target.selector))…")
+        await statusHandler("Installing OpenCrustacean CLI (\(target.selector))…")
         guard let installerURL = Bundle.main.url(forResource: "install-cli", withExtension: "sh") else {
-            await statusHandler("Install failed: installer resource is missing. Reinstall OpenClaw.")
+            await statusHandler("Install failed: installer resource is missing. Reinstall OpenCrustacean.")
             return false
         }
         let cmd = self.installScriptCommand(
@@ -426,8 +426,8 @@ enum CLIInstaller {
     {
         let executable = self.managedExecutableLocation()
         await statusHandler(repair
-            ? String(localized: "Repairing the OpenClaw Gateway update…")
-            : String(localized: "Updating the OpenClaw Gateway to \(targetVersion)…"))
+            ? String(localized: "Repairing the OpenCrustacean Gateway update…")
+            : String(localized: "Updating the OpenCrustacean Gateway to \(targetVersion)…"))
         let command = self.managedUpdateCommand(
             executable: executable,
             targetVersion: targetVersion,
@@ -472,7 +472,7 @@ enum CLIInstaller {
 
         self.rememberInstallPolicy(.exact(targetVersion))
         NotificationCenter.default.post(name: .openclawCLIInstalled, object: nil)
-        await statusHandler(String(localized: "OpenClaw Gateway \(installedVersion) is installed."))
+        await statusHandler(String(localized: "OpenCrustacean Gateway \(installedVersion) is installed."))
         return .success(
             fromVersion: summary?.before?.version,
             toVersion: installedVersion)

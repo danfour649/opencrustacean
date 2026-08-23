@@ -66,7 +66,7 @@ private val RightAntennaPivot = Offset(82.5f, 11f)
 private val LeftEyeCenter = Offset(45f, 35f)
 private val RightEyeCenter = Offset(75f, 35f)
 
-/** Animated 120x120 OpenClaw mascot. [tint] keeps the single-color icon rendering path. */
+/** Animated 120x120 OpenCrustacean mascot. [tint] keeps the single-color icon rendering path. */
 @Composable
 fun OpenClawMascot(
   modifier: Modifier = Modifier,
