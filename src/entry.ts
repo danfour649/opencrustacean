@@ -35,6 +35,8 @@ import { defaultRuntime } from "./runtime.js";
 const ENTRY_WRAPPER_PAIRS = [
   { wrapperBasename: "openclaw.mjs", entryBasename: "entry.js" },
   { wrapperBasename: "openclaw.js", entryBasename: "entry.js" },
+  { wrapperBasename: "opencrustacean.mjs", entryBasename: "entry.js" },
+  { wrapperBasename: "opencrustacean.js", entryBasename: "entry.js" },
 ] as const;
 
 const loadRootHelpLiveConfigModule = async () => await import("./cli/root-help-live-config.js");
