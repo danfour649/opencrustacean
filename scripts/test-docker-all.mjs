@@ -19,6 +19,7 @@ import {
   laneResources,
   laneSummary,
   laneWeight,
+  laneCredentialRequirements,
   lanesNeedE2eImageKind,
   lanesNeedOpenClawPackage,
   normalizeReleaseProfile,
@@ -1522,7 +1523,7 @@ async function main() {
   appendExtension(baseEnv, "codex");
 
   const timingStore = await loadTimingStore(timingsFile, timingsEnabled);
-  const { omittedUnsupportedLaneNames, orderedLanes, orderedTailLanes, plan, scheduledLanes } =
+  let { omittedUnsupportedLaneNames, orderedLanes, orderedTailLanes, plan, scheduledLanes } =
     resolveDockerE2ePlan({
       includeOpenWebUI,
       liveMode,
@@ -1539,12 +1540,53 @@ async function main() {
       upgradeSurvivorTargetRoot: process.env.OPENCLAW_UPGRADE_SURVIVOR_TARGET_ROOT,
       allowFrozenTargetScenarioOmissions,
     });
+  const absentCredentials = new Set(
+    String(process.env.OPENCLAW_DOCKER_ABSENT_CREDENTIALS || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean),
+  );
+  let skippedForCredentials = 0;
+  if (absentCredentials.size > 0) {
+    const keepLane = (poolLane) => {
+      const missing = laneCredentialRequirements(poolLane).filter((credential) =>
+        absentCredentials.has(credential),
+      );
+      if (missing.length === 0) {
+        return true;
+      }
+      skippedForCredentials += 1;
+      console.log(
+        `==> Skipping Docker lane ${poolLane.name}: missing credential ${missing.join(",")}`,
+      );
+      return false;
+    };
+    orderedLanes = orderedLanes.filter(keepLane);
+    orderedTailLanes = orderedTailLanes.filter(keepLane);
+    scheduledLanes = [...orderedLanes, ...orderedTailLanes];
+  }
   if (omittedUnsupportedLaneNames.length > 0 && !allowFrozenTargetScenarioOmissions) {
     throw new Error(
       `frozen target scenario omissions require trusted workflow opt-in: ${omittedUnsupportedLaneNames.join(", ")}`,
     );
   }
   if (scheduledLanes.length === 0 && omittedUnsupportedLaneNames.length === 0) {
+    if (skippedForCredentials > 0) {
+      console.log("==> All selected Docker lanes skipped because required credentials are absent.");
+      await mkdir(logDir, { recursive: true });
+      await writeSummary({
+        chunk: releaseChunk || undefined,
+        failures: [],
+        lanes: [],
+        phases,
+        profile,
+        selectedLanes: selectedLaneNames.length > 0 ? selectedLaneNames : undefined,
+        skippedForCredentials,
+        startedAt: runStartedAt,
+        status: "passed",
+      });
+      return;
+    }
     throw new Error(
       [
         "resolved zero Docker lanes",

@@ -542,7 +542,7 @@ export function findLaneByName(name) {
   ).find((poolLane) => poolLane.name === name);
 }
 
-function laneCredentialRequirements(poolLane) {
+export function laneCredentialRequirements(poolLane) {
   const resources = laneResources(poolLane);
   const credentials = [];
   if (poolLane.name === "install-e2e-openai") {
