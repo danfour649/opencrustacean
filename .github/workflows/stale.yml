@@ -808,19 +808,22 @@ jobs:
 
   lock-closed-issues:
     needs: stale
-    if: ${{ (github.event_name != 'workflow_dispatch' || inputs.backfill_stale_closures != true) && secrets.GH_APP_PRIVATE_KEY != '' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.backfill_stale_closures != true }}
     permissions:
       issues: write
     runs-on: blacksmith-16vcpu-ubuntu-2404
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
+        if: secrets.GH_APP_PRIVATE_KEY != ''
+        continue-on-error: true
         with:
           app-id: "2729701"
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           permission-issues: write
           permission-metadata: read
       - name: Lock closed issues after 48h of no activity
+        if: steps.app-token.outputs.token != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ steps.app-token.outputs.token }}
@@ -866,3 +869,11 @@ jobs:
             core.info(
               `Found ${data.total_count} unlocked issues inactive for 48h; locked ${candidates.length}.`,
             );
+      - name: Skip issue locking without a GitHub App key
+        if: secrets.GH_APP_PRIVATE_KEY == ''
+        run: echo "Skipping closed-issue locking. Add GH_APP_PRIVATE_KEY (app 2729701) under Settings → Secrets and variables → Actions."
+      - name: Require a GitHub App token when a key is configured
+        if: always() && secrets.GH_APP_PRIVATE_KEY != '' && steps.app-token.outputs.token == ''
+        run: |
+          echo "GH_APP_PRIVATE_KEY is configured, but the GitHub App did not produce a token." >&2
+          exit 1
