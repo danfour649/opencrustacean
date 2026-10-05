@@ -328,6 +328,7 @@ prepare_update_tarball() {
       --output-dir "$UPDATE_DIR"
       --pack-json "$pack_json_file"
       --skip-build
+      --npm-package-name "$PACKAGE_NAME"
     )
     if [[ "${OPENCLAW_INSTALL_SMOKE_ALLOW_UNRELEASED_CHANGELOG:-true}" == "true" ]]; then
       package_args+=(--allow-unreleased-changelog)

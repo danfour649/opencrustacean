@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 export function parseArgs(argv: unknown): {
   allowUnreleasedChangelog: boolean;
+  npmPackageName: string;
   outputDir: string;
   outputName: string;
   packJson: string;

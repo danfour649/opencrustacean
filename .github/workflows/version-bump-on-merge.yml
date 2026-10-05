@@ -61,7 +61,7 @@ jobs:
           fi
 
           git checkout -b "${BRANCH}"
-          git add package.json
+          git add package.json packages/ai/package.json packages/gateway-client/package.json packages/gateway-protocol/package.json
           git commit -m "chore: bump version to ${VERSION}"
           git push origin "${BRANCH}"
           gh pr create --base main --head "${BRANCH}"             --title "chore: bump version to ${VERSION}"             --body "Automated version bump (one per merged PR). The header version chip shows this after the next rebuild."

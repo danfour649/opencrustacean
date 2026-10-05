@@ -118,6 +118,14 @@ function validateOutputName(value) {
   }
 }
 
+const NPM_PACKAGE_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/u;
+
+function validateNpmPackageName(value) {
+  if (!NPM_PACKAGE_NAME_PATTERN.test(value)) {
+    throw new Error(`--npm-package-name must be an unscoped npm package name: ${value}`);
+  }
+}
+
 function resolvePackedOpenClawFileName(value) {
   const filename = value.trim();
   if (
@@ -144,6 +152,7 @@ function resolvePackedOpenClawFileName(value) {
 export function parseArgs(argv) {
   const options = {
     allowUnreleasedChangelog: false,
+    npmPackageName: "",
     outputDir: "",
     outputName: "",
     packJson: "",
@@ -163,6 +172,15 @@ export function parseArgs(argv) {
     const arg = argv[index];
     if (arg === "--allow-unreleased-changelog") {
       setOnce(arg, "allowUnreleasedChangelog", true);
+    } else if (arg === "--npm-package-name") {
+      setOnce("--npm-package-name", "npmPackageName", readOptionValue(argv, index, arg));
+      index += 1;
+    } else if (arg?.startsWith("--npm-package-name=")) {
+      setOnce(
+        "--npm-package-name",
+        "npmPackageName",
+        readEqualsOptionValue(arg.slice("--npm-package-name=".length), "--npm-package-name"),
+      );
     } else if (arg === "--output-dir") {
       setOnce("--output-dir", "outputDir", readOptionValue(argv, index, arg));
       index += 1;
@@ -206,6 +224,9 @@ export function parseArgs(argv) {
     } else {
       throw new Error(`unknown argument: ${arg}`);
     }
+  }
+  if (options.npmPackageName) {
+    validateNpmPackageName(options.npmPackageName);
   }
   if (options.outputName) {
     validateOutputName(options.outputName);
@@ -672,6 +693,63 @@ export async function prepareBundledAiRuntimePackage(
   }
 }
 
+function resolvePackedLauncher(bin) {
+  if (typeof bin === "string" && bin) {
+    return bin;
+  }
+  if (!bin || typeof bin !== "object") {
+    return "";
+  }
+  for (const name of ["openclaw", "opencrustacean"]) {
+    if (typeof bin[name] === "string" && bin[name]) {
+      return bin[name];
+    }
+  }
+  const launcher = Object.values(bin).find((value) => typeof value === "string" && value);
+  return typeof launcher === "string" ? launcher : "";
+}
+
+function rewriteOfficialUpdatePackageIdentity(packageJson, npmPackageName) {
+  const launcher = resolvePackedLauncher(packageJson.bin);
+  if (!launcher) {
+    throw new Error(
+      `--npm-package-name ${npmPackageName} requires package.json bin to name a launcher`,
+    );
+  }
+  return {
+    ...packageJson,
+    name: npmPackageName,
+    bin: {
+      ...(packageJson.bin && typeof packageJson.bin === "object" ? packageJson.bin : {}),
+      [npmPackageName]: launcher,
+    },
+  };
+}
+
+async function withOfficialUpdatePackageIdentity(sourceDir, npmPackageName, action) {
+  if (!npmPackageName) {
+    return await action();
+  }
+  const packageJsonPath = path.join(sourceDir, "package.json");
+  const originalPackageJson = await fs.readFile(packageJsonPath, "utf8");
+  let packageJson;
+  try {
+    packageJson = JSON.parse(originalPackageJson);
+  } catch (error) {
+    throw new Error(`failed to parse ${packageJsonPath}`, { cause: error });
+  }
+  // The installed updater stages node_modules/<its package name>. A rebranded
+  // tarball lands beside that directory, and the missing root is reported as an
+  // invalid dist inventory. Pack the artifact under the updater's package name.
+  const rewritten = rewriteOfficialUpdatePackageIdentity(packageJson, npmPackageName);
+  await fs.writeFile(packageJsonPath, `${JSON.stringify(rewritten, null, 2)}\n`);
+  try {
+    return await action();
+  } finally {
+    await fs.writeFile(packageJsonPath, originalPackageJson);
+  }
+}
+
 export async function packOpenClawPackageForDocker(sourceDir, outputDir, options = {}) {
   const runCaptureImpl = options.runCaptureImpl ?? runCapture;
   const prepareChangelog =
@@ -704,13 +782,18 @@ export async function packOpenClawPackageForDocker(sourceDir, outputDir, options
             "--pack-destination",
             outputDir,
           ];
-    packOutput = await runCaptureImpl(packTool, packArgs, sourceDir, {
-      deferForwardedSignalExit: true,
-      timeoutMs: resolveTimeoutMs(
-        "OPENCLAW_DOCKER_PACKAGE_PACK_TIMEOUT_MS",
-        DEFAULT_PACKAGE_PACK_TIMEOUT_MS,
-      ),
-    });
+    packOutput = await withOfficialUpdatePackageIdentity(
+      sourceDir,
+      options.npmPackageName,
+      async () =>
+        await runCaptureImpl(packTool, packArgs, sourceDir, {
+          deferForwardedSignalExit: true,
+          timeoutMs: resolveTimeoutMs(
+            "OPENCLAW_DOCKER_PACKAGE_PACK_TIMEOUT_MS",
+            DEFAULT_PACKAGE_PACK_TIMEOUT_MS,
+          ),
+        }),
+    );
   } finally {
     try {
       await cleanupBundledAiRuntime();
@@ -769,6 +852,7 @@ async function main() {
 
   const tarball = await packOpenClawPackageForDocker(sourceDir, outputDir, {
     allowUnreleasedChangelog: options.allowUnreleasedChangelog,
+    npmPackageName: options.npmPackageName,
     outputName: options.outputName,
     packJsonPath: options.packJson,
     pnpmPack: options.pnpmPack,
