@@ -1176,6 +1176,7 @@ printf 'status=%s\\n' "$status"
       'if [[ "${OPENCLAW_INSTALL_SMOKE_ALLOW_UNRELEASED_CHANGELOG:-true}" == "true" ]]',
     );
     expect(script).toContain("package_args+=(--allow-unreleased-changelog)");
+    expect(script).toContain('--npm-package-name "$PACKAGE_NAME"');
     expect(script).toContain('--source-dir "$ROOT_DIR"');
     expect(script).toContain('--pack-json "$pack_json_file"');
     expect(script).toContain("--skip-build");

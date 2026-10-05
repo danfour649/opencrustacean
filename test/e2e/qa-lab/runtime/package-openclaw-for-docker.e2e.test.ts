@@ -186,6 +186,7 @@ describe("package-openclaw-for-docker", () => {
       ]),
     ).toEqual({
       allowUnreleasedChangelog: true,
+      npmPackageName: "",
       outputDir: ".artifacts/docker",
       outputName: "openclaw-current.tgz",
       packJson: ".artifacts/docker/pack.json",
@@ -196,7 +197,7 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("rejects missing package artifact option values", () => {
-    for (const flag of ["--output-dir", "--output-name", "--source-dir"]) {
+    for (const flag of ["--npm-package-name", "--output-dir", "--output-name", "--source-dir"]) {
       expect(() => parseArgs([flag])).toThrow(`${flag} requires a value`);
       expect(() => parseArgs([flag, "--skip-build"])).toThrow(`${flag} requires a value`);
       expect(() => parseArgs([flag, "-h"])).toThrow(`${flag} requires a value`);
@@ -207,6 +208,7 @@ describe("package-openclaw-for-docker", () => {
 
   it("rejects duplicate package artifact CLI options", () => {
     const duplicateCases = [
+      ["--npm-package-name", ["--npm-package-name", "openclaw", "--npm-package-name=openclaw"]],
       ["--output-dir", ["--output-dir", "one", "--output-dir=two"]],
       ["--output-name", ["--output-name", "one.tgz", "--output-name=two.tgz"]],
       ["--pack-json", ["--pack-json", "one.json", "--pack-json=two.json"]],
@@ -335,6 +337,10 @@ describe("package-openclaw-for-docker", () => {
 
     expect(parseArgs(["--output-name", "openclaw-current.tar.gz"]).outputName).toBe(
       "openclaw-current.tar.gz",
+    );
+    expect(parseArgs(["--npm-package-name", "openclaw"]).npmPackageName).toBe("openclaw");
+    expect(() => parseArgs(["--npm-package-name", "../openclaw"])).toThrow(
+      "--npm-package-name must be an unscoped npm package name",
     );
   });
 
@@ -582,6 +588,50 @@ describe("package-openclaw-for-docker", () => {
         fs.rmSync(sourceDir, { recursive: true, force: true });
         fs.rmSync(outputDir, { recursive: true, force: true });
       }
+    }
+  });
+
+  it("packs the official updater package name without leaving the source renamed", async () => {
+    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-updater-identity-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-updater-identity-out-"));
+    const originalPackageJson = `${JSON.stringify(
+      {
+        name: "opencrustacean",
+        version: "2026.7.2-beta.18",
+        bin: { opencrustacean: "opencrustacean.mjs" },
+        dependencies: { "@openclaw/ai": "2026.7.2-beta.18" },
+      },
+      null,
+      2,
+    )}\n`;
+    fs.writeFileSync(path.join(sourceDir, "package.json"), originalPackageJson);
+
+    try {
+      const tarball = await packOpenClawPackageForDocker(sourceDir, outputDir, {
+        npmPackageName: "openclaw",
+        prepareBundledAiRuntime: skipBundledAiRuntime,
+        prepareChangelog: async () => {},
+        restoreChangelog: async () => {},
+        runCaptureImpl: async () => {
+          const packed = JSON.parse(fs.readFileSync(path.join(sourceDir, "package.json"), "utf8"));
+          expect(packed.name).toBe("openclaw");
+          expect(packed.bin).toEqual({
+            opencrustacean: "opencrustacean.mjs",
+            openclaw: "opencrustacean.mjs",
+          });
+          expect(packed.dependencies["@openclaw/ai"]).toBe("2026.7.2-beta.18");
+          fs.writeFileSync(path.join(outputDir, "openclaw-2026.7.2-beta.18.tgz"), "package");
+          return "openclaw-2026.7.2-beta.18.tgz\n";
+        },
+      });
+
+      expect(tarball).toBe(path.join(outputDir, "openclaw-2026.7.2-beta.18.tgz"));
+      expect(fs.readFileSync(path.join(sourceDir, "package.json"), "utf8")).toBe(
+        originalPackageJson,
+      );
+    } finally {
+      fs.rmSync(sourceDir, { recursive: true, force: true });
+      fs.rmSync(outputDir, { recursive: true, force: true });
     }
   });
 
