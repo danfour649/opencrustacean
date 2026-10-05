@@ -30,6 +30,7 @@
     "CHANGELOG.md",
     "LICENSE",
     "openclaw.mjs",
+    "opencrustacean.mjs",
     "pnpm-workspace.yaml",
     "README.md",
     "THIRD_PARTY_NOTICES.md",

@@ -2186,19 +2186,41 @@ fix_npm_permissions() {
 ensure_openclaw_bin_link() {
     local npm_root=""
     npm_root="$(npm root -g 2>/dev/null || true)"
-    if [[ -z "$npm_root" || ! -d "$npm_root/openclaw" ]]; then
-        return 1
-    fi
     local npm_bin=""
     npm_bin="$(npm_global_bin_dir || true)"
     if [[ -z "$npm_bin" ]]; then
         return 1
     fi
     mkdir -p "$npm_bin"
-    if [[ ! -x "${npm_bin}/openclaw" ]]; then
-        ln -sf "$npm_root/openclaw/dist/entry.js" "${npm_bin}/openclaw"
-        ui_info "Created openclaw bin link at ${npm_bin}/openclaw"
+    if [[ -x "${npm_bin}/openclaw" ]]; then
+        return 0
     fi
+    if [[ -x "${npm_bin}/opencrustacean" ]]; then
+        ln -sf "${npm_bin}/opencrustacean" "${npm_bin}/openclaw"
+        ui_info "Created openclaw bin link at ${npm_bin}/openclaw"
+        return 0
+    fi
+    local package_root=""
+    if [[ -n "$npm_root" && -d "$npm_root/openclaw" ]]; then
+        package_root="$npm_root/openclaw"
+    elif [[ -n "$npm_root" && -d "$npm_root/opencrustacean" ]]; then
+        package_root="$npm_root/opencrustacean"
+    else
+        return 1
+    fi
+    local entry=""
+    local candidate=""
+    for candidate in dist/entry.js dist/entry.mjs opencrustacean.mjs openclaw.mjs; do
+        if [[ -f "$package_root/$candidate" ]]; then
+            entry="$package_root/$candidate"
+            break
+        fi
+    done
+    if [[ -z "$entry" ]]; then
+        return 1
+    fi
+    ln -sf "$entry" "${npm_bin}/openclaw"
+    ui_info "Created openclaw bin link at ${npm_bin}/openclaw"
     return 0
 }
 

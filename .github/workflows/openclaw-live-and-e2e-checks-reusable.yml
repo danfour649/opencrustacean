@@ -847,25 +847,21 @@ jobs:
           ref: ${{ needs.validate_selected_ref.outputs.selected_sha }}
           fetch-depth: 1
 
+      - name: Validate live cache credentials
+        id: live_credentials
+        run: |
+          set -euo pipefail
+          OPENCLAW_LIVE_SUITE=live-cache bash scripts/ci-live-suite-credentials.sh
+
       - name: Setup Node environment
+        if: steps.live_credentials.outputs.skip != 'true'
         uses: ./.github/actions/setup-node-env
         with:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
-      - name: Validate live cache credentials
-        run: |
-          set -euo pipefail
-          if [[ -z "${OPENAI_API_KEY:-}" ]]; then
-            echo "Missing OPENAI_API_KEY secret for live-cache validation." >&2
-            exit 1
-          fi
-          if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
-            echo "Missing ANTHROPIC_API_KEY secret for live-cache validation." >&2
-            exit 1
-          fi
-
       - name: Verify live prompt cache floors
+        if: steps.live_credentials.outputs.skip != 'true'
         run: |
           set -euo pipefail
           for attempt in 1 2; do
@@ -1292,37 +1288,8 @@ jobs:
           CREDENTIALS: ${{ steps.plan.outputs.credentials }}
         run: |
           set -euo pipefail
-          credentials=",$CREDENTIALS,"
-          require_any() {
-            local label="$1"
-            shift
-            local key
-            for key in "$@"; do
-              if [[ -n "${!key:-}" ]]; then
-                return 0
-              fi
-            done
-            echo "Missing credential for ${label}: expected one of $*" >&2
-            exit 1
-          }
-          if [[ "$credentials" == *",openai,"* ]]; then
-            require_any OpenAI OPENAI_API_KEY
-          fi
-          if [[ "$credentials" == *",codex,"* ]]; then
-            require_any Codex OPENCLAW_CODEX_AUTH_JSON
-          fi
-          if [[ "$credentials" == *",anthropic,"* ]]; then
-            require_any Anthropic ANTHROPIC_API_TOKEN ANTHROPIC_API_KEY OPENCLAW_CLAUDE_CREDENTIALS_JSON OPENCLAW_CLAUDE_JSON
-          fi
-          if [[ "$credentials" == *",factory,"* ]]; then
-            require_any Factory FACTORY_API_KEY
-          fi
-          if [[ "$credentials" == *",gemini,"* ]]; then
-            require_any Gemini GEMINI_API_KEY GOOGLE_API_KEY OPENCLAW_GEMINI_SETTINGS_JSON
-          fi
-          if [[ "$credentials" == *",opencode,"* ]]; then
-            require_any OpenCode OPENCODE_API_KEY OPENCODE_ZEN_API_KEY
-          fi
+          OPENCLAW_DOCKER_PLAN_CREDENTIALS="$CREDENTIALS" \
+            bash scripts/ci-live-suite-credentials.sh
 
       - name: Run Docker E2E chunk
         if: contains(matrix.profiles, inputs.release_test_profile)
@@ -1618,37 +1585,8 @@ jobs:
           CREDENTIALS: ${{ steps.plan.outputs.credentials }}
         run: |
           set -euo pipefail
-          credentials=",$CREDENTIALS,"
-          require_any() {
-            local label="$1"
-            shift
-            local key
-            for key in "$@"; do
-              if [[ -n "${!key:-}" ]]; then
-                return 0
-              fi
-            done
-            echo "Missing credential for ${label}: expected one of $*" >&2
-            exit 1
-          }
-          if [[ "$credentials" == *",openai,"* ]]; then
-            require_any OpenAI OPENAI_API_KEY
-          fi
-          if [[ "$credentials" == *",codex,"* ]]; then
-            require_any Codex OPENCLAW_CODEX_AUTH_JSON
-          fi
-          if [[ "$credentials" == *",anthropic,"* ]]; then
-            require_any Anthropic ANTHROPIC_API_TOKEN ANTHROPIC_API_KEY OPENCLAW_CLAUDE_CREDENTIALS_JSON OPENCLAW_CLAUDE_JSON
-          fi
-          if [[ "$credentials" == *",factory,"* ]]; then
-            require_any Factory FACTORY_API_KEY
-          fi
-          if [[ "$credentials" == *",gemini,"* ]]; then
-            require_any Gemini GEMINI_API_KEY GOOGLE_API_KEY OPENCLAW_GEMINI_SETTINGS_JSON
-          fi
-          if [[ "$credentials" == *",opencode,"* ]]; then
-            require_any OpenCode OPENCODE_API_KEY OPENCODE_ZEN_API_KEY
-          fi
+          OPENCLAW_DOCKER_PLAN_CREDENTIALS="$CREDENTIALS" \
+            bash scripts/ci-live-suite-credentials.sh
 
       - name: Run targeted Docker E2E lanes
         shell: bash
@@ -1749,10 +1687,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          [[ -n "${OPENAI_API_KEY:-}" ]] || {
-            echo "OPENAI_API_KEY is required for the Open WebUI Docker smoke." >&2
-            exit 1
-          }
+          OPENCLAW_DOCKER_PLAN_CREDENTIALS="openai" \
+            bash scripts/ci-live-suite-credentials.sh
 
       - name: Plan Open WebUI Docker E2E chunk
         id: plan
@@ -2155,13 +2091,14 @@ jobs:
           digest="$(sha256sum "$target" | awk '{print $1}')"
           version="$(tar -xOf "$target" package/package.json | jq -r '.version')"
           name="$(tar -xOf "$target" package/package.json | jq -r '.name')"
+          expected_name="$(jq -r '.name' package.json)"
           package_source_sha="$(
             tar -xOf "$target" package/dist/build-info.json |
               jq -er '.commit | select(type == "string" and test("^[0-9a-f]{40}$"))'
           )"
           if [[ -n "${EXPECTED_PACKAGE_SOURCE_SHA// }" ]]; then
             [[ "$digest" == "$EXPECTED_PACKAGE_SHA256" &&
-              "$name" == "openclaw" &&
+              "$name" == "$expected_name" &&
               "$package_source_sha" == "$EXPECTED_PACKAGE_SOURCE_SHA" &&
               "$version" == "$EXPECTED_PACKAGE_VERSION" ]] || {
               echo "Resolved package identity differs from the declared immutable tuple." >&2
@@ -2173,7 +2110,7 @@ jobs:
               echo "Exact-target package SHA-256 differs from package_sha256." >&2
               exit 1
             fi
-            if [[ "$name" != "openclaw" || ( -n "$EXPECTED_PACKAGE_VERSION" && "$version" != "$EXPECTED_PACKAGE_VERSION" ) ]]; then
+            if [[ "$name" != "$expected_name" || ( -n "$EXPECTED_PACKAGE_VERSION" && "$version" != "$EXPECTED_PACKAGE_VERSION" ) ]]; then
               echo "Exact-target package name/version differs from declared package identity." >&2
               exit 1
             fi
@@ -2187,8 +2124,9 @@ jobs:
                 --arg sha "$SELECTED_SHA" \
                 --arg digest "$digest" \
                 --arg version "$version" \
+                --arg expectedName "$expected_name" \
                 '
-                  .name == "openclaw" and
+                  .name == $expectedName and
                   .packageSourceSha == $sha and
                   .sha256 == $digest and
                   .version == $version
@@ -2700,8 +2638,13 @@ jobs:
           path: .release-harness
           persist-credentials: false
 
+      - name: Decide whether live credentials are present
+        id: live_credentials
+        if: contains(matrix.profiles, inputs.release_test_profile)
+        run: bash scripts/ci-live-suite-credentials.sh
+
       - name: Validate live-test image artifact binding
-        if: contains(matrix.profiles, inputs.release_test_profile) && inputs.shared_image_policy == 'no-push-artifact'
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true' && inputs.shared_image_policy == 'no-push-artifact'
         env:
           ARTIFACT_DIGEST: ${{ needs.prepare_live_test_image.outputs.image_artifact_digest }}
           ARTIFACT_ID: ${{ needs.prepare_live_test_image.outputs.image_artifact_id }}
@@ -2718,7 +2661,7 @@ jobs:
             "$ARTIFACT_RUN_ID" "$ARTIFACT_RUN_ATTEMPT"
 
       - name: Download live-test image artifact
-        if: contains(matrix.profiles, inputs.release_test_profile) && inputs.shared_image_policy == 'no-push-artifact'
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true' && inputs.shared_image_policy == 'no-push-artifact'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare_live_test_image.outputs.image_artifact_id }}
@@ -2727,7 +2670,7 @@ jobs:
           github-token: ${{ github.token }}
 
       - name: Verify and load live-test image artifact
-        if: contains(matrix.profiles, inputs.release_test_profile) && inputs.shared_image_policy == 'no-push-artifact'
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true' && inputs.shared_image_policy == 'no-push-artifact'
         env:
           ARCHIVE_SHA256: ${{ needs.prepare_live_test_image.outputs.image_archive_sha256 }}
           LIVE_IMAGE: ${{ needs.prepare_live_test_image.outputs.live_image }}
@@ -2743,63 +2686,25 @@ jobs:
             load .artifacts/live-test-image live-test "$TARGET_SHA" "$WORKFLOW_SHA" "$LIVE_IMAGE"
 
       - name: Setup Node environment
-        if: contains(matrix.profiles, inputs.release_test_profile)
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true'
         uses: ./.github/actions/setup-node-env
         with:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
       - name: Hydrate live auth/profile inputs
-        if: contains(matrix.profiles, inputs.release_test_profile)
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true'
         run: bash scripts/ci-hydrate-live-auth.sh
 
       - name: Log in to GHCR
-        if: contains(matrix.profiles, inputs.release_test_profile) && inputs.shared_image_policy != 'no-push-artifact'
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true' && inputs.shared_image_policy != 'no-push-artifact'
         run: bash .release-harness/scripts/ci-docker-login-ghcr.sh
         env:
           GHCR_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Validate provider credential
-        if: contains(matrix.profiles, inputs.release_test_profile)
-        shell: bash
-        env:
-          LIVE_MODEL_PROVIDERS: ${{ matrix.providers }}
-        run: |
-          set -euo pipefail
-
-          require_any() {
-            local label="$1"
-            shift
-            local key
-            for key in "$@"; do
-              if [[ -n "${!key:-}" ]]; then
-                return 0
-              fi
-            done
-            echo "Missing credential for ${label}: expected one of $*" >&2
-            exit 1
-          }
-
-          case "${LIVE_MODEL_PROVIDERS}" in
-            anthropic) require_any Anthropic ANTHROPIC_OAUTH_TOKEN ANTHROPIC_API_KEY ANTHROPIC_API_KEY_OLD ANTHROPIC_API_TOKEN ;;
-            google) require_any Google GEMINI_API_KEY GOOGLE_API_KEY ;;
-            minimax) require_any MiniMax MINIMAX_API_KEY ;;
-            moonshot) require_any Moonshot MOONSHOT_API_KEY KIMI_API_KEY ;;
-            openai) require_any OpenAI OPENAI_API_KEY ;;
-            opencode-go) require_any OpenCode OPENCODE_API_KEY OPENCODE_ZEN_API_KEY ;;
-            openrouter) require_any OpenRouter OPENROUTER_API_KEY ;;
-            xai) require_any xAI XAI_API_KEY ;;
-            zai) require_any Z.ai ZAI_API_KEY Z_AI_API_KEY ;;
-            fireworks) require_any Fireworks FIREWORKS_API_KEY ;;
-            *)
-              echo "Unhandled live model provider shard: ${LIVE_MODEL_PROVIDERS}" >&2
-              exit 1
-              ;;
-          esac
-
       - name: Run Docker live model sweep
-        if: contains(matrix.profiles, inputs.release_test_profile)
+        if: contains(matrix.profiles, inputs.release_test_profile) && steps.live_credentials.outputs.skip != 'true'
         run: OPENCLAW_LIVE_DOCKER_REPO_ROOT="$GITHUB_WORKSPACE" timeout --foreground --kill-after=30s 35m bash .release-harness/scripts/test-live-models-docker.sh
 
   validate_live_models_docker_targeted:
@@ -2985,44 +2890,15 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Validate provider credentials
+        id: live_credentials
         shell: bash
         run: |
           set -euo pipefail
-
-          require_any() {
-            local label="$1"
-            shift
-            local key
-            for key in "$@"; do
-              if [[ -n "${!key:-}" ]]; then
-                return 0
-              fi
-            done
-            echo "Missing credential for ${label}: expected one of $*" >&2
-            exit 1
-          }
-
-          IFS=',' read -r -a providers <<<"${OPENCLAW_LIVE_PROVIDERS}"
-          for provider in "${providers[@]}"; do
-            case "$provider" in
-              anthropic) require_any Anthropic ANTHROPIC_OAUTH_TOKEN ANTHROPIC_API_KEY ANTHROPIC_API_KEY_OLD ANTHROPIC_API_TOKEN ;;
-              google) require_any Google GEMINI_API_KEY GOOGLE_API_KEY ;;
-              minimax) require_any MiniMax MINIMAX_API_KEY ;;
-              moonshot) require_any Moonshot MOONSHOT_API_KEY KIMI_API_KEY ;;
-              openai) require_any OpenAI OPENAI_API_KEY ;;
-              opencode-go) require_any OpenCode OPENCODE_API_KEY OPENCODE_ZEN_API_KEY ;;
-              openrouter) require_any OpenRouter OPENROUTER_API_KEY ;;
-              xai) require_any xAI XAI_API_KEY ;;
-              zai) require_any Z.ai ZAI_API_KEY Z_AI_API_KEY ;;
-              fireworks) require_any Fireworks FIREWORKS_API_KEY ;;
-              *)
-                echo "Unhandled live model provider shard: ${provider}" >&2
-                exit 1
-                ;;
-            esac
-          done
+          OPENCLAW_LIVE_CREDENTIAL_MODE=drop \
+            bash scripts/ci-live-suite-credentials.sh
 
       - name: Run Docker live model sweep
+        if: steps.live_credentials.outputs.skip != 'true'
         run: OPENCLAW_LIVE_DOCKER_REPO_ROOT="$GITHUB_WORKSPACE" timeout --foreground --kill-after=30s 35m bash .release-harness/scripts/test-live-models-docker.sh
 
   validate_live_provider_suites:
@@ -3299,19 +3175,26 @@ jobs:
           fetch-depth: 1
           path: .release-harness
 
-      - name: Setup Node environment
+      - name: Decide whether live credentials are present
+        id: live_credentials
         if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-')))
+        env:
+          OPENCLAW_LIVE_SUITE: ${{ matrix.suite_id }}
+        run: bash scripts/ci-live-suite-credentials.sh
+
+      - name: Setup Node environment
+        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-'))) && steps.live_credentials.outputs.skip != 'true'
         uses: ./.github/actions/setup-node-env
         with:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
       - name: Hydrate live auth/profile inputs
-        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-')))
+        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-'))) && steps.live_credentials.outputs.skip != 'true'
         run: bash scripts/ci-hydrate-live-auth.sh
 
       - name: Configure suite-specific env
-        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-')))
+        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-'))) && steps.live_credentials.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -3358,7 +3241,7 @@ jobs:
           esac
 
       - name: Run ${{ matrix.label }}
-        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-')))
+        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-anthropic' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-anthropic-')) || (inputs.live_suite_filter == 'native-live-src-gateway-profiles-opencode-go' && startsWith(matrix.suite_id, 'native-live-src-gateway-profiles-opencode-go-'))) && steps.live_credentials.outputs.skip != 'true'
         env:
           OPENCLAW_LIVE_COMMAND: ${{ matrix.command }}
           OPENCLAW_LIVE_SUITE_ADVISORY: ${{ matrix.advisory }}
@@ -3561,6 +3444,13 @@ jobs:
           path: .release-harness
           persist-credentials: false
 
+      - name: Decide whether live credentials are present
+        id: live_credentials
+        if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
+        env:
+          OPENCLAW_LIVE_SUITE: ${{ matrix.suite_id }}
+        run: bash scripts/ci-live-suite-credentials.sh
+
       - name: Resolve frozen Codex live compatibility
         id: codex_compat
         if: contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
@@ -3572,7 +3462,7 @@ jobs:
         run: node .release-harness/scripts/resolve-frozen-codex-live-suite.mjs
 
       - name: Validate live-test image artifact binding
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
         env:
           ARTIFACT_DIGEST: ${{ needs.prepare_live_test_image.outputs.image_artifact_digest }}
           ARTIFACT_ID: ${{ needs.prepare_live_test_image.outputs.image_artifact_id }}
@@ -3589,7 +3479,7 @@ jobs:
             "$ARTIFACT_RUN_ID" "$ARTIFACT_RUN_ATTEMPT"
 
       - name: Download live-test image artifact
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare_live_test_image.outputs.image_artifact_id }}
@@ -3598,7 +3488,7 @@ jobs:
           github-token: ${{ github.token }}
 
       - name: Verify and load live-test image artifact
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy == 'no-push-artifact'
         env:
           ARCHIVE_SHA256: ${{ needs.prepare_live_test_image.outputs.image_archive_sha256 }}
           LIVE_IMAGE: ${{ needs.prepare_live_test_image.outputs.live_image }}
@@ -3614,25 +3504,25 @@ jobs:
             load .artifacts/live-test-image live-test "$TARGET_SHA" "$WORKFLOW_SHA" "$LIVE_IMAGE"
 
       - name: Setup Node environment
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
         uses: ./.github/actions/setup-node-env
         with:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
       - name: Hydrate live auth/profile inputs
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
         run: bash scripts/ci-hydrate-live-auth.sh
 
       - name: Log in to GHCR
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy != 'no-push-artifact'
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group) && inputs.shared_image_policy != 'no-push-artifact'
         run: bash .release-harness/scripts/ci-docker-login-ghcr.sh
         env:
           GHCR_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Configure suite-specific env
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
         shell: bash
         run: |
           set -euo pipefail
@@ -3672,7 +3562,7 @@ jobs:
           esac
 
       - name: Run ${{ matrix.label }}
-        if: steps.codex_compat.outputs.run_lane != 'false' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
+        if: steps.codex_compat.outputs.run_lane != 'false' && steps.live_credentials.outputs.skip != 'true' && contains(matrix.profiles, inputs.release_test_profile) && (inputs.live_suite_filter == '' || inputs.live_suite_filter == matrix.suite_id || inputs.live_suite_filter == matrix.suite_group)
         env:
           OPENCLAW_LIVE_COMMAND: ${{ matrix.command }}
           OPENCLAW_LIVE_SUITE_ADVISORY: ${{ matrix.advisory }}

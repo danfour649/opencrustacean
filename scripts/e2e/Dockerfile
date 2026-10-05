@@ -94,6 +94,7 @@ COPY --from=functional-deps --chown=appuser:appuser /tmp/openclaw-deps/node_modu
 # openclaw/plugin-sdk/*; create it after postinstall so its prune walks cannot
 # cycle through the link.
 RUN tar -xzf /tmp/openclaw-current.tgz -C /app --strip-components=1 \
+ && if [ ! -e /app/openclaw.mjs ] && [ -e /app/opencrustacean.mjs ]; then ln -sfn opencrustacean.mjs /app/openclaw.mjs; fi \
  && chmod +x /app/openclaw.mjs \
  && node --input-type=module -e "import { runBundledPluginPostinstall } from '/app/scripts/postinstall-bundled-plugins.mjs'; runBundledPluginPostinstall();" \
  && ln -sfn /app /app/node_modules/openclaw \

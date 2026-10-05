@@ -44,8 +44,17 @@ jobs:
       pull-requests: write
     runs-on: blacksmith-16vcpu-ubuntu-2404
     steps:
+      - name: Detect GitHub App keys
+        id: app-keys
+        env:
+          HAS_PRIMARY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          HAS_FALLBACK: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK }}
+        run: |
+          if [ -n "$HAS_PRIMARY" ]; then echo "primary=true" >> "$GITHUB_OUTPUT"; else echo "primary=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$HAS_FALLBACK" ]; then echo "fallback=true" >> "$GITHUB_OUTPUT"; else echo "fallback=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
+        if: steps.app-keys.outputs.primary == 'true'
         continue-on-error: true
         with:
           app-id: "2729701"
@@ -55,6 +64,7 @@ jobs:
           permission-pull-requests: write
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token-fallback
+        if: steps.app-keys.outputs.fallback == 'true'
         continue-on-error: true
         with:
           app-id: "2971289"
@@ -64,6 +74,7 @@ jobs:
           permission-pull-requests: write
       - name: Mark stale unassigned issues and pull requests (primary)
         id: stale-primary
+        if: steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != ''
         continue-on-error: true
         uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
         with:
@@ -97,6 +108,7 @@ jobs:
             That channel is the escape hatch for high-quality PRs that get auto-closed.
       - name: Mark stale assigned issues (primary)
         id: assigned-issue-stale-primary
+        if: steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != ''
         continue-on-error: true
         uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
         with:
@@ -121,6 +133,7 @@ jobs:
           close-issue-reason: not_planned
       - name: Mark stale assigned pull requests (primary)
         id: assigned-stale-primary
+        if: steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != ''
         continue-on-error: true
         uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10
         with:
@@ -145,7 +158,7 @@ jobs:
             That channel is the escape hatch for high-quality PRs that get auto-closed.
       - name: Check stale state cache
         id: stale-state
-        if: always()
+        if: always() && (steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != '')
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ steps.app-token-fallback.outputs.token || steps.app-token.outputs.token }}
@@ -245,6 +258,14 @@ jobs:
             Closing due to inactivity.
             If you believe this PR should be revived, post in #clawtributors on Discord to talk to a maintainer.
             That channel is the escape hatch for high-quality PRs that get auto-closed.
+      - name: Skip stale maintenance without a GitHub App key
+        if: steps.app-keys.outputs.primary != 'true' && steps.app-keys.outputs.fallback != 'true'
+        run: echo "Skipping stale maintenance. Add GH_APP_PRIVATE_KEY (app 2729701) and/or GH_APP_PRIVATE_KEY_FALLBACK (app 2971289) under Settings → Secrets and variables → Actions."
+      - name: Require a GitHub App token when a key is configured
+        if: always() && (steps.app-keys.outputs.primary == 'true' || steps.app-keys.outputs.fallback == 'true') && steps.app-token.outputs.token == '' && steps.app-token-fallback.outputs.token == ''
+        run: |
+          echo "A GitHub App private key is configured, but neither app produced a token." >&2
+          exit 1
 
   stale-bug-verification:
     if: ${{ github.event_name != 'workflow_dispatch' || inputs.backfill_stale_closures != true }}
@@ -252,8 +273,17 @@ jobs:
       issues: write
     runs-on: ubuntu-24.04
     steps:
+      - name: Detect GitHub App keys
+        id: app-keys
+        env:
+          HAS_PRIMARY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          HAS_FALLBACK: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK }}
+        run: |
+          if [ -n "$HAS_PRIMARY" ]; then echo "primary=true" >> "$GITHUB_OUTPUT"; else echo "primary=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$HAS_FALLBACK" ]; then echo "fallback=true" >> "$GITHUB_OUTPUT"; else echo "fallback=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
+        if: steps.app-keys.outputs.primary == 'true'
         continue-on-error: true
         with:
           app-id: "2729701"
@@ -262,6 +292,7 @@ jobs:
           permission-metadata: read
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token-fallback
+        if: steps.app-keys.outputs.fallback == 'true'
         continue-on-error: true
         with:
           app-id: "2971289"
@@ -269,6 +300,7 @@ jobs:
           permission-issues: write
           permission-metadata: read
       - name: Mark inactive bugs for ClawSweeper verification
+        if: steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ steps.app-token.outputs.token || steps.app-token-fallback.outputs.token }}
@@ -429,6 +461,14 @@ jobs:
               .addRaw(`Marked for ClawSweeper review: ${marked.length}\n\n`)
               .addRaw(`Returned to active/exempt state: ${unmarked.length}\n\n`)
               .write();
+      - name: Skip bug verification without a GitHub App key
+        if: steps.app-keys.outputs.primary != 'true' && steps.app-keys.outputs.fallback != 'true'
+        run: echo "Skipping ClawSweeper bug verification. Add GH_APP_PRIVATE_KEY (app 2729701) and/or GH_APP_PRIVATE_KEY_FALLBACK (app 2971289) under Settings → Secrets and variables → Actions."
+      - name: Require a GitHub App token when a key is configured
+        if: always() && (steps.app-keys.outputs.primary == 'true' || steps.app-keys.outputs.fallback == 'true') && steps.app-token.outputs.token == '' && steps.app-token-fallback.outputs.token == ''
+        run: |
+          echo "A GitHub App private key is configured, but neither app produced a token." >&2
+          exit 1
 
   backfill-stale-closures:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_stale_closures == true }}
@@ -789,14 +829,23 @@ jobs:
       issues: write
     runs-on: blacksmith-16vcpu-ubuntu-2404
     steps:
+      - name: Detect GitHub App key
+        id: app-keys
+        env:
+          HAS_PRIMARY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+        run: |
+          if [ -n "$HAS_PRIMARY" ]; then echo "primary=true" >> "$GITHUB_OUTPUT"; else echo "primary=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
+        if: steps.app-keys.outputs.primary == 'true'
+        continue-on-error: true
         with:
           app-id: "2729701"
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           permission-issues: write
           permission-metadata: read
       - name: Lock closed issues after 48h of no activity
+        if: steps.app-token.outputs.token != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ steps.app-token.outputs.token }}
@@ -842,3 +891,11 @@ jobs:
             core.info(
               `Found ${data.total_count} unlocked issues inactive for 48h; locked ${candidates.length}.`,
             );
+      - name: Skip issue locking without a GitHub App key
+        if: steps.app-keys.outputs.primary != 'true'
+        run: echo "Skipping closed-issue locking. Add GH_APP_PRIVATE_KEY (app 2729701) under Settings → Secrets and variables → Actions."
+      - name: Require a GitHub App token when a key is configured
+        if: always() && steps.app-keys.outputs.primary == 'true' && steps.app-token.outputs.token == ''
+        run: |
+          echo "GH_APP_PRIVATE_KEY is configured, but the GitHub App did not produce a token." >&2
+          exit 1

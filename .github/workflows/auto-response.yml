@@ -29,8 +29,17 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
+      - name: Detect GitHub App keys
+        id: app-keys
+        env:
+          HAS_PRIMARY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          HAS_FALLBACK: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK }}
+        run: |
+          if [ -n "$HAS_PRIMARY" ]; then echo "primary=true" >> "$GITHUB_OUTPUT"; else echo "primary=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$HAS_FALLBACK" ]; then echo "fallback=true" >> "$GITHUB_OUTPUT"; else echo "fallback=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
+        if: steps.app-keys.outputs.primary == 'true'
         continue-on-error: true
         with:
           app-id: "2729701"
@@ -41,7 +50,8 @@ jobs:
           permission-pull-requests: write
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token-fallback
-        if: steps.app-token.outcome == 'failure'
+        if: steps.app-keys.outputs.fallback == 'true' && steps.app-token.outputs.token == ''
+        continue-on-error: true
         with:
           app-id: "2971289"
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK }}
@@ -49,7 +59,13 @@ jobs:
           permission-members: read
           permission-metadata: read
           permission-pull-requests: write
+      - name: Require a GitHub App token when a key is configured
+        if: always() && (steps.app-keys.outputs.primary == 'true' || steps.app-keys.outputs.fallback == 'true') && steps.app-token.outputs.token == '' && steps.app-token-fallback.outputs.token == ''
+        run: |
+          echo "A GitHub App private key is configured, but neither app produced a token." >&2
+          exit 1
       - name: Run Barnacle auto-response
+        if: steps.app-token.outputs.token != '' || steps.app-token-fallback.outputs.token != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ steps.app-token.outputs.token || steps.app-token-fallback.outputs.token }}
