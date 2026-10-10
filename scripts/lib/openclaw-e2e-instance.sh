@@ -242,6 +242,19 @@ openclaw_e2e_install_package() {
     fi
     exit 1
   fi
+  local bin_dir=""
+  if [ -n "$prefix" ]; then
+    bin_dir="$prefix/bin"
+  else
+    bin_dir="$(npm prefix -g 2>/dev/null || true)"
+    if [ -n "$bin_dir" ]; then
+      bin_dir="$bin_dir/bin"
+    fi
+  fi
+  if [ -n "$bin_dir" ] && [ ! -e "$bin_dir/openclaw" ] && [ -x "$bin_dir/opencrustacean" ]; then
+    mkdir -p "$bin_dir"
+    ln -sfn "$bin_dir/opencrustacean" "$bin_dir/openclaw"
+  fi
 }
 openclaw_e2e_find_dep_package() {
   local dep_path="$1"

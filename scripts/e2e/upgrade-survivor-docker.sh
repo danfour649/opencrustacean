@@ -103,10 +103,62 @@ normalize_npm_candidate() {
   esac
 }
 
+published_baseline_is_newer_than_candidate() {
+  local candidate_version baseline_version
+  candidate_version="$(node -p "require(process.argv[1]).version" "$ROOT_DIR/package.json")"
+  baseline_version="$(npm view "$BASELINE_SPEC" version 2>/dev/null || true)"
+  if [ -z "$baseline_version" ]; then
+    return 1
+  fi
+  node - "$candidate_version" "$baseline_version" <<'NODE'
+const [, , candidate, baseline] = process.argv;
+function parse(version) {
+  const [core, prerelease = ""] = String(version).split("-", 2);
+  return {
+    core: core.split(".").map((part) => Number.parseInt(part, 10) || 0),
+    prerelease: prerelease ? prerelease.split(".") : [],
+  };
+}
+function comparePrerelease(left, right) {
+  if (left.length === 0 && right.length === 0) return 0;
+  if (left.length === 0) return 1;
+  if (right.length === 0) return -1;
+  const length = Math.max(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    if ((left[index] ?? "") === (right[index] ?? "")) continue;
+    const leftNumber = Number(left[index]);
+    const rightNumber = Number(right[index]);
+    if (Number.isInteger(leftNumber) && Number.isInteger(rightNumber) && String(leftNumber) === left[index] && String(rightNumber) === right[index]) {
+      return leftNumber - rightNumber;
+    }
+    return String(left[index]).localeCompare(String(right[index]));
+  }
+  return 0;
+}
+function compare(leftRaw, rightRaw) {
+  const left = parse(leftRaw);
+  const right = parse(rightRaw);
+  const length = Math.max(left.core.length, right.core.length);
+  for (let index = 0; index < length; index += 1) {
+    const diff = (left.core[index] ?? 0) - (right.core[index] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return comparePrerelease(left.prerelease, right.prerelease);
+}
+process.exit(compare(candidate, baseline) < 0 ? 0 : 1);
+NODE
+}
+
 if [ "${OPENCLAW_UPGRADE_SURVIVOR_PUBLISHED_BASELINE:-0}" = "1" ]; then
   if [ -z "${BASELINE_SPEC// }" ]; then
     echo "OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC is required for published upgrade survivor" >&2
     exit 1
+  fi
+  if published_baseline_is_newer_than_candidate; then
+    candidate_version="$(node -p "require(process.argv[1]).version" "$ROOT_DIR/package.json")"
+    baseline_version="$(npm view "$BASELINE_SPEC" version)"
+    echo "Skipping published upgrade from ${BASELINE_SPEC} (${baseline_version}): candidate ${candidate_version} is older, so this is not an upgrade."
+    exit 0
   fi
 
   mkdir -p "$ARTIFACT_DIR"

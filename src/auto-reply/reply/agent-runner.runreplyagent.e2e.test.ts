@@ -278,6 +278,7 @@ function createMinimalRun(params?: {
   sessionCtx?: Partial<TemplateContext>;
   sourceTurnId?: string;
   runOverrides?: Partial<FollowupRun["run"]>;
+  emptyReplyRetry?: boolean;
 }) {
   const typing = createMockTypingController();
   const opts = params?.opts;
@@ -304,6 +305,7 @@ function createMinimalRun(params?: {
     summaryLine: "hello",
     enqueuedAt: Date.now(),
     currentInboundEventKind: params?.currentInboundEventKind,
+    emptyReplyRetry: params?.emptyReplyRetry,
     originatingChannel: sessionCtx.OriginatingChannel ?? sessionCtx.Provider,
     originatingTo: sessionCtx.OriginatingTo,
     originatingChatId: sessionCtx.NativeChannelId ?? sessionCtx.ChatId,
@@ -3430,6 +3432,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
   ])("surfaces successful $label through normal reply delivery", async ({ payloads }) => {
     state.runEmbeddedAgentMock.mockResolvedValueOnce({ payloads, meta: {} });
     const { run } = createMinimalRun({
+      emptyReplyRetry: true,
       runOverrides: { config: { channels: { whatsapp: { replyToMode: "first" } } } },
     });
 
@@ -3455,6 +3458,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
       return { payloads: [], meta: {} };
     });
     const { run } = createMinimalRun({
+      emptyReplyRetry: true,
       blockStreamingEnabled: true,
       opts: {
         onBlockReply,

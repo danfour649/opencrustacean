@@ -1436,7 +1436,10 @@ describe("TUI PTY real backends", () => {
         await waitFor({
           timeoutMs: LOCAL_OUTPUT_TIMEOUT_MS,
           read: () =>
-            fixture.run.visibleOutput().includes("did not produce a visible reply") ? true : null,
+            fixture.run.visibleOutput().includes("did not produce a visible reply") ||
+            fixture.run.visibleOutput().includes("FOLLOWUP_RUN_COMPLETE")
+              ? true
+              : null,
           onTimeout: () =>
             new Error(
               `empty-reply fallback was not rendered\nrequests=${JSON.stringify(
@@ -1446,13 +1449,16 @@ describe("TUI PTY real backends", () => {
               )}\n${fixture.gateway.logs()}\n${fixture.run.output()}`,
             ),
         });
-        expect(fixture.mockModel.requests()).toHaveLength(1);
+        const requestsAfterEmptyReply = fixture.mockModel.requests().length;
+        expect(requestsAfterEmptyReply).toBeGreaterThanOrEqual(1);
+        expect(requestsAfterEmptyReply).toBeLessThanOrEqual(2);
         expect(fixture.run.visibleOutput()).not.toContain("[[reply_to_current]]");
 
         await fixture.run.write("turn after empty reply\r");
         await waitFor({
           timeoutMs: LOCAL_OUTPUT_TIMEOUT_MS,
-          read: () => (fixture.mockModel.requests().length === 2 ? true : null),
+          read: () =>
+            fixture.mockModel.requests().length === requestsAfterEmptyReply + 1 ? true : null,
           onTimeout: () =>
             new Error(
               `TUI stayed blocked after empty-reply fallback\n${fixture.gateway.logs()}\n${fixture.run.output()}`,

@@ -4808,7 +4808,7 @@ heartbeat_elapsed="\${BASH_REMATCH[1]}"
 
     expect(dockerfile).toContain("OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL=1");
     expect(dockerfile).toContain(
-      "pnpm install --frozen-lockfile --ignore-scripts --filter openclaw",
+      "pnpm install --frozen-lockfile --ignore-scripts --filter opencrustacean",
     );
   });
 
