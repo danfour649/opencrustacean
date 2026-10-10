@@ -168,6 +168,9 @@ NODE
   "$bun_path" install -g "$PACKAGE_TGZ" --no-progress
 
   openclaw_bin="$BUN_INSTALL/bin/openclaw"
+  if [ ! -x "$openclaw_bin" ] && [ -x "$BUN_INSTALL/bin/opencrustacean" ]; then
+    ln -sfn "$BUN_INSTALL/bin/opencrustacean" "$openclaw_bin"
+  fi
   if [ ! -x "$openclaw_bin" ]; then
     openclaw_bin="$(command -v openclaw || true)"
   fi

@@ -367,6 +367,12 @@ run_update_smoke() {
   resolve_update_baseline_version
 
   echo "package=$PACKAGE_NAME baseline=$UPDATE_BASELINE_VERSION target=$UPDATE_EXPECT_VERSION"
+  if is_version_before "$UPDATE_EXPECT_VERSION" "$UPDATE_BASELINE_VERSION"; then
+    echo "Skipping openclaw update: published baseline ${UPDATE_BASELINE_VERSION} is newer than candidate ${UPDATE_EXPECT_VERSION}."
+    echo "This build cannot be installed by a newer published updater. The candidate install is covered by the fresh-install smoke."
+    echo "OK"
+    return 0
+  fi
   echo "==> Install baseline release"
   if [[ -n "$UPDATE_BASELINE_TAG_URL" ]]; then
     npm_install_global "install baseline release" --omit=optional "$UPDATE_BASELINE_TAG_URL"

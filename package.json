@@ -20,7 +20,8 @@
     "url": "git+https://github.com/openclaw/openclaw.git"
   },
   "bin": {
-    "opencrustacean": "opencrustacean.mjs"
+    "opencrustacean": "opencrustacean.mjs",
+    "openclaw": "opencrustacean.mjs"
   },
   "directories": {
     "doc": "docs",
