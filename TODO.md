@@ -13,16 +13,16 @@
   job block, change:
 
   ```yaml
-      if: needs.preflight.outputs.run_full_install_smoke == 'true'
+  if: needs.preflight.outputs.run_full_install_smoke == 'true'
   ```
 
   to:
 
   ```yaml
-      # TODO(2026-10-19): re-enable installer_smoke once the Blacksmith Docker
-      # builder outage is resolved. Disabled 2026-10-12 after "Run installer
-      # docker tests" failed on the fallback local builder (run 38239868381).
-      if: false # needs.preflight.outputs.run_full_install_smoke == 'true'
+  # TODO(2026-10-19): re-enable installer_smoke once the Blacksmith Docker
+  # builder outage is resolved. Disabled 2026-10-12 after "Run installer
+  # docker tests" failed on the fallback local builder (run 38239868381).
+  if: false # needs.preflight.outputs.run_full_install_smoke == 'true'
   ```
 
   **Why:** On 2026-10-12 the scheduled "Install Smoke" workflow failed on main
