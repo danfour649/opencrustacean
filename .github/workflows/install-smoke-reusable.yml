@@ -557,7 +557,10 @@ jobs:
 
   installer_smoke:
     needs: [preflight, root_dockerfile_image, root_dockerfile_image_ready]
-    if: needs.preflight.outputs.run_full_install_smoke == 'true'
+    # TODO(2026-10-19): re-enable installer_smoke once the Blacksmith Docker
+    # builder outage is resolved. Disabled 2026-10-12 after "Run installer
+    # docker tests" failed on the fallback local builder (run 38239868381).
+    if: false # needs.preflight.outputs.run_full_install_smoke == 'true'
     runs-on: ubuntu-24.04
     env:
       DOCKER_BUILD_SUMMARY: "false"
