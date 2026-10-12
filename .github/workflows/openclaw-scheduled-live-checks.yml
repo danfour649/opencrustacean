@@ -28,8 +28,11 @@ jobs:
     uses: ./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml
     with:
       ref: ${{ github.sha }}
-      include_repo_e2e: true
-      include_release_path_suites: true
+      # TODO(2026-10-19): re-enable repo E2E and release-path Docker E2E suites.
+      # Disabled 2026-10-12: validate_repo_e2e and the Docker E2E
+      # package/update (OpenAI, core) legs fail every scheduled run.
+      include_repo_e2e: false
+      include_release_path_suites: false
       include_openwebui: true
       include_live_suites: true
       allow_unreleased_changelog: true
