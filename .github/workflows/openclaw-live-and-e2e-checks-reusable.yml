@@ -1637,7 +1637,10 @@ jobs:
     if: inputs.include_openwebui && inputs.docker_lanes == '' && (inputs.release_test_profile == 'stable' || inputs.release_test_profile == 'full')
     name: Docker E2E (openwebui)
     continue-on-error: ${{ inputs.advisory }}
-    runs-on: blacksmith-32vcpu-ubuntu-2404
+    # Upstream always uses a large-disk Blacksmith runner here; this fork has
+    # no Blacksmith runners, so the job waited 24h for a runner and was
+    # cancelled (run 39113245702). Forks fall back to a GitHub-hosted runner.
+    runs-on: ${{ github.repository == 'openclaw/openclaw' && 'blacksmith-32vcpu-ubuntu-2404' || 'ubuntu-24.04' }}
     timeout-minutes: 60
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

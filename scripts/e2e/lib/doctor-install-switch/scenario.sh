@@ -39,7 +39,7 @@ if ! openclaw_e2e_maybe_timeout "${OPENCLAW_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm 
 fi
 
 npm_bin="/tmp/npm-prefix/bin/openclaw"
-npm_root="/tmp/npm-prefix/lib/node_modules/openclaw"
+npm_root="$(openclaw_e2e_package_root /tmp/npm-prefix)"
 if [ -f "$npm_root/dist/index.mjs" ]; then
   npm_entry="$npm_root/dist/index.mjs"
 else
@@ -52,6 +52,9 @@ else
   git_entry="$git_root/dist/index.js"
 fi
 git_cli="$git_root/openclaw.mjs"
+if [ ! -f "$git_cli" ] && [ -f "$git_root/opencrustacean.mjs" ]; then
+  git_cli="$git_root/opencrustacean.mjs"
+fi
 
 package_version="$(node -p "require(\"$npm_root/package.json\").version")"
 update_doctor_env="OPENCLAW_UPDATE_IN_PROGRESS=1"

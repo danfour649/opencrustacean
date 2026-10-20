@@ -276,7 +276,7 @@ phase() {
 }
 
 package_root() {
-  printf '%s/lib/node_modules/openclaw\n' "$npm_config_prefix"
+  openclaw_e2e_package_root "$npm_config_prefix"
 }
 
 legacy_runtime_deps_symlink_plugin() {
