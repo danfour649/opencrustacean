@@ -331,6 +331,39 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
     }
   });
 
+  it("resolves the installed package root by published package name", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-package-root-"));
+    try {
+      const forkPrefix = path.join(tempDir, "fork-prefix");
+      const upstreamPrefix = path.join(tempDir, "upstream-prefix");
+      const emptyPrefix = path.join(tempDir, "empty-prefix");
+      fs.mkdirSync(path.join(forkPrefix, "lib/node_modules/opencrustacean"), {
+        recursive: true,
+      });
+      fs.mkdirSync(path.join(upstreamPrefix, "lib/node_modules/openclaw"), { recursive: true });
+      fs.mkdirSync(path.join(emptyPrefix, "lib/node_modules"), { recursive: true });
+
+      const fork = runSourcedHelper(
+        `printf "%s" "$(openclaw_e2e_package_root ${shellQuote(forkPrefix)})"`,
+      );
+      const upstream = runSourcedHelper(
+        `printf "%s" "$(openclaw_e2e_package_root ${shellQuote(upstreamPrefix)})"`,
+      );
+      const missing = runSourcedHelper(
+        `printf "%s" "$(openclaw_e2e_package_root ${shellQuote(emptyPrefix)})"`,
+      );
+
+      expectShellSuccess(fork);
+      expect(fork.stdout).toBe(path.join(forkPrefix, "lib/node_modules/opencrustacean"));
+      expectShellSuccess(upstream);
+      expect(upstream.stdout).toBe(path.join(upstreamPrefix, "lib/node_modules/openclaw"));
+      expectShellSuccess(missing);
+      expect(missing.stdout).toBe(path.join(emptyPrefix, "lib/node_modules/openclaw"));
+    } finally {
+      fs.rmSync(tempDir, { force: true, recursive: true });
+    }
+  });
+
   it("wraps package installs with the configured timeout", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-"));
     try {

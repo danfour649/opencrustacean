@@ -49,11 +49,26 @@ openclaw_e2e_resolve_entrypoint() {
 }
 openclaw_e2e_package_root() {
   local prefix="${1:-}"
+  local modules_dir=""
   if [ -n "$prefix" ]; then
-    printf '%s/lib/node_modules/openclaw\n' "$prefix"
-    return 0
+    modules_dir="$prefix/lib/node_modules"
+  else
+    modules_dir="$(npm root -g)"
   fi
-  printf '%s/openclaw\n' "$(npm root -g)"
+  # The tarball installs under its published package name: "openclaw"
+  # upstream, "opencrustacean" in this fork. Resolve the directory that
+  # actually exists instead of assuming the upstream name; when both exist
+  # (a published baseline upgraded to the fork candidate), the candidate
+  # name wins. Fall back to the upstream path so a missing install still
+  # surfaces the historical error downstream.
+  local name
+  for name in opencrustacean openclaw; do
+    if [ -d "$modules_dir/$name" ]; then
+      printf '%s/%s\n' "$modules_dir" "$name"
+      return 0
+    fi
+  done
+  printf '%s/openclaw\n' "$modules_dir"
 }
 openclaw_e2e_package_entrypoint() {
   local root="${1:?missing package root}"
